@@ -5,48 +5,44 @@ import java.util.Arrays;
  */
 public class ArrayStorage {
     private Resume[] storage = new Resume[10000];
+    private int size = 0;
 
     void clear() {
-        Arrays.fill(this.storage, null);
+        for (int i = 0; i < this.size; i++){
+            storage[i] = null;
+        }
+        this.size = 0;
     }
 
     void save(Resume r) {
-        for (int i = 0; i < storage.length; i++) {
-            if (storage[i] == null) {
-                storage[i] = r;
-                return;
-            }
-        }
+        storage[this.size++] = r;
     }
 
     Resume get(String uuid) {
-        Resume getResume = null;
-
-        for (int i = 0; i < size(); i++) {
+        for (int i = 0; i < this.size; i++) {
             if (storage[i].toString().equals(uuid)) {
-                getResume = storage[i];
+                return storage[i];
             }
         }
 
-        return getResume;
+        return null;
     }
 
     void delete(String uuid) {
-        int size = size();
-
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < this.size; i++) {
             if (storage[i].toString().equals(uuid)) {
-                for (int j = i; j < size; j++) {
+                for (int j = i; j < this.size; j++) {
                     storage[j] = storage[j + 1];
                 }
+                this.size--;
                 return;
             }
         }
     }
 
     Resume[] getAll() {
-        Resume[] resumeAll = new Resume[size()];
-        System.arraycopy(storage, 0, resumeAll, 0, resumeAll.length);
+        Resume[] resumeAll = new Resume[this.size];
+        System.arraycopy(storage, 0, resumeAll, 0, this.size);
         return resumeAll;
     }
 
