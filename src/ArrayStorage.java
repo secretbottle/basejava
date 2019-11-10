@@ -15,6 +15,13 @@ public class ArrayStorage {
     }
 
     void save(Resume r) {
+        for (int i = 0; i < size; i++) {
+            if (storage[i].toString().equals(r.toString())) {
+                System.out.println("Объекты равны");
+                return;
+            }
+        }
+
         if(size < storage.length) {
             storage[size++] = r;
         }
@@ -37,6 +44,7 @@ public class ArrayStorage {
                 for (int j = i; j < size; j++) {
                     storage[j] = storage[j + 1];
                 }
+                return;
             }
         }
     }
