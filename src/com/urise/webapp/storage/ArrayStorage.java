@@ -17,11 +17,9 @@ public class ArrayStorage {
     }
 
     public void save(Resume resume) {
-        for (int i = 0; i < size; i++) {
-            if (storage[i].toString().equals(resume.toString())) {
-                System.out.println("Ошибка: save Объект существует.");
-                return;
-            }
+        if (getArrayNum(resume.toString()) != -1) {
+            System.out.println("Ошибка: Объект существует.");
+            return;
         }
 
         if (size < storage.length) {
@@ -32,40 +30,50 @@ public class ArrayStorage {
     }
 
     public Resume get(String uuid) {
-        for (int i = 0; i < size; i++) {
-            if (storage[i].getUuid().equals(uuid)) {
-                return storage[i];
-            }
+        int i = getArrayNum(uuid);
+
+        if (i == -1) {
+            System.out.println("Ошибка: Объект '" + uuid + "' не существует в массиве");
+        } else {
+            return storage[i];
         }
-        System.out.println("Ошибка: Объект '" + uuid + "' не существует в массиве");
+
         return null;
     }
 
     public void delete(String uuid) {
-        for (int i = 0; i < size; i++) {
-            if (storage[i].getUuid().equals(uuid)) {
-                storage[i] = storage[size - 1];
-                storage[size - 1] = null;
-                size--;
-                return;
-            }
-        }
+        int i = getArrayNum(uuid);
 
-        System.out.println("Ошибка: delete Объект не существует в массиве");
-    }
-    //TODO протеститить update
-    public void update(Resume resumeOld, Resume resumeNew) {
-        for (int i = 0; i < size; i++) {
-            if (storage[i].equals(resumeOld)) {
-                System.out.println("Ошибка: Объект существует.");
-            } else {
-                storage[i] = resumeNew;
-            }
+        if (i == -1) {
+            System.out.println("Ошибка: Объект '" + uuid + "' не существует в массиве");
+        } else {
+            storage[i] = storage[size - 1];
+            storage[size - 1] = null;
+            size--;
         }
     }
-    //TODO оптимизировать код
-    private void optimCode(){
 
+    public void update(String resumeOld, Resume resumeNew) {
+        if (resumeNew.toString().equals(resumeOld)) {
+            System.out.println("Ошибка: Объекты совпадают.");
+            return;
+        }
+
+        int i = getArrayNum(resumeOld);
+        if (i == -1) {
+            System.out.println("Ошибка: Объект '" + resumeNew.toString() + "' не существует в массиве");
+        } else {
+            storage[i] = resumeNew;
+        }
+    }
+
+    private int getArrayNum(String uuid) {
+        for (int i = 0; i < size; i++) {
+            if (storage[i].toString().equals(uuid)) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     public Resume[] getAll() {
@@ -75,6 +83,5 @@ public class ArrayStorage {
     public int size() {
         return size;
     }
-
 
 }
