@@ -8,7 +8,7 @@ import java.util.Arrays;
  * Array based storage for Resumes
  */
 public class ArrayStorage {
-    private Resume[] storage = new Resume[10000];
+    private Resume[] storage = new Resume[10_000];
     private int size = 0;
 
     public void clear() {
@@ -17,7 +17,7 @@ public class ArrayStorage {
     }
 
     public void save(Resume resume) {
-        if (getArrayNum(resume.toString()) != -1) {
+        if (getIndex(resume.toString()) != -1) {
             System.out.println("Ошибка: Объект существует.");
             return;
         }
@@ -30,44 +30,40 @@ public class ArrayStorage {
     }
 
     public Resume get(String uuid) {
-        int i = getArrayNum(uuid);
+        int index = getIndex(uuid);
 
-        if (i == -1) {
+        if (index == -1) {
             System.out.println("Ошибка: Объект '" + uuid + "' не существует в массиве");
         } else {
-            return storage[i];
+            return storage[index];
         }
 
         return null;
     }
 
     public void delete(String uuid) {
-        int i = getArrayNum(uuid);
+        int index = getIndex(uuid);
 
-        if (i == -1) {
+        if (index == -1) {
             System.out.println("Ошибка: Объект '" + uuid + "' не существует в массиве");
         } else {
-            storage[i] = storage[size - 1];
+            storage[index] = storage[size - 1];
             storage[size - 1] = null;
             size--;
         }
     }
 
-    public void update(String resumeOld, Resume resumeNew) {
-        if (resumeNew.toString().equals(resumeOld)) {
-            System.out.println("Ошибка: Объекты совпадают.");
-            return;
-        }
+    public void update(Resume resume) {
+        int index = getIndex(resume.getUuid());
 
-        int i = getArrayNum(resumeOld);
-        if (i == -1) {
-            System.out.println("Ошибка: Объект '" + resumeNew.toString() + "' не существует в массиве");
+        if (index== -1) {
+            System.out.println("Ошибка: Объект '" + resume + "' не существует в массиве");
         } else {
-            storage[i] = resumeNew;
+            storage[index] = resume;
         }
     }
 
-    private int getArrayNum(String uuid) {
+    private int getIndex(String uuid) {
         for (int i = 0; i < size; i++) {
             if (storage[i].toString().equals(uuid)) {
                 return i;
