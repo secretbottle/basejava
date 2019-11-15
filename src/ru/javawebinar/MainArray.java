@@ -1,14 +1,14 @@
-package com.urise.webapp;
+package ru.javawebinar;
 
-import com.urise.webapp.model.Resume;
-import com.urise.webapp.storage.ArrayStorage;
+import ru.javawebinar.model.Resume;
+import ru.javawebinar.storage.ArrayStorage;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
 /**
- * Interactive test for com.urise.webapp.storage.ArrayStorage implementation
+ * Interactive test for ru.javawebinar.storage.ArrayStorage implementation
  * (just run, no need to understand)
  */
 public class MainArray {
