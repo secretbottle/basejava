@@ -10,14 +10,13 @@ public class Resume implements Comparable<Resume>{
 
 
     public static void main (String[] args) {
-        char a = 'а';
-        char b = 'б';
+    Resume r1 = new Resume();
+    r1.setUuid("Стринги");
 
+    Resume r2 = new Resume();
+    r2.setUuid("Стринги1");
 
-        System.out.println(a - a);
-        System.out.println(a - b);
-        System.out.println(b - a);
-
+    System.out.println("ЪЪЪЪЪЪЪЪЪЙЙЙ " + r1.compareTo(r2));
     }
 
     public void setUuid(String uuid) {
