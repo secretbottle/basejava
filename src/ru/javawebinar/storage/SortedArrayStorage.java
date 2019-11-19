@@ -7,65 +7,29 @@ import java.util.Arrays;
 public class SortedArrayStorage extends AbstractArrayStorage {
 
     @Override
-    public void update(Resume resume) {
-        int index = getIndex(resume.getUuid());
-
-        if (index < 0) {
-            System.out.println("Ошибка: Объект '" + resume + "' не существует в массиве");
-        } else {
-            storage[index] = resume;
-        }
-
-        sort(0, size - 1);
-    }
-
-    @Override
-    public void save(Resume resume) {
-        if (getIndex(resume.toString()) > 0) {
-            System.out.println("Ошибка: Объект существует.");
-            return;
-        }
-
-        if (size < storage.length) {
-            storage[size++] = resume;
-        } else {
-            System.out.println("Ошибка: Массив забит.");
-        }
-
-        sort(0, size - 1);
-
-    }
-
-    public Resume get(String uuid) {
-        int index = getIndex(uuid);
-
-        if (index < 0) {
-            System.out.println("Ошибка: Объект '" + uuid + "' не существует");
-            return null;
-        }
-        return storage[index];
-    }
-
-    @Override
-    public void delete(String uuid) {
-        int index = getIndex(uuid);
-
-        if (index < 0) {
-            System.out.println("Ошибка: Объект '" + uuid + "' не существует в массиве");
-        } else {
-            storage[index] = storage[size - 1];
-            storage[size - 1] = null;
-            size--;
-        }
-
-        sort(0, size - 1);
-    }
-
-    @Override
     protected int getIndex(String uuid) {
         Resume searchKey = new Resume();
         searchKey.setUuid(uuid);
         return Arrays.binarySearch(storage, 0, size, searchKey);
+    }
+
+    @Override
+    protected void add(Resume resume) {
+        storage[size++] = resume;
+        sort(0, size -1);
+    }
+
+    @Override
+    protected void refresh(Resume resume, int index) {
+        storage[index] = resume;
+        sort(0, size -1);
+    }
+
+    @Override
+    protected void remove(int index) {
+        storage[index] = storage[size - 1];
+        storage[--size] = null;
+        sort(0, size -1);
     }
 
     private void sort(int leftBorder, int rightBorder){
@@ -73,6 +37,8 @@ public class SortedArrayStorage extends AbstractArrayStorage {
         int leftMarker = leftBorder;
         int rightMarker = rightBorder;
         Resume pivot = storage[(leftMarker + rightMarker) / 2];
+        System.out.println((leftMarker + rightMarker) / 2);
+        System.out.println((leftMarker + rightMarker) >>> 1);
         do {
 
             while (storage[leftMarker].compareTo(pivot) < 0) {
@@ -101,4 +67,5 @@ public class SortedArrayStorage extends AbstractArrayStorage {
             sort(leftBorder, rightMarker);
         }
     }
+
 }

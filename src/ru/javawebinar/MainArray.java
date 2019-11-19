@@ -1,7 +1,6 @@
 package ru.javawebinar;
 
 import ru.javawebinar.model.Resume;
-import ru.javawebinar.storage.ArrayStorage;
 import ru.javawebinar.storage.SortedArrayStorage;
 
 import java.io.BufferedReader;
