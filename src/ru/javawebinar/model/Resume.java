@@ -6,9 +6,9 @@ package ru.javawebinar.model;
 public class Resume implements Comparable<Resume> {
 
     // Unique identifier
-    private String uuid;
+    private final String uuid;
 
-    public void setUuid(String uuid) {
+    public Resume(String uuid) {
         this.uuid = uuid;
     }
 
