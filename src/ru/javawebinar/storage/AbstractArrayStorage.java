@@ -19,9 +19,8 @@ public abstract class AbstractArrayStorage implements Storage {
         int index = getIndex(resume.getUuid());
 
         if (index < 0) {
-            System.out.println("Ошибка: Объект '" + resume + "' не существует в массиве");
+            System.out.println("Ошибка: Объект '" + resume.getUuid() + "' не существует в массиве");
         } else {
-            refresh(resume, index);
             storage[index] = resume;
         }
     }
@@ -29,12 +28,13 @@ public abstract class AbstractArrayStorage implements Storage {
     public void save(Resume resume) {
         int index = getIndex(resume.getUuid());
         if (index >= 0) {
-            System.out.println("Ошибка: Объект существует.");
+            System.out.println("Ошибка: Объект '" + resume.getUuid() + "' существует.");
             return;
         }
 
         if (size < storage.length) {
-            add(resume);
+            add(resume, index);
+            size++;
         } else {
             System.out.println("Ошибка: Массив забит.");
         }
@@ -57,6 +57,7 @@ public abstract class AbstractArrayStorage implements Storage {
             System.out.println("Ошибка: Объект '" + uuid + "' не существует в массиве");
         } else {
             remove(index);
+            size--;
         }
     }
 
@@ -69,11 +70,10 @@ public abstract class AbstractArrayStorage implements Storage {
     }
 
     protected abstract int getIndex(String uuid);
-    protected abstract void add(Resume resume);
-    protected abstract void refresh(Resume resume, int index);
+
+    protected abstract void add(Resume resume, int index);
+
     protected abstract void remove(int index);
-
-
 
 
 }

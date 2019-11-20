@@ -3,21 +3,10 @@ package ru.javawebinar.model;
 /**
  * Initial resume class
  */
-public class Resume implements Comparable<Resume>{
+public class Resume implements Comparable<Resume> {
 
     // Unique identifier
     private String uuid;
-
-
-    public static void main (String[] args) {
-    Resume r1 = new Resume();
-    r1.setUuid("Стринги");
-
-    Resume r2 = new Resume();
-    r2.setUuid("Стринги1");
-
-    System.out.println("ЪЪЪЪЪЪЪЪЪЙЙЙ " + r1.compareTo(r2));
-    }
 
     public void setUuid(String uuid) {
         this.uuid = uuid;

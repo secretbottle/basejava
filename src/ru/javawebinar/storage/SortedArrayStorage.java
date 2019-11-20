@@ -14,58 +14,20 @@ public class SortedArrayStorage extends AbstractArrayStorage {
     }
 
     @Override
-    protected void add(Resume resume) {
-        storage[size++] = resume;
-        sort(0, size -1);
-    }
-
-    @Override
-    protected void refresh(Resume resume, int index) {
-        storage[index] = resume;
-        sort(0, size -1);
+    protected void add(Resume resume, int index) {
+        int addIndex = -index - 1;
+        /*
+        for (int i = size; i > addIndex ; i--){
+            storage[i] = storage[i + 1];
+        }
+        */
+        System.arraycopy(storage, addIndex, storage, addIndex + 1, size - addIndex);
+        storage[addIndex] = resume;
     }
 
     @Override
     protected void remove(int index) {
-        storage[index] = storage[size - 1];
-        storage[--size] = null;
-        sort(0, size -1);
-    }
-
-    private void sort(int leftBorder, int rightBorder){
-        //QuickSort
-        int leftMarker = leftBorder;
-        int rightMarker = rightBorder;
-        Resume pivot = storage[(leftMarker + rightMarker) / 2];
-        System.out.println((leftMarker + rightMarker) / 2);
-        System.out.println((leftMarker + rightMarker) >>> 1);
-        do {
-
-            while (storage[leftMarker].compareTo(pivot) < 0) {
-                leftMarker++;
-            }
-
-            while (storage[rightMarker].compareTo(pivot) > 0) {
-                rightMarker--;
-            }
-
-            if (leftMarker <= rightMarker) {
-                if (leftMarker < rightMarker) {
-                    Resume tmp = storage[leftMarker];
-                    storage[leftMarker] = storage[rightMarker];
-                    storage[rightMarker] = tmp;
-                }
-                leftMarker++;
-                rightMarker--;
-            }
-        } while (leftMarker <= rightMarker);
-
-        if (leftMarker < rightBorder) {
-            sort(leftMarker, rightBorder);
-        }
-        if (leftBorder < rightMarker) {
-            sort(leftBorder, rightMarker);
-        }
+        System.arraycopy(storage, index + 1, storage, index, size - index - 1);
     }
 
 }

@@ -1,7 +1,6 @@
 package ru.javawebinar;
 
 import ru.javawebinar.model.Resume;
-import ru.javawebinar.storage.ArrayStorage;
 import ru.javawebinar.storage.SortedArrayStorage;
 
 /**
@@ -35,7 +34,6 @@ public class MainTestArrayStorage {
         printAll();
         System.out.println("Size: " + ARRAY_STORAGE.size());
 
-        printAll();
         ARRAY_STORAGE.delete(r1.getUuid());
         printAll();
         ARRAY_STORAGE.clear();
