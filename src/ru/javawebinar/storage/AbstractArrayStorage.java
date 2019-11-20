@@ -57,6 +57,7 @@ public abstract class AbstractArrayStorage implements Storage {
             System.out.println("Ошибка: Объект '" + uuid + "' не существует в массиве");
         } else {
             remove(index);
+            storage[size - 1] = null;
             size--;
         }
     }
