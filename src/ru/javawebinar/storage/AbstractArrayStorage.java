@@ -1,5 +1,7 @@
 package ru.javawebinar.storage;
 
+import ru.javawebinar.exception.ExistStorageException;
+import ru.javawebinar.exception.NotExistStorageException;
 import ru.javawebinar.model.Resume;
 
 import java.util.Arrays;
@@ -19,7 +21,7 @@ public abstract class AbstractArrayStorage implements Storage {
         int index = getIndex(resume.getUuid());
 
         if (index < 0) {
-            System.out.println("Ошибка: Объект '" + resume.getUuid() + "' не существует в массиве");
+            throw new NotExistStorageException(resume.getUuid());
         } else {
             storage[index] = resume;
         }
@@ -28,8 +30,7 @@ public abstract class AbstractArrayStorage implements Storage {
     public void save(Resume resume) {
         int index = getIndex(resume.getUuid());
         if (index >= 0) {
-            System.out.println("Ошибка: Объект '" + resume.getUuid() + "' существует.");
-            return;
+            throw new ExistStorageException(resume.getUuid());
         }
 
         if (size < storage.length) {
@@ -44,8 +45,7 @@ public abstract class AbstractArrayStorage implements Storage {
         int index = getIndex(uuid);
 
         if (index < 0) {
-            System.out.println("Ошибка: Объект '" + uuid + "' не существует");
-            return null;
+            throw new NotExistStorageException(uuid);
         }
         return storage[index];
     }
@@ -54,7 +54,7 @@ public abstract class AbstractArrayStorage implements Storage {
         int index = getIndex(uuid);
 
         if (index < 0) {
-            System.out.println("Ошибка: Объект '" + uuid + "' не существует в массиве");
+            throw new NotExistStorageException(uuid);
         } else {
             remove(index);
             storage[size - 1] = null;
