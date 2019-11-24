@@ -2,6 +2,7 @@ package ru.javawebinar.storage;
 
 import ru.javawebinar.exception.ExistStorageException;
 import ru.javawebinar.exception.NotExistStorageException;
+import ru.javawebinar.exception.StorageException;
 import ru.javawebinar.model.Resume;
 
 import java.util.Arrays;
@@ -37,7 +38,7 @@ public abstract class AbstractArrayStorage implements Storage {
             add(resume, index);
             size++;
         } else {
-            System.out.println("Ошибка: Массив забит.");
+            throw new StorageException("Array overflow", resume.getUuid());
         }
     }
 
