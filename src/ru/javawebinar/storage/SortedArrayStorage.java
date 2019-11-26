@@ -6,10 +6,6 @@ import java.util.Arrays;
 
 public class SortedArrayStorage extends AbstractArrayStorage {
 
-    public SortedArrayStorage(){
-
-    }
-
     @Override
     protected int getIndex(String uuid) {
         Resume searchKey = new Resume(uuid);

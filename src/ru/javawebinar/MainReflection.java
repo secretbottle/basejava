@@ -19,8 +19,6 @@ public class MainReflection {
         Method methodToStr = r.getClass().getMethod("toString");
         System.out.println("Method name: " + methodToStr);
         System.out.println("Method value: " + methodToStr.getDefaultValue());
-
-        methodToStr.invoke(r);
         System.out.println(methodToStr.invoke(r));
     }
 }
