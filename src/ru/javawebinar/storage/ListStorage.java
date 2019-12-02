@@ -19,7 +19,8 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     protected void saveElement(int index, Resume resume) {
-        storage.add(index, resume);
+        int addIndex = -index - 1;
+        storage.add(addIndex, resume);
     }
 
     @Override
@@ -40,7 +41,7 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     public Resume[] getAll() {
-        return (Resume[]) storage.toArray();
+        return storage.toArray(new Resume[storage.size()]);
     }
 
     @Override
