@@ -18,7 +18,7 @@ public class ArrayStorage extends AbstractArrayStorage {
     }
 
     @Override
-    public void add(Resume resume, int index) {
+    public void add(int index, Resume resume) {
         storage[size] = resume;
     }
 
@@ -26,6 +26,5 @@ public class ArrayStorage extends AbstractArrayStorage {
     public void remove(int index) {
         storage[index] = storage[size - 1];
     }
-
 
 }

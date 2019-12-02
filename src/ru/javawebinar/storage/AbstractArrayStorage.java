@@ -1,7 +1,5 @@
 package ru.javawebinar.storage;
 
-import ru.javawebinar.exception.ExistStorageException;
-import ru.javawebinar.exception.NotExistStorageException;
 import ru.javawebinar.exception.StorageException;
 import ru.javawebinar.model.Resume;
 
@@ -13,59 +11,50 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     protected Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int size = 0;
 
+    @Override
     public void clear() {
         Arrays.fill(storage, 0, size, null);
         size = 0;
     }
 
-    protected void abstractUpdate(int index, Resume resume){
+    @Override
+    protected void updateElement(int index, Resume resume) {
         storage[index] = resume;
     }
 
-    public void save(Resume resume) {
-        int index = getIndex(resume.getUuid());
-        if (index >= 0) {
-            throw new ExistStorageException(resume.getUuid());
-        }
-
+    @Override
+    protected void saveElement(int index, Resume resume) {
         if (size < storage.length) {
-            add(resume, index);
+            add(index, resume);
             size++;
         } else {
             throw new StorageException("Array overflow", resume.getUuid());
         }
     }
 
-    public Resume get(String uuid) {
-        int index = getIndex(uuid);
-
-        if (index < 0) {
-            throw new NotExistStorageException(uuid);
-        }
+    @Override
+    protected Resume getElement(int index) {
         return storage[index];
     }
 
-    public void delete(String uuid) {
-        int index = getIndex(uuid);
-
-        if (index < 0) {
-            throw new NotExistStorageException(uuid);
-        } else {
-            remove(index);
-            storage[size - 1] = null;
-            size--;
-        }
+    @Override
+    protected void deleteElement(int index) {
+        remove(index);
+        storage[size - 1] = null;
+        size--;
     }
 
+    @Override
     public Resume[] getAll() {
         return Arrays.copyOfRange(storage, 0, size);
     }
 
+    @Override
     public int size() {
         return size;
     }
 
-    protected abstract void add(Resume resume, int index);
+    protected abstract void add(int index, Resume resume);
 
     protected abstract void remove(int index);
 

@@ -1,5 +1,6 @@
 package ru.javawebinar.storage;
 
+import ru.javawebinar.exception.ExistStorageException;
 import ru.javawebinar.exception.NotExistStorageException;
 import ru.javawebinar.model.Resume;
 
@@ -7,40 +8,45 @@ public abstract class AbstractStorage implements Storage {
 
     @Override
     public void update(Resume resume) {
-        int index = getIndex(resume.getUuid());
-
-        if (index < 0) {
-            throw new NotExistStorageException(resume.getUuid());
-        } else {
-            abstractUpdate(index, resume);
-        }
+        updateElement(NotExistElement(resume.getUuid()), resume);
     }
 
     @Override
     public void save(Resume resume) {
+        int index = getIndex(resume.getUuid());
 
+        if (index >= 0)
+            throw new ExistStorageException(resume.getUuid());
+
+        saveElement(index, resume);
     }
 
     @Override
     public Resume get(String uuid) {
-        return null;
+        return getElement(NotExistElement(uuid));
     }
 
     @Override
     public void delete(String uuid) {
-
+        deleteElement(NotExistElement(uuid));
     }
 
-    @Override
-    public Resume[] getAll() {
-        return new Resume[0];
+    private int NotExistElement(String uuid) {
+        int index = getIndex(uuid);
+        if (index < 0)
+            throw new NotExistStorageException(uuid);
+        return index;
     }
 
-    @Override
-    public int size() {
-        return 0;
-    }
+    protected abstract void updateElement(int index, Resume resume);
 
-    protected abstract void abstractUpdate(int index, Resume resume);
+    protected abstract void saveElement(int index, Resume resume);
+
+    protected abstract Resume getElement(int index);
+
+    protected abstract void deleteElement(int index);
+
     protected abstract int getIndex(String uuid);
+
+    public abstract int size();
 }
