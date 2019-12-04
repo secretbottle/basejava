@@ -8,13 +8,18 @@ import ru.javawebinar.model.Resume;
 public class ArrayStorage extends AbstractArrayStorage {
 
     @Override
-    public int getIndex(String uuid) {
+    public Object getIndex(String uuid) {
         for (int i = 0; i < size; i++) {
             if (storage[i].getUuid().equals(uuid)) {
                 return i;
             }
         }
         return -1;
+    }
+
+    @Override
+    protected boolean isExist(Object index) {
+        return (Integer) index >= 0;
     }
 
     @Override

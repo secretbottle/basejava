@@ -3,9 +3,10 @@ package ru.javawebinar.storage;
 import ru.javawebinar.model.Resume;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ListStorage extends AbstractStorage {
-    protected ArrayList<Resume> storage = new ArrayList<>();
+    protected List<Resume> storage = new ArrayList<>();
 
     @Override
     public void clear() {
@@ -13,35 +14,43 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected void updateElement(int index, Resume resume) {
-        storage.set(index, resume);
+    protected void updateElement(Object index, Resume resume) {
+        storage.set((Integer) index, resume);
     }
 
     @Override
-    protected void saveElement(int index, Resume resume) {
-        int addIndex = -index - 1;
-        storage.add(addIndex, resume);
+    protected void saveElement(Object index, Resume resume) {
+        storage.add(resume);
     }
 
     @Override
-    protected Resume getElement(int index) {
-        return storage.get(index);
+    protected Resume getElement(Object index) {
+        return storage.get((Integer) index);
     }
 
     @Override
-    protected void deleteElement(int index) {
-        storage.remove(index);
+    protected void deleteElement(Object index) {
+        storage.remove((Integer) index);
     }
 
     @Override
-    protected int getIndex(String uuid) {
-        Resume searchElement = new Resume(uuid);
-        return storage.indexOf(searchElement);
+    protected Object getIndex(String uuid) {
+        for (int i = 0; i < storage.size(); i++) {
+            if (storage.get(i).getUuid().equals(uuid)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    @Override
+    protected boolean isExist(Object index) {
+        return (Integer) index >= 0;
     }
 
     @Override
     public Resume[] getAll() {
-        return storage.toArray(new Resume[storage.size()]);
+        return storage.toArray(new Resume[0]);
     }
 
     @Override
