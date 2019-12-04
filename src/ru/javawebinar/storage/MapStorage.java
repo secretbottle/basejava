@@ -15,32 +15,27 @@ public class MapStorage extends AbstractStorage {
 
     @Override
     protected void saveElement(Object index, Resume resume) {
-        storage.put(resume.getUuid(), resume);
+        storage.put((String) index, resume);
     }
 
     @Override
     protected Resume getElement(Object index) {
-        return storage.get((String) index);
+        return storage.get(index.toString());
     }
 
     @Override
     protected void deleteElement(Object index) {
-        storage.remove((String) index);
+        storage.remove(index.toString());
     }
 
     @Override
     protected Object getIndex(String uuid) {
-        for (Map.Entry<String, Resume> entry : storage.entrySet()) {
-            String key = entry.getKey();
-            if (key.equals(uuid))
-                return key;
-        }
-        return null;
+        return uuid;
     }
 
     @Override
     protected boolean isExist(Object index) {
-        return index == null;
+        return storage.containsKey((String) index);
     }
 
     @Override

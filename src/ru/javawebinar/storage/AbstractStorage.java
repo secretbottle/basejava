@@ -13,7 +13,7 @@ public abstract class AbstractStorage implements Storage {
 
     @Override
     public void save(Resume resume) {
-        int index = ExistElementCheck(resume.getUuid());
+        Object index = ExistElementCheck(resume.getUuid());
         saveElement(index, resume);
     }
 
@@ -27,15 +27,15 @@ public abstract class AbstractStorage implements Storage {
         deleteElement(NotExistElementCheck(uuid));
     }
 
-    private int NotExistElementCheck(String uuid) {
-        int index = (Integer) getIndex(uuid);
+    private Object NotExistElementCheck(String uuid) {
+        Object index = getIndex(uuid);
         if (!isExist(index))
             throw new NotExistStorageException(uuid);
         return index;
     }
 
-    private int ExistElementCheck(String uuid) {
-        int index = (Integer) getIndex(uuid);
+    private Object ExistElementCheck(String uuid) {
+        Object index = getIndex(uuid);
         if (isExist(index))
             throw new ExistStorageException(uuid);
         return index;
