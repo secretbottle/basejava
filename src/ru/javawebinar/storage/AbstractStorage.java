@@ -8,37 +8,40 @@ public abstract class AbstractStorage implements Storage {
 
     @Override
     public void update(Resume resume) {
-        updateElement(NotExistElementCheck(resume.getUuid()), resume);
+        Object index = getExistKey(resume.getUuid());
+        updateElement(index, resume);
     }
 
     @Override
     public void save(Resume resume) {
-        Object index = ExistElementCheck(resume.getUuid());
+        Object index = getNotExistKey(resume.getUuid());
         saveElement(index, resume);
     }
 
     @Override
     public Resume get(String uuid) {
-        return getElement(NotExistElementCheck(uuid));
+        Object index = getExistKey(uuid);
+        return getElement(index);
     }
 
     @Override
     public void delete(String uuid) {
-        deleteElement(NotExistElementCheck(uuid));
+        Object index = getExistKey(uuid);
+        deleteElement(index);
     }
 
-    private Object NotExistElementCheck(String uuid) {
-        Object index = getIndex(uuid);
-        if (!isExist(index))
+    private Object getExistKey(String uuid) {
+        Object searchKey = getSearchKey(uuid);
+        if (!isExist(searchKey))
             throw new NotExistStorageException(uuid);
-        return index;
+        return searchKey;
     }
 
-    private Object ExistElementCheck(String uuid) {
-        Object index = getIndex(uuid);
-        if (isExist(index))
+    private Object getNotExistKey(String uuid) {
+        Object searchKey = getSearchKey(uuid);
+        if (isExist(searchKey))
             throw new ExistStorageException(uuid);
-        return index;
+        return searchKey;
     }
 
     protected abstract void updateElement(Object index, Resume resume);
@@ -49,7 +52,7 @@ public abstract class AbstractStorage implements Storage {
 
     protected abstract void deleteElement(Object index);
 
-    protected abstract Object getIndex(String uuid);
+    protected abstract Object getSearchKey(String uuid);
 
     protected abstract boolean isExist(Object index);
 }

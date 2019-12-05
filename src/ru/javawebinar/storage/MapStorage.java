@@ -9,33 +9,33 @@ public class MapStorage extends AbstractStorage {
     private Map<String, Resume> storage = new HashMap<>();
 
     @Override
-    protected void updateElement(Object index, Resume resume) {
-        storage.replace((String) index, resume);
+    protected void updateElement(Object uuid, Resume resume) {
+        storage.replace((String) uuid, resume);
     }
 
     @Override
-    protected void saveElement(Object index, Resume resume) {
-        storage.put((String) index, resume);
+    protected void saveElement(Object uuid, Resume resume) {
+        storage.put((String) uuid, resume);
     }
 
     @Override
-    protected Resume getElement(Object index) {
-        return storage.get(index.toString());
+    protected Resume getElement(Object uuid) {
+        return storage.get((String) uuid);
     }
 
     @Override
-    protected void deleteElement(Object index) {
-        storage.remove(index.toString());
+    protected void deleteElement(Object uuid) {
+        storage.remove((String) uuid);
     }
 
     @Override
-    protected Object getIndex(String uuid) {
+    protected String getSearchKey(String uuid) {
         return uuid;
     }
 
     @Override
-    protected boolean isExist(Object index) {
-        return storage.containsKey((String) index);
+    protected boolean isExist(Object searchKey) {
+        return storage.containsKey((String) searchKey);
     }
 
     @Override
