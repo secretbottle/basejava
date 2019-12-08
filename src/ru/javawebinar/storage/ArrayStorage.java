@@ -8,15 +8,15 @@ import ru.javawebinar.model.Resume;
 public class ArrayStorage extends AbstractArrayStorage {
 
     @Override
-    public Object getSearchKey(String uuid) {
+    public Object getSearchKey(String searchKey) {
         for (int i = 0; i < size; i++) {
-            if (storage[i].getUuid().equals(uuid)) {
+            if (storage[i].getUuid().equals(searchKey)) {
                 return i;
             }
         }
         return -1;
     }
-    
+
     @Override
     public void add(int index, Resume resume) {
         storage[size] = resume;

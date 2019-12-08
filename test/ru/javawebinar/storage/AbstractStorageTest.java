@@ -12,12 +12,12 @@ public abstract class AbstractStorageTest {
 
     protected Storage storage;
 
-    private static final String UUID_1 = "uuid1";
-    private static final Resume RESUME_1 = new Resume(UUID_1);
-    private static final String UUID_2 = "uuid2";
-    private static final Resume RESUME_2 = new Resume(UUID_2);
-    private static final String UUID_3 = "uuid3";
-    private static final Resume RESUME_3 = new Resume(UUID_3);
+    private static final String FULLNAME_1 = "uuid 1";
+    private static final Resume RESUME_1 = new Resume(FULLNAME_1);
+    private static final String FULLNAME_2 = "uuid 2";
+    private static final Resume RESUME_2 = new Resume(FULLNAME_2);
+    private static final String FULLNAME_3 = "uuid 3";
+    private static final Resume RESUME_3 = new Resume(FULLNAME_3);
 
     AbstractStorageTest(Storage storage) {
         this.storage = storage;
@@ -38,15 +38,14 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void update() throws Exception {
-        Resume resume = new Resume(UUID_2);
+        Resume resume = new Resume(FULLNAME_2);
         storage.update(resume);
         assertGet(resume);
-        //assertEquals(resume, storage.get(UUID_2));
     }
 
     @Test(expected = NotExistStorageException.class)
     public void updateNotExist() throws Exception {
-        storage.update(new Resume());
+        storage.update(new Resume("uuid 404"));
     }
 
     @Test
@@ -73,16 +72,16 @@ public abstract class AbstractStorageTest {
 
     @Test(expected = NotExistStorageException.class)
     public void delete() throws Exception {
-        storage.delete(UUID_1);
+        storage.delete(FULLNAME_1);
         assertSize(1);
-        storage.delete(UUID_1);
+        storage.delete(FULLNAME_1);
     }
 
     @Test(expected = NotExistStorageException.class)
     public void deleteNotExist() throws Exception {
-        storage.delete(UUID_3);
+        storage.delete(FULLNAME_3);
     }
-
+//TODO проверить не надо ли тестировать с учетом примененных изменений
     @Test
     public void getAll() throws Exception {
         assertGet(RESUME_1);
