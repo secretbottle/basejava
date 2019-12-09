@@ -11,23 +11,23 @@ public class MapResumeStorage extends AbstractStorage {
     protected Map<String, Resume> storage = new HashMap<>();
 
     @Override
-    protected void updateElement(Object uuid, Resume resume) {
+    protected void updateElement(Object searchKey, Resume resume) {
         storage.replace(resume.getUuid(), resume);
     }
 
     @Override
-    protected void saveElement(Object uuid, Resume resume) {
+    protected void saveElement(Object searchKey, Resume resume) {
         storage.put(resume.getUuid(), resume);
     }
 
     @Override
-    protected Resume getElement(Object uuid) {
-        return storage.get(((Resume) uuid).getUuid());
+    protected Resume getElement(Object searchKey) {
+        return storage.get(((Resume) searchKey).getUuid());
     }
 
     @Override
-    protected void deleteElement(Object uuid) {
-        storage.remove(((Resume) uuid).getUuid());
+    protected void deleteElement(Object searchKey) {
+        storage.remove(((Resume) searchKey).getUuid());
     }
 
     @Override
