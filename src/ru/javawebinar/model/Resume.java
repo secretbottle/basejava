@@ -43,7 +43,9 @@ public class Resume implements Comparable <Resume> {
 
     @Override
     public int hashCode() {
-        return uuid.hashCode() + fullName.hashCode();
+        int result = uuid.hashCode();
+        result = 31 * result + fullName.hashCode();
+        return result;
     }
 
     @Override
@@ -53,7 +55,6 @@ public class Resume implements Comparable <Resume> {
 
     @Override
     public int compareTo(Resume o) {
-        //return fullName.compareTo(o.getFullName());
         return Comparator.comparing(Resume::getFullName).thenComparing(Resume::getUuid).compare(this, o);
     }
 
