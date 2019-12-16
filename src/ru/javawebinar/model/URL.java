@@ -8,9 +8,15 @@ public class URL {
 
     public URL(String title, String urlAdr) {
         Objects.requireNonNull(title, "Inputed title startPeriod is null");
-        this.title = title;
         Objects.requireNonNull(urlAdr, "Inputed urlAdr startPeriod is null");
+        this.title = title;
         this.urlAdr = urlAdr;
+    }
+
+    public URL(String title) {
+        Objects.requireNonNull(title, "Inputed title startPeriod is null");
+        this.title = title;
+        this.urlAdr = null;
     }
 
     @Override

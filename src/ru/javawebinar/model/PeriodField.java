@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 
-public class periodField implements Section {
+public class PeriodField implements Section {
     private final HashMap<URL, ArrayList<PeriodDescription>> periodSections;
 
-    public periodField(HashMap<URL, ArrayList<PeriodDescription>> periodSections) {
+    public PeriodField(HashMap<URL, ArrayList<PeriodDescription>> periodSections) {
         Objects.requireNonNull(periodSections, "Inputed parameter periodSections is null");
         this.periodSections = periodSections;
     }
@@ -20,12 +20,17 @@ public class periodField implements Section {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        periodField that = (periodField) o;
+        PeriodField that = (PeriodField) o;
         return periodSections.equals(that.periodSections);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(periodSections);
+    }
+
+    @Override
+    public String toString() {
+        return periodSections.toString();
     }
 }

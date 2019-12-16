@@ -1,17 +1,17 @@
 package ru.javawebinar.model;
 
-import java.util.List;
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class ListField implements Section {
-    private final List<String> descriptionList;
+    private final ArrayList<String> descriptionList;
 
-    public ListField(List<String> descriptionList) {
+    public ListField(ArrayList<String> descriptionList) {
         Objects.requireNonNull(descriptionList, "Inputed parameter descriptionList is null");
         this.descriptionList = descriptionList;
     }
 
-    public List<String> getDescriptionList() {
+    public ArrayList<String> getDescriptionList() {
         return descriptionList;
     }
 
@@ -26,5 +26,10 @@ public class ListField implements Section {
     @Override
     public int hashCode() {
         return Objects.hash(descriptionList);
+    }
+
+    @Override
+    public String toString() {
+        return descriptionList.toString();
     }
 }

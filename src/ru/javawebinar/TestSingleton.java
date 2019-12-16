@@ -1,6 +1,4 @@
-package ru.javawebinar.storage;
-
-import ru.javawebinar.SectionType;
+package ru.javawebinar;
 
 public class TestSingleton {
     private static TestSingleton instance;

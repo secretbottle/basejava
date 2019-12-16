@@ -8,16 +8,43 @@ public class PeriodDescription {
     private final LocalDate endPeriod;
     private final String position;
     private final String description;
+    public final String NOW = "Сейчас";
 
     public PeriodDescription(LocalDate startPeriod, LocalDate endPeriod, String position, String description) {
         Objects.requireNonNull(startPeriod, "Inputed parameter startPeriod is null");
-        this.startPeriod = startPeriod;
         Objects.requireNonNull(endPeriod, "Inputed parameter endPeriod is null");
-        this.endPeriod = endPeriod;
         Objects.requireNonNull(position, "Inputed parameter position is null");
-        this.position = position;
         Objects.requireNonNull(description, "Inputed parameter description is null");
+        this.startPeriod = startPeriod;
+        this.endPeriod = endPeriod;
+        this.position = position;
         this.description = description;
+    }
+
+    public PeriodDescription(LocalDate startPeriod, String position, String description) {
+        Objects.requireNonNull(startPeriod, "Inputed parameter startPeriod is null");
+        Objects.requireNonNull(position, "Inputed parameter position is null");
+        Objects.requireNonNull(description, "Inputed parameter description is null");
+        this.startPeriod = startPeriod;
+        endPeriod = LocalDate.now();
+        this.position = position;
+        this.description = description;
+    }
+
+    public LocalDate getStartPeriod() {
+        return startPeriod;
+    }
+
+    public LocalDate getEndPeriod() {
+        return endPeriod;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     @Override
@@ -38,11 +65,8 @@ public class PeriodDescription {
 
     @Override
     public String toString() {
-        return "PeriodDescription{" +
-                "startPeriod=" + startPeriod +
-                ", endPeriod=" + endPeriod +
-                ", position='" + position + '\'' +
-                ", description='" + description + '\'' +
-                '}';
+        return startPeriod + " - " + endPeriod + " " + position + " : " + description;
     }
+
 }
+
