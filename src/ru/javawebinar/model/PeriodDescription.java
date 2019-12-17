@@ -40,10 +40,18 @@ public class PeriodDescription {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PeriodDescription that = (PeriodDescription) o;
-        return startPeriod.equals(that.startPeriod) &&
-                endPeriod.equals(that.endPeriod) &&
-                position.equals(that.position) &&
-                description.equals(that.description);
+
+        if (!startPeriod.equals(that.startPeriod) &&
+                !endPeriod.equals(that.endPeriod) &&
+                !position.equals(that.position)) {
+            return false;
+        }
+
+        if (description == null) {
+            return false;
+        } else {
+            return description.equals(that.description);
+        }
     }
 
     @Override

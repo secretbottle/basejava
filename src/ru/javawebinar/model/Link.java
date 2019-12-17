@@ -12,7 +12,6 @@ public class Link {
         this.urlAdr = urlAdr;
     }
 
-
     public String getTitle() {
         return title;
     }
@@ -31,7 +30,7 @@ public class Link {
             return false;
 
         if (urlAdr == null) {
-            return true;
+            return false;
         } else {
             return urlAdr.equals(link.urlAdr);
         }

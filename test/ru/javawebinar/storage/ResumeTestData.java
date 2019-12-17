@@ -14,26 +14,11 @@ public class ResumeTestData {
     public static void main(String[] args) {
         Resume RESUME = new Resume("Григорий Кислин");
 
-        // Раздел "Контакты"
-        List<Link> enterContacts = new ArrayList<>();
-        enterContacts.add(new Link("+7(921) 855-0482", "+7(921) 855-0482"));
-        enterContacts.add(new Link("grigory.kislin", "skype:grigory.kislin"));
-        enterContacts.add(new Link("gkislin@yandex.ru", "gkislin@yandex.ru"));
-        enterContacts.add(new Link("Профиль LinkedIn", "https://www.linkedin.com/in/gkislin"));
-        enterContacts.add(new Link("Профиль GitHub", "https://github.com/gkislin"));
-        enterContacts.add(new Link("Профиль Stackoverflow", "https://stackoverflow.com/users/548473"));
-        enterContacts.add(new Link("Домашняя страница", "http://gkislin.ru/"));
-
-        // Для Остальных секций
-        List<Section> enterSections = new ArrayList<>();
-
         // Раздел "Позиция"
         TextSection position = new TextSection("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям");
-        enterSections.add(position);
 
         // Раздел "Личные качества"
         TextSection personalDesc = new TextSection("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры.");
-        enterSections.add(personalDesc);
 
         // Раздел "Достижения"
         List<String> listAchievements = new ArrayList<>();
@@ -43,8 +28,6 @@ public class ResumeTestData {
 
         ListSection achievements = new ListSection(listAchievements);
 
-        enterSections.add(achievements);
-
         // Раздел "Квалификация"
         List<String> listQualification = new ArrayList<>();
         listQualification.add("JEE AS: GlassFish (v2.1, v3), OC4J, JBoss, Tomcat, Jetty, WebLogic, WSO2");
@@ -52,8 +35,6 @@ public class ResumeTestData {
         listQualification.add("DB: PostgreSQL(наследование, pgplsql, PL/Python), Redis (Jedis), H2, Oracle,");
 
         ListSection qualification = new ListSection(listQualification);
-
-        enterSections.add(qualification);
 
         // Раздел "Опыт работы"
         PeriodDescription javaops = new PeriodDescription(LocalDate.of(2013, 10, 1), LocalDate.now(), "Автор проекта.", "Создание, организация и проведение Java онлайн проектов и стажировок.");
@@ -73,8 +54,6 @@ public class ResumeTestData {
 
         PeriodSection experience = new PeriodSection(experienceMap);
 
-        enterSections.add(experience);
-
         // Раздел "Образование
         PeriodDescription Coursera = new PeriodDescription(LocalDate.of(2013, 3, 1), LocalDate.of(2016, 5, 1), "", "\"Functional Programming Principles in Scala\" by Martin Odersky");
         Link CourseraLink = new Link("Coursera", "https://www.coursera.org/course/progfun");
@@ -93,19 +72,24 @@ public class ResumeTestData {
         educationMap.put(itmoLink, secondEdu);
 
         PeriodSection education = new PeriodSection(educationMap);
-        enterSections.add(education);
 
         //Собираем в мапах
         Map<ContactType, String> contacts = RESUME.getContactMap();
-
-        for (int i = 0; i < ContactType.values().length; i++) {
-            contacts.put(ContactType.values()[i], enterContacts.get(i).getUrlAdr());
-        }
+        contacts.put(ContactType.PHONE,"+7(921) 855-0482");
+        contacts.put(ContactType.EMAIL,"skype:grigory.kislin");
+        contacts.put(ContactType.SKYPE,"gkislin@yandex.ru");
+        contacts.put(ContactType.LINKEDIN,"https://www.linkedin.com/in/gkislin");
+        contacts.put(ContactType.GITHUB,"https://github.com/gkislin");
+        contacts.put(ContactType.STACKOVERFLOW,"https://stackoverflow.com/users/548473");
+        contacts.put(ContactType.HOMEPAGE,"http://gkislin.ru/");
 
         Map<SectionType, Section> sections = RESUME.getSectionMap();
-        for (int i = 0; i < SectionType.values().length; i++) {
-            sections.put(SectionType.values()[i], enterSections.get(i));
-        }
+        sections.put(SectionType.OBJECTIVE, position);
+        sections.put(SectionType.PERSONAL,personalDesc);
+        sections.put(SectionType.ACHIEVEMENT,achievements);
+        sections.put(SectionType.QUALIFICATIONS,qualification);
+        sections.put(SectionType.EXPERIENCE,experience);
+        sections.put(SectionType.EDUCATION,education);
 
         //Выводим результат
         System.out.println(RESUME.getFullName());
