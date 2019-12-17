@@ -1,18 +1,18 @@
 package ru.javawebinar.model;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
-public class PeriodField implements Section {
-    private final HashMap<URL, ArrayList<PeriodDescription>> periodSections;
+public class PeriodSection implements Section {
+    private final Map<Link, List<PeriodDescription>> periodSections;
 
-    public PeriodField(HashMap<URL, ArrayList<PeriodDescription>> periodSections) {
+    public PeriodSection(Map<Link, List<PeriodDescription>> periodSections) {
         Objects.requireNonNull(periodSections, "Inputed parameter periodSections is null");
         this.periodSections = periodSections;
     }
 
-    public HashMap<URL, ArrayList<PeriodDescription>> getPeriodSections() {
+    public Map<Link, List<PeriodDescription>> getPeriodSections() {
         return periodSections;
     }
 
@@ -20,7 +20,7 @@ public class PeriodField implements Section {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        PeriodField that = (PeriodField) o;
+        PeriodSection that = (PeriodSection) o;
         return periodSections.equals(that.periodSections);
     }
 

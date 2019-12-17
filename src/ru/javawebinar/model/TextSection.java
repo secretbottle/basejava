@@ -2,10 +2,10 @@ package ru.javawebinar.model;
 
 import java.util.Objects;
 
-public class TextField implements Section {
+public class TextSection implements Section {
     private final String text;
 
-    public TextField(String text) {
+    public TextSection(String text) {
         Objects.requireNonNull(text, "Inputed parameter text is null");
         this.text = text;
     }
@@ -18,8 +18,8 @@ public class TextField implements Section {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        TextField textField = (TextField) o;
-        return text.equals(textField.text);
+        TextSection textSection = (TextSection) o;
+        return text.equals(textSection.text);
     }
 
     @Override

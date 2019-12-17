@@ -2,30 +2,39 @@ package ru.javawebinar.model;
 
 import java.util.Objects;
 
-public class URL {
+public class Link {
     private final String title;
     private final String urlAdr;
 
-    public URL(String title, String urlAdr) {
-        Objects.requireNonNull(title, "Inputed title startPeriod is null");
-        Objects.requireNonNull(urlAdr, "Inputed urlAdr startPeriod is null");
+    public Link(String title, String urlAdr) {
+        Objects.requireNonNull(title, "Inputed title is null");
         this.title = title;
         this.urlAdr = urlAdr;
     }
 
-    public URL(String title) {
-        Objects.requireNonNull(title, "Inputed title startPeriod is null");
-        this.title = title;
-        this.urlAdr = null;
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getUrlAdr() {
+        return urlAdr;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        URL url = (URL) o;
-        return title.equals(url.title) &&
-                urlAdr.equals(url.urlAdr);
+        Link link = (Link) o;
+
+        if(!title.equals(link.title))
+            return false;
+
+        if (urlAdr == null) {
+            return true;
+        } else {
+            return urlAdr.equals(link.urlAdr);
+        }
     }
 
     @Override
@@ -35,9 +44,10 @@ public class URL {
 
     @Override
     public String toString() {
-        return "URL{" +
+        return "Link{" +
                 "title='" + title + '\'' +
                 ", urlAdr='" + urlAdr + '\'' +
                 '}';
     }
+
 }

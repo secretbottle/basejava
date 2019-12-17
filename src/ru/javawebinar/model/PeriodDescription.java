@@ -8,25 +8,13 @@ public class PeriodDescription {
     private final LocalDate endPeriod;
     private final String position;
     private final String description;
-    public final String NOW = "Сейчас";
 
     public PeriodDescription(LocalDate startPeriod, LocalDate endPeriod, String position, String description) {
         Objects.requireNonNull(startPeriod, "Inputed parameter startPeriod is null");
         Objects.requireNonNull(endPeriod, "Inputed parameter endPeriod is null");
         Objects.requireNonNull(position, "Inputed parameter position is null");
-        Objects.requireNonNull(description, "Inputed parameter description is null");
         this.startPeriod = startPeriod;
         this.endPeriod = endPeriod;
-        this.position = position;
-        this.description = description;
-    }
-
-    public PeriodDescription(LocalDate startPeriod, String position, String description) {
-        Objects.requireNonNull(startPeriod, "Inputed parameter startPeriod is null");
-        Objects.requireNonNull(position, "Inputed parameter position is null");
-        Objects.requireNonNull(description, "Inputed parameter description is null");
-        this.startPeriod = startPeriod;
-        endPeriod = LocalDate.now();
         this.position = position;
         this.description = description;
     }
