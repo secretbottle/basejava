@@ -29,7 +29,7 @@ public class Link {
         if(!title.equals(link.title))
             return false;
 
-        if (urlAdr == null) {
+        if (Objects.equals(urlAdr, null)) {
             return false;
         } else {
             return urlAdr.equals(link.urlAdr);

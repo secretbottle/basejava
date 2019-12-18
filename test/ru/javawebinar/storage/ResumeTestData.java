@@ -55,17 +55,25 @@ public class ResumeTestData {
         PeriodSection experience = new PeriodSection(experienceMap);
 
         // Раздел "Образование
-        PeriodDescription Coursera = new PeriodDescription(LocalDate.of(2013, 3, 1), LocalDate.of(2016, 5, 1), "", "\"Functional Programming Principles in Scala\" by Martin Odersky");
+        PeriodDescription Coursera = new PeriodDescription(LocalDate.of(2013, 3, 1), LocalDate.of(2016, 5, 1), "\"Functional Programming Principles in Scala\" by Martin Odersky", null);
         Link CourseraLink = new Link("Coursera", "https://www.coursera.org/course/progfun");
         List<PeriodDescription> firstEdu = new ArrayList<>();
         firstEdu.add(Coursera);
 
-        PeriodDescription itmo1 = new PeriodDescription(LocalDate.of(1993, 9, 1), LocalDate.of(1996, 7, 1), "", "Аспирантура (программист С, С++)");
-        PeriodDescription itmo2 = new PeriodDescription(LocalDate.of(1987, 9, 1), LocalDate.of(1993, 7, 1), "", "Инженер (программист Fortran, C)");
+        PeriodDescription itmo1 = new PeriodDescription(LocalDate.of(1993, 9, 1), LocalDate.of(1996, 7, 1), "Аспирантура (программист С, С++)", null);
+        PeriodDescription itmo2 = new PeriodDescription(LocalDate.of(1987, 9, 1), LocalDate.of(1993, 7, 1), "Инженер (программист Fortran, C)", null);
         Link itmoLink = new Link("Санкт-Петербургский национальный исследовательский университет информационных технологий, механики и оптики", "http://www.ifmo.ru/");
         List<PeriodDescription> secondEdu = new ArrayList<>();
         secondEdu.add(itmo1);
         secondEdu.add(itmo2);
+
+        /*
+        System.out.println(itmo1.equals(itmo2));
+
+        PeriodDescription itmo3 = new PeriodDescription(LocalDate.of(1993, 9, 1), LocalDate.of(1996, 7, 1), "Аспирантура (программист С, С++)", "");
+        PeriodDescription itmo4 = new PeriodDescription(LocalDate.of(2019, 9, 1), LocalDate.of(2019, 12, 18), "Аспирантура (программист С, С++)", "");
+        System.out.println(itmo3.equals(itmo4));
+        */
 
         Map<Link, List<PeriodDescription>> educationMap = new HashMap<>();
         educationMap.put(CourseraLink, firstEdu);

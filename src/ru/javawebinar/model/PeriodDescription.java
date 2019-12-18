@@ -41,13 +41,13 @@ public class PeriodDescription {
         if (o == null || getClass() != o.getClass()) return false;
         PeriodDescription that = (PeriodDescription) o;
 
-        if (!startPeriod.equals(that.startPeriod) &&
-                !endPeriod.equals(that.endPeriod) &&
-                !position.equals(that.position)) {
+        if (!startPeriod.equals(that.startPeriod))
             return false;
-        }
-
-        if (description == null) {
+        if (!endPeriod.equals(that.endPeriod))
+            return false;
+        if (!position.equals(that.position))
+            return false;
+        if (Objects.equals(description, null)) {
             return false;
         } else {
             return description.equals(that.description);
