@@ -26,14 +26,7 @@ public class Link {
         if (o == null || getClass() != o.getClass()) return false;
         Link link = (Link) o;
 
-        if(!title.equals(link.title))
-            return false;
-
-        if (Objects.equals(urlAdr, null)) {
-            return false;
-        } else {
-            return urlAdr.equals(link.urlAdr);
-        }
+        return title.equals(link.title) && Objects.equals(urlAdr, link.urlAdr);
     }
 
     @Override
