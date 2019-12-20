@@ -11,46 +11,46 @@ import java.util.logging.Logger;
 public abstract class AbstractStorage<SK> implements Storage {
     private static final Logger LOG = Logger.getLogger(AbstractStorage.class.getName());
 
-    protected abstract void updateElement(SK index, Resume resume);
+    protected abstract void updateElement(SK searchKey, Resume resume);
 
-    protected abstract void saveElement(SK index, Resume resume);
+    protected abstract void saveElement(SK searchKey, Resume resume);
 
-    protected abstract Resume getElement(SK index);
+    protected abstract Resume getElement(SK searchKey);
 
-    protected abstract void deleteElement(SK index);
+    protected abstract void deleteElement(SK searchKey);
 
     protected abstract SK getSearchKey(String searchKey);
 
-    protected abstract boolean isExist(SK index);
+    protected abstract boolean isExist(SK searchKey);
 
     protected abstract List <Resume> getAsList();
 
     @Override
     public void update(Resume resume) {
         LOG.info("Resume" + resume);
-        SK index = getExistSearchKey(resume.getUuid());
-        updateElement(index, resume);
+        SK searchKey = getExistSearchKey(resume.getUuid());
+        updateElement(searchKey, resume);
     }
 
     @Override
     public void save(Resume resume) {
         LOG.info("save" + resume);
-        SK index = getNotExistSearchKey(resume.getUuid());
-        saveElement(index, resume);
+        SK searchKey = getNotExistSearchKey(resume.getUuid());
+        saveElement(searchKey, resume);
     }
 
     @Override
     public Resume get(String uuid) {
         LOG.info("get" + uuid);
-        SK index = getExistSearchKey(uuid);
-        return getElement(index);
+        SK searchKey = getExistSearchKey(uuid);
+        return getElement(searchKey);
     }
 
     @Override
     public void delete(String uuid) {
         LOG.info("delete" + uuid);
-        SK index = getExistSearchKey(uuid);
-        deleteElement(index);
+        SK searchKey = getExistSearchKey(uuid);
+        deleteElement(searchKey);
     }
 
     @Override

@@ -10,6 +10,16 @@ import java.util.List;
 import java.util.Map;
 
 public class ResumeTestData {
+    private final Resume RESUME;
+
+    public ResumeTestData() {
+        RESUME = new Resume(uuid, fullname);
+    }
+
+    public static void generateResume(String uuid, String fullname){
+
+    }
+
 
     public static void main(String[] args) {
         Resume RESUME = new Resume("Григорий Кислин");
@@ -109,7 +119,5 @@ public class ResumeTestData {
         for (SectionType type : SectionType.values()) {
             System.out.println(type.getTitle() + " : " + sections.get(type).toString());
         }
-
-
     }
 }
