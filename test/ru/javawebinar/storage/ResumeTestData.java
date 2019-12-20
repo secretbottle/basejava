@@ -10,14 +10,13 @@ import java.util.List;
 import java.util.Map;
 
 public class ResumeTestData {
-    private final Resume RESUME;
 
-    public ResumeTestData() {
-        RESUME = new Resume(uuid, fullname);
-    }
+    private ResumeTestData() {}
 
-    public static void generateResume(String uuid, String fullname){
+    public static Resume generateResume(String uuid, String fullname){
+        Resume RESUME = new Resume(uuid, fullname);
 
+        return RESUME;
     }
 
 
@@ -47,32 +46,30 @@ public class ResumeTestData {
         ListSection qualification = new ListSection(listQualification);
 
         // Раздел "Опыт работы"
-        PeriodDescription javaops = new PeriodDescription(LocalDate.of(2013, 10, 1), LocalDate.now(), "Автор проекта.", "Создание, организация и проведение Java онлайн проектов и стажировок.");
-        Link javaopsLink = new Link("Java Online Projects", "http://javaops.ru/");
+        List <PeriodDescription> experienceMap;
+        PeriodDescription javaops = new PeriodDescription("Java Online Projects", "http://javaops.ru/", LocalDate.of(2013, 10, 1), LocalDate.now(), "Автор проекта.", "Создание, организация и проведение Java онлайн проектов и стажировок.");
         List<PeriodDescription> firstJob = new ArrayList<>();
         firstJob.add(javaops);
 
-        PeriodDescription wrike = new PeriodDescription(LocalDate.of(2014, 10, 1), LocalDate.of(2016, 1, 1), "Старший разработчик (backend)", "Проектирование и разработка онлайн платформы управления проектами Wrike (Java 8 API, Maven, Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO.");
-        Link wrikeLink = new Link("Wrike", "https://www.wrike.com/");
+        PeriodDescription wrike = new PeriodDescription("Wrike", "https://www.wrike.com/", LocalDate.of(2014, 10, 1), LocalDate.of(2016, 1, 1), "Старший разработчик (backend)", "Проектирование и разработка онлайн платформы управления проектами Wrike (Java 8 API, Maven, Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO.");
         List<PeriodDescription> secondJob = new ArrayList<>();
         secondJob.add(wrike);
 
-        Map<Link, List<PeriodDescription>> experienceMap = new HashMap<>();
-        experienceMap.put(javaopsLink, firstJob);
-        experienceMap.put(wrikeLink, secondJob);
+        List<PeriodDescription> experienceMap = new HashMap<>();
+        experienceMap.add(firstJob);
+        experienceMap.add(secondJob);
 
 
         PeriodSection experience = new PeriodSection(experienceMap);
 
         // Раздел "Образование
-        PeriodDescription Coursera = new PeriodDescription(LocalDate.of(2013, 3, 1), LocalDate.of(2016, 5, 1), "\"Functional Programming Principles in Scala\" by Martin Odersky", null);
-        Link CourseraLink = new Link("Coursera", "https://www.coursera.org/course/progfun");
+        PeriodDescription Coursera = new PeriodDescription("Coursera", "https://www.coursera.org/course/progfun", LocalDate.of(2013, 3, 1), LocalDate.of(2016, 5, 1), "\"Functional Programming Principles in Scala\" by Martin Odersky", null);
+
         List<PeriodDescription> firstEdu = new ArrayList<>();
         firstEdu.add(Coursera);
 
-        PeriodDescription itmo1 = new PeriodDescription(LocalDate.of(1993, 9, 1), LocalDate.of(1996, 7, 1), "Аспирантура (программист С, С++)", null);
-        PeriodDescription itmo2 = new PeriodDescription(LocalDate.of(1987, 9, 1), LocalDate.of(1993, 7, 1), "Инженер (программист Fortran, C)", null);
-        Link itmoLink = new Link("Санкт-Петербургский национальный исследовательский университет информационных технологий, механики и оптики", "http://www.ifmo.ru/");
+        PeriodDescription itmo1 = new PeriodDescription("Санкт-Петербургский национальный исследовательский университет информационных технологий, механики и оптики", "http://www.ifmo.ru/"LocalDate.of(1993, 9, 1), LocalDate.of(1996, 7, 1), "Аспирантура (программист С, С++)", null);
+        PeriodDescription itmo2 = new PeriodDescription("Санкт-Петербургский национальный исследовательский университет информационных технологий, механики и оптики", "http://www.ifmo.ru/"LocalDate.of(1987, 9, 1), LocalDate.of(1993, 7, 1), "Инженер (программист Fortran, C)", null);
         List<PeriodDescription> secondEdu = new ArrayList<>();
         secondEdu.add(itmo1);
         secondEdu.add(itmo2);
