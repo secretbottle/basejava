@@ -1,8 +1,8 @@
 package ru.javawebinar.storage;
 
-import ru.javawebinar.model.SectionType;
 import ru.javawebinar.model.*;
 
+import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,76 +11,81 @@ import java.util.Map;
 
 public class ResumeTestData {
 
-    private ResumeTestData() {}
-
-    public static Resume generateResume(String uuid, String fullname){
-        Resume RESUME = new Resume(uuid, fullname);
-
-        return RESUME;
+    private ResumeTestData() {
     }
 
-
     public static void main(String[] args) {
-        Resume RESUME = new Resume("Григорий Кислин");
+        printResume(generateResume("uuid1", "FULLNAME1"));
+
+    }
+
+    public static Resume generateResume(String uuid, String fullname) {
+        Resume resume = new Resume(uuid, fullname);
+        //Контакты
+        resume.putContactMap(ContactType.PHONE, "+7(921) 855-0482");
+        resume.putContactMap(ContactType.EMAIL, "skype:grigory.kislin" + generateRandomString(3));
+        resume.putContactMap(ContactType.SKYPE, "gkislin@yandex.ru");
+        resume.putContactMap(ContactType.LINKEDIN, "https://www.linkedin.com/in/gkislin" + generateRandomString(3));
+        resume.putContactMap(ContactType.GITHUB, "https://github.com/gkislin" + generateRandomString(3));
+        resume.putContactMap(ContactType.STACKOVERFLOW, "https://stackoverflow.com/users/548473" + generateRandomString(3));
+        resume.putContactMap(ContactType.HOMEPAGE, "http://gkislin.ru/");
 
         // Раздел "Позиция"
-        TextSection position = new TextSection("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям");
+        TextSection position = new TextSection("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям" + generateRandomString(10));
+        resume.putSectionMap(SectionType.OBJECTIVE, position);
 
         // Раздел "Личные качества"
-        TextSection personalDesc = new TextSection("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры.");
+        TextSection personalDesc = new TextSection("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры." + generateRandomString(10));
+        resume.putSectionMap(SectionType.PERSONAL, personalDesc);
 
         // Раздел "Достижения"
         List<String> listAchievements = new ArrayList<>();
-        listAchievements.add("С 2013 года: разработка проектов \"Разработка Web приложения\",\"Java Enterprise\", \"Многомодульный maven. Многопоточность. XML (JAXB/StAX). Веб сервисы (JAX-RS/SOAP). Удаленное взаимодействие (JMS/AKKA)\". Организация онлайн стажировок и ведение проектов. Более 1000 выпускников.");
-        listAchievements.add("Реализация двухфакторной аутентификации для онлайн платформы управления проектами Wrike. Интеграция с Twilio, DuoSecurity, Google Authenticator, Jira, Zendesk.");
-        listAchievements.add("Налаживание процесса разработки и непрерывной интеграции ERP системы River BPM. Интеграция с 1С, Bonita BPM, CMIS, LDAP. Разработка приложения управления окружением на стеке: Scala/Play/Anorm/JQuery. Разработка SSO аутентификации и авторизации различных ERP модулей, интеграция CIFS/SMB java сервера.");
+        listAchievements.add("С 2013 года: разработка проектов \"Разработка Web приложения\",\"Java Enterprise\", \"Многомодульный maven. Многопоточность. XML (JAXB/StAX). Веб сервисы (JAX-RS/SOAP). Удаленное взаимодействие (JMS/AKKA)\". Организация онлайн стажировок и ведение проектов. Более 1000 выпускников." + generateRandomString(10));
+        listAchievements.add("Реализация двухфакторной аутентификации для онлайн платформы управления проектами Wrike. Интеграция с Twilio, DuoSecurity, Google Authenticator, Jira, Zendesk." + generateRandomString(20));
+        listAchievements.add("Налаживание процесса разработки и непрерывной интеграции ERP системы River BPM. Интеграция с 1С, Bonita BPM, CMIS, LDAP. Разработка приложения управления окружением на стеке: Scala/Play/Anorm/JQuery. Разработка SSO аутентификации и авторизации различных ERP модулей, интеграция CIFS/SMB java сервера." + generateRandomString(20));
 
         ListSection achievements = new ListSection(listAchievements);
+        resume.putSectionMap(SectionType.ACHIEVEMENT, achievements);
 
         // Раздел "Квалификация"
         List<String> listQualification = new ArrayList<>();
-        listQualification.add("JEE AS: GlassFish (v2.1, v3), OC4J, JBoss, Tomcat, Jetty, WebLogic, WSO2");
-        listQualification.add("Version control: Subversion, Git, Mercury, ClearCase, Perforce");
-        listQualification.add("DB: PostgreSQL(наследование, pgplsql, PL/Python), Redis (Jedis), H2, Oracle,");
+        listQualification.add("JEE AS: GlassFish (v2.1, v3), OC4J, JBoss, Tomcat, Jetty, WebLogic, WSO2 " + generateRandomString(20));
+        listQualification.add("Version control: Subversion, Git, Mercury, ClearCase, Perforce, " + generateRandomString(20));
+        listQualification.add("DB: PostgreSQL(наследование, pgplsql, PL/Python), Redis (Jedis), H2, Oracle," + generateRandomString(20));
 
         ListSection qualification = new ListSection(listQualification);
+        resume.putSectionMap(SectionType.QUALIFICATIONS, qualification);
 
         // Раздел "Опыт работы"
-        List <PeriodDescription> experienceMap;
-        PeriodDescription javaops = new PeriodDescription("Java Online Projects", "http://javaops.ru/", LocalDate.of(2013, 10, 1), LocalDate.now(), "Автор проекта.", "Создание, организация и проведение Java онлайн проектов и стажировок.");
+        PeriodDescription javaops = new PeriodDescription(createRandomDate(1999, 2019), LocalDate.now(), "Автор проекта.", "Создание, организация и проведение Java онлайн проектов и стажировок.");
+        Link javaopsLink = new Link(generateRandomString(20), "http://javaops.ru/");
         List<PeriodDescription> firstJob = new ArrayList<>();
         firstJob.add(javaops);
 
-        PeriodDescription wrike = new PeriodDescription("Wrike", "https://www.wrike.com/", LocalDate.of(2014, 10, 1), LocalDate.of(2016, 1, 1), "Старший разработчик (backend)", "Проектирование и разработка онлайн платформы управления проектами Wrike (Java 8 API, Maven, Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO.");
+        PeriodDescription wrike = new PeriodDescription(createRandomDate(1999, 2019), LocalDate.of(2016, 1, 1), "Старший разработчик (backend)", "Проектирование и разработка онлайн платформы управления проектами Wrike (Java 8 API, Maven, Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO.");
+        Link wrikeLink = new Link(generateRandomString(20), "https://www.wrike.com/");
         List<PeriodDescription> secondJob = new ArrayList<>();
         secondJob.add(wrike);
 
-        List<PeriodDescription> experienceMap = new HashMap<>();
-        experienceMap.add(firstJob);
-        experienceMap.add(secondJob);
-
+        Map<Link, List<PeriodDescription>> experienceMap = new HashMap<>();
+        experienceMap.put(javaopsLink, firstJob);
+        experienceMap.put(wrikeLink, secondJob);
 
         PeriodSection experience = new PeriodSection(experienceMap);
+        resume.putSectionMap(SectionType.EXPERIENCE, experience);
 
         // Раздел "Образование
-        PeriodDescription Coursera = new PeriodDescription("Coursera", "https://www.coursera.org/course/progfun", LocalDate.of(2013, 3, 1), LocalDate.of(2016, 5, 1), "\"Functional Programming Principles in Scala\" by Martin Odersky", null);
-
+        PeriodDescription Coursera = new PeriodDescription(createRandomDate(1999, 2019), createRandomDate(1999, 2019), "\"Functional Programming Principles in Scala\" by Martin Odersky", null);
+        Link CourseraLink = new Link(generateRandomString(20), "https://www.coursera.org/course/progfun");
         List<PeriodDescription> firstEdu = new ArrayList<>();
         firstEdu.add(Coursera);
 
-        PeriodDescription itmo1 = new PeriodDescription("Санкт-Петербургский национальный исследовательский университет информационных технологий, механики и оптики", "http://www.ifmo.ru/"LocalDate.of(1993, 9, 1), LocalDate.of(1996, 7, 1), "Аспирантура (программист С, С++)", null);
-        PeriodDescription itmo2 = new PeriodDescription("Санкт-Петербургский национальный исследовательский университет информационных технологий, механики и оптики", "http://www.ifmo.ru/"LocalDate.of(1987, 9, 1), LocalDate.of(1993, 7, 1), "Инженер (программист Fortran, C)", null);
+        PeriodDescription itmo1 = new PeriodDescription(createRandomDate(1999, 2019), createRandomDate(1999, 2019), "Аспирантура (программист С, С++)", null);
+        PeriodDescription itmo2 = new PeriodDescription(createRandomDate(1999, 2019), createRandomDate(1999, 2019), "Инженер (программист Fortran, C)", null);
+        Link itmoLink = new Link(generateRandomString(20), "http://www.ifmo.ru/");
         List<PeriodDescription> secondEdu = new ArrayList<>();
         secondEdu.add(itmo1);
         secondEdu.add(itmo2);
-
-        /*
-        System.out.println(itmo1.equals(itmo2));
-
-        PeriodDescription itmo3 = new PeriodDescription(LocalDate.of(1993, 9, 1), LocalDate.of(1996, 7, 1), "Аспирантура (программист С, С++)", "");
-        PeriodDescription itmo4 = new PeriodDescription(LocalDate.of(2019, 9, 1), LocalDate.of(2019, 12, 18), "Аспирантура (программист С, С++)", "");
-        System.out.println(itmo3.equals(itmo4));
-        */
 
         Map<Link, List<PeriodDescription>> educationMap = new HashMap<>();
         educationMap.put(CourseraLink, firstEdu);
@@ -88,26 +93,47 @@ public class ResumeTestData {
 
         PeriodSection education = new PeriodSection(educationMap);
 
-        //Собираем в мапах
-        Map<ContactType, String> contacts = RESUME.getContactMap();
-        contacts.put(ContactType.PHONE,"+7(921) 855-0482");
-        contacts.put(ContactType.EMAIL,"skype:grigory.kislin");
-        contacts.put(ContactType.SKYPE,"gkislin@yandex.ru");
-        contacts.put(ContactType.LINKEDIN,"https://www.linkedin.com/in/gkislin");
-        contacts.put(ContactType.GITHUB,"https://github.com/gkislin");
-        contacts.put(ContactType.STACKOVERFLOW,"https://stackoverflow.com/users/548473");
-        contacts.put(ContactType.HOMEPAGE,"http://gkislin.ru/");
+        resume.putSectionMap(SectionType.EDUCATION, education);
 
-        Map<SectionType, Section> sections = RESUME.getSectionMap();
-        sections.put(SectionType.OBJECTIVE, position);
-        sections.put(SectionType.PERSONAL,personalDesc);
-        sections.put(SectionType.ACHIEVEMENT,achievements);
-        sections.put(SectionType.QUALIFICATIONS,qualification);
-        sections.put(SectionType.EXPERIENCE,experience);
-        sections.put(SectionType.EDUCATION,education);
+        return resume;
+    }
+
+    //Random generator for String
+    private static String generateRandomString(int length) {
+        SecureRandom random = new SecureRandom();
+        if (length < 1) throw new IllegalArgumentException();
+
+        StringBuilder strB = new StringBuilder(length);
+        for (int i = 0; i < length; i++) {
+
+            int rndCharAt = random.nextInt("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMN0123456789".length());
+            char rndChar = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMN0123456789".charAt(rndCharAt);
+
+            strB.append(rndChar);
+
+        }
+        return strB.toString();
+    }
+
+    //Random Generator for LocalDates
+    private static int createRandomIntBetween(int start, int end) {
+        return start + (int) Math.round(Math.random() * (end - start));
+    }
+
+    //Random Generator for LocalDates
+    private static LocalDate createRandomDate(int startYear, int endYear) {
+        int day = createRandomIntBetween(1, 28);
+        int month = createRandomIntBetween(1, 12);
+        int year = createRandomIntBetween(startYear, endYear);
+        return LocalDate.of(year, month, day);
+    }
+
+    private static void printResume(Resume resume) {
+        Map<ContactType, String> contacts = resume.getContactMap();
+        Map<SectionType, Section> sections = resume.getSectionMap();
 
         //Выводим результат
-        System.out.println(RESUME.getFullName());
+        System.out.println(resume.getFullName());
 
         for (ContactType type : ContactType.values()) {
             System.out.println(type.getTitle() + " : " + contacts.get(type).toString());
@@ -117,4 +143,5 @@ public class ResumeTestData {
             System.out.println(type.getTitle() + " : " + sections.get(type).toString());
         }
     }
+
 }

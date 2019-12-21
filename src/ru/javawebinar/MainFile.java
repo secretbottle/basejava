@@ -12,19 +12,14 @@ public class MainFile {
     }
 
     private static void outputFileName(File[] arr) {
-        String dir = "";
         for (File f : arr) {
             if (f.isDirectory()) {
+                System.out.println(f.getPath());
                 outputFileName(Objects.requireNonNull(f.listFiles(), "Array is null"));
-                continue;
             }
 
-            if (!dir.equals(f.getParent())) {
-                dir = f.getParent();
-                System.out.println(dir);
-            }
-
-            System.out.println(f.getName());
+            if (f.isFile())
+                System.out.println(f.getName());
         }
     }
 }

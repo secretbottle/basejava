@@ -41,6 +41,14 @@ public class Resume implements Comparable<Resume> {
         return sectionMap;
     }
 
+    public void putContactMap(ContactType contactType, String field) {
+        contactMap.put(contactType, field);
+    }
+
+    public void putSectionMap(SectionType sectionType, Section section) {
+        sectionMap.put(sectionType, section);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
