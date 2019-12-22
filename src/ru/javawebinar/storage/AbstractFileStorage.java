@@ -40,9 +40,9 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     protected void saveElement(File file, Resume resume) {
         try {
             file.createNewFile();
-            doWrite(file, resume);
+            updateElement(file, resume);
         } catch (IOException e) {
-            throw new StorageException("IOError at create or write operation:", file.getName(), e);
+            throw new StorageException("IOError at create operation:", file.getName(), e);
         }
     }
 
@@ -53,7 +53,6 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         } catch (IOException e) {
             throw new StorageException("IOError at read operation: ", file.getName(), e);
         }
-
     }
 
     @Override
@@ -78,11 +77,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         List<Resume> resumeList = new ArrayList<>();
 
         for (File file : fileList) {
-            try {
-                resumeList.add(doRead(file));
-            } catch (IOException e) {
-                throw new StorageException("IOError at read operation: ", file.getName(), e);
-            }
+            resumeList.add(getElement(file));
         }
 
         return resumeList;
@@ -98,8 +93,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     public int size() {
-        File[] fileList = getFileList();
-        return fileList.length;
+        return getFileList().length;
     }
 
     private File[] getFileList() {

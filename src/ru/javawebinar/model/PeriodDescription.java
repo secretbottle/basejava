@@ -1,38 +1,25 @@
 package ru.javawebinar.model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class PeriodDescription {
-    private final LocalDate startPeriod;
-    private final LocalDate endPeriod;
-    private final String position;
-    private final String description;
+    private final Link link;
+    private List<Description> descriptions = new ArrayList<>();
 
-    public PeriodDescription(LocalDate startPeriod, LocalDate endPeriod, String position, String description) {
-        Objects.requireNonNull(startPeriod, "Inputed parameter startPeriod is null");
-        Objects.requireNonNull(endPeriod, "Inputed parameter endPeriod is null");
-        Objects.requireNonNull(position, "Inputed parameter position is null");
-        this.startPeriod = startPeriod;
-        this.endPeriod = endPeriod;
-        this.position = position;
-        this.description = description;
+    public PeriodDescription(Link link, List<Description> descriptions) {
+        this.link = link;
+        this.descriptions = descriptions;
     }
 
-    public LocalDate getStartPeriod() {
-        return startPeriod;
+    public Link getLink() {
+        return link;
     }
 
-    public LocalDate getEndPeriod() {
-        return endPeriod;
-    }
-
-    public String getPosition() {
-        return position;
-    }
-
-    public String getDescription() {
-        return description;
+    public List<Description> getDescriptions() {
+        return descriptions;
     }
 
     @Override
@@ -56,5 +43,6 @@ public class PeriodDescription {
     public String toString() {
         return startPeriod + " - " + endPeriod + " " + position + " : " + description;
     }
+
 }
 

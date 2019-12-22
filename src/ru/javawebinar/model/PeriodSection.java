@@ -1,18 +1,17 @@
 package ru.javawebinar.model;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 public class PeriodSection implements Section {
-    private final Map<Link, List<PeriodDescription>> periodSections;
+    private final List<PeriodDescription> periodSections;
 
-    public PeriodSection(Map<Link, List<PeriodDescription>> periodSections) {
+    public PeriodSection(List<PeriodDescription> periodSections) {
         Objects.requireNonNull(periodSections, "Inputed parameter periodSections is null");
         this.periodSections = periodSections;
     }
 
-    public Map<Link, List<PeriodDescription>> getPeriodSections() {
+    public List<PeriodDescription> getPeriodSections() {
         return periodSections;
     }
 

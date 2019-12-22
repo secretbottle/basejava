@@ -8,15 +8,14 @@ public class MainFile {
     public static void main(String[] args) {
         String ROOT = "./src/ru/javawebinar";
         File dir = new File(ROOT);
-        outputFileName(Objects.requireNonNull(dir.listFiles(), "Array is null"));
+        outputFileName(dir.listFiles());
     }
 
     private static void outputFileName(File[] arr) {
+        Objects.requireNonNull(arr, "Array is null");
         for (File f : arr) {
-            if (f.isDirectory()) {
-                System.out.println(f.getPath());
+            if (f.isDirectory())
                 outputFileName(Objects.requireNonNull(f.listFiles(), "Array is null"));
-            }
 
             if (f.isFile())
                 System.out.println(f.getName());
