@@ -5,7 +5,6 @@ import ru.javawebinar.model.*;
 import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -57,41 +56,48 @@ public class ResumeTestData {
         resume.putSectionMap(SectionType.QUALIFICATIONS, qualification);
 
         // Раздел "Опыт работы"
-        PeriodDescription javaops = new PeriodDescription(createRandomDate(1999, 2019), LocalDate.now(), "Автор проекта.", "Создание, организация и проведение Java онлайн проектов и стажировок.");
+        List <Organization> organizationExpList = new ArrayList<>();
+        // Первая работа
+        OrganizationDescription javaops = new OrganizationDescription(createRandomDate(1999, 2019), LocalDate.now(), "Автор проекта.", "Создание, организация и проведение Java онлайн проектов и стажировок.");
         Link javaopsLink = new Link(generateRandomString(20), "http://javaops.ru/");
-        List<PeriodDescription> firstJob = new ArrayList<>();
+        List<OrganizationDescription> firstJob = new ArrayList<>();
         firstJob.add(javaops);
-
-        PeriodDescription wrike = new PeriodDescription(createRandomDate(1999, 2019), LocalDate.of(2016, 1, 1), "Старший разработчик (backend)", "Проектирование и разработка онлайн платформы управления проектами Wrike (Java 8 API, Maven, Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO.");
+        Organization firstOrganization = new Organization(javaopsLink, firstJob);
+        organizationExpList.add(firstOrganization);
+        // Вторая работа
+        OrganizationDescription wrike = new OrganizationDescription(createRandomDate(1999, 2019), LocalDate.of(2016, 1, 1), "Старший разработчик (backend)", "Проектирование и разработка онлайн платформы управления проектами Wrike (Java 8 API, Maven, Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO.");
         Link wrikeLink = new Link(generateRandomString(20), "https://www.wrike.com/");
-        List<PeriodDescription> secondJob = new ArrayList<>();
+        List<OrganizationDescription> secondJob = new ArrayList<>();
         secondJob.add(wrike);
+        Organization secondOrganization = new Organization(wrikeLink, secondJob);
+        organizationExpList.add(secondOrganization);
 
-        Map<Link, List<PeriodDescription>> experienceMap = new HashMap<>();
-        experienceMap.put(javaopsLink, firstJob);
-        experienceMap.put(wrikeLink, secondJob);
+        PeriodSection experienceSection = new PeriodSection(organizationExpList);
 
-        PeriodSection experience = new PeriodSection(experienceMap);
-        resume.putSectionMap(SectionType.EXPERIENCE, experience);
+        resume.putSectionMap(SectionType.EXPERIENCE, experienceSection);
 
         // Раздел "Образование
-        PeriodDescription Coursera = new PeriodDescription(createRandomDate(1999, 2019), createRandomDate(1999, 2019), "\"Functional Programming Principles in Scala\" by Martin Odersky", null);
+        List <Organization> educationExpList = new ArrayList<>();
+        // Первое место
+        OrganizationDescription Coursera = new OrganizationDescription(createRandomDate(1999, 2019), createRandomDate(1999, 2019), "\"Functional Programming Principles in Scala\" by Martin Odersky", null);
         Link CourseraLink = new Link(generateRandomString(20), "https://www.coursera.org/course/progfun");
-        List<PeriodDescription> firstEdu = new ArrayList<>();
+        List<OrganizationDescription> firstEdu = new ArrayList<>();
         firstEdu.add(Coursera);
+        Organization firstEducation = new Organization(CourseraLink, firstEdu);
 
-        PeriodDescription itmo1 = new PeriodDescription(createRandomDate(1999, 2019), createRandomDate(1999, 2019), "Аспирантура (программист С, С++)", null);
-        PeriodDescription itmo2 = new PeriodDescription(createRandomDate(1999, 2019), createRandomDate(1999, 2019), "Инженер (программист Fortran, C)", null);
+        educationExpList.add(firstEducation);
+        // Второе место
+        OrganizationDescription itmo1 = new OrganizationDescription(createRandomDate(1999, 2019), createRandomDate(1999, 2019), "Аспирантура (программист С, С++)", null);
+        OrganizationDescription itmo2 = new OrganizationDescription(createRandomDate(1999, 2019), createRandomDate(1999, 2019), "Инженер (программист Fortran, C)", null);
         Link itmoLink = new Link(generateRandomString(20), "http://www.ifmo.ru/");
-        List<PeriodDescription> secondEdu = new ArrayList<>();
+        List<OrganizationDescription> secondEdu = new ArrayList<>();
         secondEdu.add(itmo1);
         secondEdu.add(itmo2);
+        Organization secondEducation = new Organization(itmoLink, secondEdu);
 
-        Map<Link, List<PeriodDescription>> educationMap = new HashMap<>();
-        educationMap.put(CourseraLink, firstEdu);
-        educationMap.put(itmoLink, secondEdu);
+        educationExpList.add(secondEducation);
 
-        PeriodSection education = new PeriodSection(educationMap);
+        PeriodSection education = new PeriodSection(educationExpList);
 
         resume.putSectionMap(SectionType.EDUCATION, education);
 

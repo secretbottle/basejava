@@ -4,14 +4,14 @@ import java.util.List;
 import java.util.Objects;
 
 public class PeriodSection implements Section {
-    private final List<PeriodDescription> periodSections;
+    private final List<Organization> periodSections;
 
-    public PeriodSection(List<PeriodDescription> periodSections) {
+    public PeriodSection(List<Organization> periodSections) {
         Objects.requireNonNull(periodSections, "Inputed parameter periodSections is null");
         this.periodSections = periodSections;
     }
 
-    public List<PeriodDescription> getPeriodSections() {
+    public List<Organization> getPeriodSections() {
         return periodSections;
     }
 
