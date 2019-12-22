@@ -72,7 +72,7 @@ public class ResumeTestData {
         Organization secondOrganization = new Organization(wrikeLink, secondJob);
         organizationExpList.add(secondOrganization);
 
-        PeriodSection experienceSection = new PeriodSection(organizationExpList);
+        OrganizationsSection experienceSection = new OrganizationsSection(organizationExpList);
 
         resume.putSectionMap(SectionType.EXPERIENCE, experienceSection);
 
@@ -97,7 +97,7 @@ public class ResumeTestData {
 
         educationExpList.add(secondEducation);
 
-        PeriodSection education = new PeriodSection(educationExpList);
+        OrganizationsSection education = new OrganizationsSection(educationExpList);
 
         resume.putSectionMap(SectionType.EDUCATION, education);
 

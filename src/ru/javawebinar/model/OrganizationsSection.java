@@ -3,10 +3,10 @@ package ru.javawebinar.model;
 import java.util.List;
 import java.util.Objects;
 
-public class PeriodSection implements Section {
+public class OrganizationsSection implements Section {
     private final List<Organization> periodSections;
 
-    public PeriodSection(List<Organization> periodSections) {
+    public OrganizationsSection(List<Organization> periodSections) {
         Objects.requireNonNull(periodSections, "Inputed parameter periodSections is null");
         this.periodSections = periodSections;
     }
@@ -19,7 +19,7 @@ public class PeriodSection implements Section {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        PeriodSection that = (PeriodSection) o;
+        OrganizationsSection that = (OrganizationsSection) o;
         return periodSections.equals(that.periodSections);
     }
 
