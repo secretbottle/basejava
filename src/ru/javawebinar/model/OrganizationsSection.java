@@ -4,15 +4,15 @@ import java.util.List;
 import java.util.Objects;
 
 public class OrganizationsSection implements Section {
-    private final List<Organization> periodSections;
+    private final List<Organization> organizations;
 
-    public OrganizationsSection(List<Organization> periodSections) {
-        Objects.requireNonNull(periodSections, "Inputed parameter periodSections is null");
-        this.periodSections = periodSections;
+    public OrganizationsSection(List<Organization> organizations) {
+        Objects.requireNonNull(organizations, "Inputed parameter organizations is null");
+        this.organizations = organizations;
     }
 
-    public List<Organization> getPeriodSections() {
-        return periodSections;
+    public List<Organization> getOrganizations() {
+        return organizations;
     }
 
     @Override
@@ -20,16 +20,16 @@ public class OrganizationsSection implements Section {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         OrganizationsSection that = (OrganizationsSection) o;
-        return periodSections.equals(that.periodSections);
+        return organizations.equals(that.organizations);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(periodSections);
+        return Objects.hash(organizations);
     }
 
     @Override
     public String toString() {
-        return periodSections.toString();
+        return organizations.toString();
     }
 }

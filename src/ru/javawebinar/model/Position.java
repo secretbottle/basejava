@@ -3,13 +3,13 @@ package ru.javawebinar.model;
 import java.time.LocalDate;
 import java.util.Objects;
 
-public class OrganizationDescription {
+public class Position {
     private final LocalDate startPeriod;
     private final LocalDate endPeriod;
     private final String position;
     private final String description;
 
-    public OrganizationDescription(LocalDate startPeriod, LocalDate endPeriod, String position, String description) {
+    public Position(LocalDate startPeriod, LocalDate endPeriod, String position, String description) {
         Objects.requireNonNull(startPeriod, "Inputed parameter startPeriod is null");
         Objects.requireNonNull(endPeriod, "Inputed parameter endPeriod is null");
         Objects.requireNonNull(position, "Inputed parameter position is null");
@@ -39,7 +39,7 @@ public class OrganizationDescription {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        OrganizationDescription that = (OrganizationDescription) o;
+        Position that = (Position) o;
 
         return startPeriod.equals(that.startPeriod) &&
                 endPeriod.equals(that.endPeriod) &&

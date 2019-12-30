@@ -5,19 +5,19 @@ import java.util.Objects;
 
 public class Organization {
     private final Link link;
-    private final List<OrganizationDescription> organizationDescriptions;
+    private final List<Position> positions;
 
-    public Organization(Link link, List<OrganizationDescription> organizationDescriptions) {
+    public Organization(Link link, List<Position> positions) {
         this.link = link;
-        this.organizationDescriptions = organizationDescriptions;
+        this.positions = positions;
     }
 
     public Link getLink() {
         return link;
     }
 
-    public List<OrganizationDescription> getOrganizationDescriptions() {
-        return organizationDescriptions;
+    public List<Position> getPositions() {
+        return positions;
     }
 
     @Override
@@ -27,19 +27,19 @@ public class Organization {
         Organization that = (Organization) o;
 
         return link.equals(that.link) &&
-                organizationDescriptions.equals(that.organizationDescriptions);
+                positions.equals(that.positions);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(link, organizationDescriptions);
+        return Objects.hash(link, positions);
     }
 
     @Override
     public String toString() {
         return "Organization{" +
                 "link=" + link.toString() +
-                ", organizationDescriptions=" + organizationDescriptions +
+                ", positions=" + positions +
                 '}';
     }
 }
