@@ -1,4 +1,6 @@
 package ru.javawebinar.model;
 
-public interface Section {
+import java.io.Serializable;
+
+public interface Section extends Serializable {
 }

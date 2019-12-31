@@ -3,8 +3,7 @@ package ru.javawebinar.storage;
 import ru.javawebinar.exception.StorageException;
 import ru.javawebinar.model.Resume;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -13,26 +12,26 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     private File directory;
 
     protected AbstractFileStorage(File directory) {
-        Objects.requireNonNull(directory, "Parameter directory is null");
+        Objects.requireNonNull(directory, " directory must not be null");
         if (!directory.isDirectory()) {
-            throw new IllegalArgumentException(directory.getAbsolutePath() + "is not directory");
+            throw new IllegalArgumentException(directory.getAbsolutePath() + " is not directory");
         }
         if (!directory.canRead() || !directory.canWrite()) {
-            throw new IllegalArgumentException(directory.getAbsolutePath() + "is not readable or writable");
+            throw new IllegalArgumentException(directory.getAbsolutePath() + " is not readable or writable");
         }
         this.directory = directory;
     }
 
-    protected abstract void doWrite(File file, Resume resume) throws IOException;
+    protected abstract void doWrite(OutputStream os, Resume resume) throws IOException;
 
-    protected abstract Resume doRead(File file) throws IOException;
+    protected abstract Resume doRead(InputStream is) throws IOException;
 
     @Override
     protected void updateElement(File file, Resume resume) {
         try {
-            doWrite(file, resume);
+            doWrite(new BufferedOutputStream(new FileOutputStream(file)), resume);
         } catch (IOException e) {
-            throw new StorageException("IOError at write operation:", file.getName(), e);
+            throw new StorageException("IOError at write operation: ", resume.getUuid(), e);
         }
     }
 
@@ -40,16 +39,17 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     protected void saveElement(File file, Resume resume) {
         try {
             file.createNewFile();
-            updateElement(file, resume);
         } catch (IOException e) {
-            throw new StorageException("IOError at create operation:", file.getName(), e);
+            e.printStackTrace();
+            throw new StorageException("IOError Couldn't create file " + file.getAbsolutePath(), file.getName(), e);
         }
+        updateElement(file, resume);
     }
 
     @Override
     protected Resume getElement(File file) {
         try {
-            return doRead(file);
+            return doRead(new BufferedInputStream(new FileInputStream(file)));
         } catch (IOException e) {
             throw new StorageException("IOError at read operation: ", file.getName(), e);
         }

@@ -30,8 +30,8 @@ public class ResumeTestData {
         resume.putContactMap(ContactType.HOMEPAGE, "http://gkislin.ru/");
 
         // Раздел "Позиция"
-        TextSection position = new TextSection("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям" + generateRandomString(10));
-        resume.putSectionMap(SectionType.OBJECTIVE, position);
+        TextSection Position = new TextSection("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям" + generateRandomString(10));
+        resume.putSectionMap(SectionType.OBJECTIVE, Position);
 
         // Раздел "Личные качества"
         TextSection personalDesc = new TextSection("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры." + generateRandomString(10));
@@ -58,16 +58,16 @@ public class ResumeTestData {
         // Раздел "Опыт работы"
         List <Organization> organizationExpList = new ArrayList<>();
         // Первая работа
-        Position javaops = new Position(createRandomDate(1999, 2019), LocalDate.now(), "Автор проекта.", "Создание, организация и проведение Java онлайн проектов и стажировок.");
+        Organization.Position javaops = new Organization.Position(createRandomDate(1999, 2019), LocalDate.now(), "Автор проекта.", "Создание, организация и проведение Java онлайн проектов и стажировок.");
         Link javaopsLink = new Link(generateRandomString(20), "http://javaops.ru/");
-        List<Position> firstJob = new ArrayList<>();
+        List<Organization.Position> firstJob = new ArrayList<>();
         firstJob.add(javaops);
         Organization firstOrganization = new Organization(javaopsLink, firstJob);
         organizationExpList.add(firstOrganization);
         // Вторая работа
-        Position wrike = new Position(createRandomDate(1999, 2019), LocalDate.of(2016, 1, 1), "Старший разработчик (backend)", "Проектирование и разработка онлайн платформы управления проектами Wrike (Java 8 API, Maven, Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO.");
+        Organization.Position wrike = new Organization.Position(createRandomDate(1999, 2019), LocalDate.of(2016, 1, 1), "Старший разработчик (backend)", "Проектирование и разработка онлайн платформы управления проектами Wrike (Java 8 API, Maven, Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO.");
         Link wrikeLink = new Link(generateRandomString(20), "https://www.wrike.com/");
-        List<Position> secondJob = new ArrayList<>();
+        List<Organization.Position> secondJob = new ArrayList<>();
         secondJob.add(wrike);
         Organization secondOrganization = new Organization(wrikeLink, secondJob);
         organizationExpList.add(secondOrganization);
@@ -79,18 +79,18 @@ public class ResumeTestData {
         // Раздел "Образование
         List <Organization> educationExpList = new ArrayList<>();
         // Первое место
-        Position Coursera = new Position(createRandomDate(1999, 2019), createRandomDate(1999, 2019), "\"Functional Programming Principles in Scala\" by Martin Odersky", null);
+        Organization.Position Coursera = new Organization.Position(createRandomDate(1999, 2019), createRandomDate(1999, 2019), "\"Functional Programming Principles in Scala\" by Martin Odersky", null);
         Link CourseraLink = new Link(generateRandomString(20), "https://www.coursera.org/course/progfun");
-        List<Position> firstEdu = new ArrayList<>();
+        List<Organization.Position> firstEdu = new ArrayList<>();
         firstEdu.add(Coursera);
         Organization firstEducation = new Organization(CourseraLink, firstEdu);
 
         educationExpList.add(firstEducation);
         // Второе место
-        Position itmo1 = new Position(createRandomDate(1999, 2019), createRandomDate(1999, 2019), "Аспирантура (программист С, С++)", null);
-        Position itmo2 = new Position(createRandomDate(1999, 2019), createRandomDate(1999, 2019), "Инженер (программист Fortran, C)", null);
+        Organization.Position itmo1 = new Organization.Position(createRandomDate(1999, 2019), createRandomDate(1999, 2019), "Аспирантура (программист С, С++)", null);
+        Organization.Position itmo2 = new Organization.Position(createRandomDate(1999, 2019), createRandomDate(1999, 2019), "Инженер (программист Fortran, C)", null);
         Link itmoLink = new Link(generateRandomString(20), "http://www.ifmo.ru/");
-        List<Position> secondEdu = new ArrayList<>();
+        List<Organization.Position> secondEdu = new ArrayList<>();
         secondEdu.add(itmo1);
         secondEdu.add(itmo2);
         Organization secondEducation = new Organization(itmoLink, secondEdu);
