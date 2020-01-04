@@ -1,17 +1,9 @@
 package ru.javawebinar.storage;
 
-import ru.javawebinar.exception.StorageException;
-import ru.javawebinar.model.Resume;
-
-import java.io.*;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.function.Consumer;
 
 public abstract class AbstractPathStorage extends AbstractStorage<Path> {
+    /*
     private Path directory;
 
     protected AbstractPathStorage(String dir) {
@@ -102,4 +94,6 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
             throw new StorageException("IOError while getting listPaths in directory: ", directory.getPath());
         return PathList;
     }
+    */
+
 }
