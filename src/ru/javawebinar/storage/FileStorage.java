@@ -2,7 +2,7 @@ package ru.javawebinar.storage;
 
 import ru.javawebinar.exception.StorageException;
 import ru.javawebinar.model.Resume;
-import ru.javawebinar.serializator.SerializableObject;
+import ru.javawebinar.strategy.SerializableStrategy;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -11,11 +11,11 @@ import java.util.Objects;
 
 public class FileStorage extends AbstractStorage<File> {
     private File directory;
-    private SerializableObject serializableObject;
+    private SerializableStrategy serializableStrategy;
 
-    protected FileStorage(File directory, SerializableObject serializableObject) {
+    protected FileStorage(File directory, SerializableStrategy serializableStrategy) {
         Objects.requireNonNull(directory, " directory must not be null");
-        this.serializableObject = serializableObject;
+        this.serializableStrategy = serializableStrategy;
         if (!directory.isDirectory()) {
             throw new IllegalArgumentException(directory.getAbsolutePath() + " is not directory");
         }
@@ -28,7 +28,7 @@ public class FileStorage extends AbstractStorage<File> {
     @Override
     protected void updateElement(File file, Resume resume) {
         try {
-            serializableObject.doWrite(new BufferedOutputStream(new FileOutputStream(file)), resume);
+            serializableStrategy.doWrite(new BufferedOutputStream(new FileOutputStream(file)), resume);
         } catch (IOException e) {
             throw new StorageException("IOError at write operation: ", resume.getUuid(), e);
         }
@@ -48,7 +48,7 @@ public class FileStorage extends AbstractStorage<File> {
     @Override
     protected Resume getElement(File file) {
         try {
-            return serializableObject.doRead(new BufferedInputStream(new FileInputStream(file)));
+            return serializableStrategy.doRead(new BufferedInputStream(new FileInputStream(file)));
         } catch (IOException e) {
             throw new StorageException("IOError at read operation: ", file.getName(), e);
         }

@@ -2,7 +2,7 @@ package ru.javawebinar.storage;
 
 import ru.javawebinar.exception.StorageException;
 import ru.javawebinar.model.Resume;
-import ru.javawebinar.serializator.SerializableObject;
+import ru.javawebinar.strategy.SerializableStrategy;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -17,11 +17,11 @@ import java.util.stream.Stream;
 
 public class PathStorage extends AbstractStorage<Path> {
     private Path directory;
-    private SerializableObject serializableObject;
+    private SerializableStrategy serializableStrategy;
 
-    protected PathStorage(String dir, SerializableObject serializableObject) {
+    protected PathStorage(String dir, SerializableStrategy serializableStrategy) {
         directory = Paths.get(dir);
-        this.serializableObject = serializableObject;
+        this.serializableStrategy = serializableStrategy;
         Objects.requireNonNull(directory, " directory must not be null");
         if (!Files.isDirectory(directory) || !Files.isWritable(directory)) {
             throw new IllegalArgumentException(dir + " is not directory or is not writable");
@@ -31,7 +31,7 @@ public class PathStorage extends AbstractStorage<Path> {
     @Override
     protected void updateElement(Path path, Resume resume) {
         try {
-            serializableObject.doWrite(new BufferedOutputStream(Files.newOutputStream(path)), resume);
+            serializableStrategy.doWrite(new BufferedOutputStream(Files.newOutputStream(path)), resume);
         } catch (IOException e) {
             throw new StorageException("IOError at write operation: ", resume.getUuid(), e);
         }
@@ -50,7 +50,7 @@ public class PathStorage extends AbstractStorage<Path> {
     @Override
     protected Resume getElement(Path path) {
         try {
-            return serializableObject.doRead(new BufferedInputStream(Files.newInputStream(path)));
+            return serializableStrategy.doRead(new BufferedInputStream(Files.newInputStream(path)));
         } catch (IOException e) {
             throw new StorageException("IOError at read operation: ", path.getFileName().toString(), e);
         }
@@ -77,18 +77,23 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     protected List<Resume> getAsList() {
-        Stream<Path> list = getFileList();
-        return list.filter(Files::isRegularFile).map(this::getElement).collect(Collectors.toList());
+        return getFileList().map(this::getElement).collect(Collectors.toList());
     }
 
     @Override
     public void clear() {
-        getFileList().forEach(this::deleteElement);
+        getFileList().forEach(x -> {
+            try {
+                Files.delete(x);
+            } catch (IOException e) {
+                throw new StorageException("IOError at clear operation: ", directory.toString(), e);
+            }
+        });
     }
 
     @Override
     public int size() {
-        return getAsList().size();
+        return (int) getFileList().count();
     }
 
     private Stream<Path> getFileList() {
