@@ -2,19 +2,20 @@ package ru.javawebinar.storage;
 
 import ru.javawebinar.exception.StorageException;
 import ru.javawebinar.model.Resume;
+import ru.javawebinar.serializator.SerializableObject;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class AbstractFileStorage extends AbstractStorage<File> {
+public class FileStorage extends AbstractStorage<File> {
     private File directory;
-    private SerializableStorage serializableStorage;
+    private SerializableObject serializableObject;
 
-    protected AbstractFileStorage(File directory, SerializableStorage serializableStorage) {
+    protected FileStorage(File directory, SerializableObject serializableObject) {
         Objects.requireNonNull(directory, " directory must not be null");
-        this.serializableStorage = serializableStorage;
+        this.serializableObject = serializableObject;
         if (!directory.isDirectory()) {
             throw new IllegalArgumentException(directory.getAbsolutePath() + " is not directory");
         }
@@ -27,7 +28,7 @@ public class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     protected void updateElement(File file, Resume resume) {
         try {
-            serializableStorage.doWrite(new BufferedOutputStream(new FileOutputStream(file)), resume);
+            serializableObject.doWrite(new BufferedOutputStream(new FileOutputStream(file)), resume);
         } catch (IOException e) {
             throw new StorageException("IOError at write operation: ", resume.getUuid(), e);
         }
@@ -47,7 +48,7 @@ public class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     protected Resume getElement(File file) {
         try {
-            return serializableStorage.doRead(new BufferedInputStream(new FileInputStream(file)));
+            return serializableObject.doRead(new BufferedInputStream(new FileInputStream(file)));
         } catch (IOException e) {
             throw new StorageException("IOError at read operation: ", file.getName(), e);
         }
