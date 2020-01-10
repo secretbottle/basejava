@@ -1,13 +1,27 @@
 package ru.javawebinar.model;
 
+import ru.javawebinar.util.LocalDateAdapter;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElements;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.List;
 import java.util.Objects;
 
+import static ru.javawebinar.util.DateUtil.NOW;
+import static ru.javawebinar.util.DateUtil.of;
+
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Organization implements Serializable {
-    private final Link link;
-    private final List<Position> positions;
+    private Link link;
+    private List<Position> positions;
+
+    public Organization() {
+    }
 
     public Organization(Link link, List<Position> positions) {
         this.link = link;
@@ -45,11 +59,25 @@ public class Organization implements Serializable {
                 '}';
     }
 
+    @XmlAccessorType(XmlAccessType.FIELD)
     public static class Position implements Serializable {
-        private final LocalDate startPeriod;
-        private final LocalDate endPeriod;
-        private final String position;
-        private final String description;
+        @XmlJavaTypeAdapter(LocalDateAdapter.class)
+        private LocalDate startPeriod;
+        @XmlJavaTypeAdapter(LocalDateAdapter.class)
+        private LocalDate endPeriod;
+        private String position;
+        private String description;
+
+        public Position() {
+        }
+
+        public Position(int startYear, Month startMonth, String title, String description) {
+            this(of(startYear, startMonth), NOW, title, description);
+        }
+
+        public Position(int startYear, Month startMonth, int endYear, Month endMonth, String title, String description) {
+            this(of(startYear, startMonth), of(endYear, endMonth), title, description);
+        }
 
         public Position(LocalDate startPeriod, LocalDate endPeriod, String position, String description) {
             Objects.requireNonNull(startPeriod, "Inputed parameter startPeriod is null");

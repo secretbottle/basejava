@@ -1,11 +1,17 @@
 package ru.javawebinar.model;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import java.util.Objects;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class TextSection implements Section {
     private static final long serialVersionUID = 1L;
 
-    private final String text;
+    private String text;
+
+    public TextSection() {
+    }
 
     public TextSection(String text) {
         Objects.requireNonNull(text, "Inputed parameter text is null");

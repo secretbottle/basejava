@@ -2,7 +2,7 @@ package ru.javawebinar.storage;
 
 import ru.javawebinar.exception.StorageException;
 import ru.javawebinar.model.Resume;
-import ru.javawebinar.strategy.SerializableStrategy;
+import ru.javawebinar.storage.strategy.SerializableStrategy;
 
 import java.io.*;
 import java.util.ArrayList;

@@ -1,12 +1,18 @@
 package ru.javawebinar.model;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import java.util.List;
 import java.util.Objects;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class ListSection implements Section {
     private static final long serialVersionUID = 1L;
 
-    private final List<String> descriptionList;
+    private List<String> descriptionList;
+
+    public ListSection() {
+    }
 
     public ListSection(List<String> descriptionList) {
         Objects.requireNonNull(descriptionList, "Inputed parameter descriptionList is null");

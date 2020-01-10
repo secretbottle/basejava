@@ -1,6 +1,6 @@
 package ru.javawebinar.storage;
 
-import ru.javawebinar.strategy.ObjectStreamSerializableStrategy;
+import ru.javawebinar.storage.strategy.ObjectStreamSerializableStrategy;
 
 public class PathStorageTest extends AbstractStorageTest {
     public PathStorageTest() {
