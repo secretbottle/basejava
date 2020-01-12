@@ -16,13 +16,7 @@ public class Resume implements Comparable<Resume>, Serializable {
     private String uuid;
     private String fullName;
 
-    @XmlAnyElement
     private final Map<ContactType, String> contactMap = new EnumMap<>(ContactType.class);
-    //@XmlElements(value = {@XmlElement(type = TextSection.class), @XmlElement(type = OrganizationsSection.class), @XmlElement(type = ListSection.class)})
-    //@XmlElement(type = Object.class)
-    //@XmlAnyElement
-    //TODO Solve the problem with JAXB and interface Section
-    @XmlAnyElement
     private final Map<SectionType, Section> sectionMap = new EnumMap<>(SectionType.class);
 
     public Resume() {
@@ -58,7 +52,6 @@ public class Resume implements Comparable<Resume>, Serializable {
     public void putContactMap(ContactType contactType, String field) {
         contactMap.put(contactType, field);
     }
-
 
     public void putSectionMap(SectionType sectionType, Section section) {
         sectionMap.put(sectionType, section);
