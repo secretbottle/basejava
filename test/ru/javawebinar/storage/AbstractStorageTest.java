@@ -10,13 +10,13 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public abstract class AbstractStorageTest {
     protected Storage storage;
     //protected static final File STORAGE_DIR = new File("C:\\Users\\060Adm18\\workspace\\basejava\\storage");
-    protected static final File STORAGE_DIR = new File("E:\\workdir\\basejava\\storage");
-    //protected static final File STORAGE_DIR = new File("/home/jacj/Documents/workdir/basejava/storage/");
+    //protected static final File STORAGE_DIR = new File("E:\\workdir\\basejava\\storage");
+    protected static final File STORAGE_DIR = new File("/home/jacj/Documents/workdir/basejava/storage/");
 
     private static final String UUID_1 = "uuid1";
     private static final String UUID_2 = "uuid2";
