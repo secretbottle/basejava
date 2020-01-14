@@ -1,4 +1,4 @@
-package ru.javawebinar.storage.strategy;
+package ru.javawebinar.storage.serial;
 
 import ru.javawebinar.model.*;
 import ru.javawebinar.util.XmlParser;

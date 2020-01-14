@@ -1,6 +1,6 @@
 package ru.javawebinar.storage;
 
-import ru.javawebinar.storage.strategy.XmlStreamSerializableStrategy;
+import ru.javawebinar.storage.serial.XmlStreamSerializableStrategy;
 
 public class XmlPathStorageTest extends AbstractStorageTest {
     public XmlPathStorageTest() {

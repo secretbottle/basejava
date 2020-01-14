@@ -1,4 +1,4 @@
-package ru.javawebinar.storage.strategy;
+package ru.javawebinar.storage.serial;
 
 import ru.javawebinar.exception.StorageException;
 import ru.javawebinar.model.Resume;
