@@ -1,10 +1,7 @@
 package ru.javawebinar.storage.serial;
 
 import ru.javawebinar.exception.StorageException;
-import ru.javawebinar.model.ContactType;
-import ru.javawebinar.model.Resume;
-import ru.javawebinar.model.Section;
-import ru.javawebinar.model.SectionType;
+import ru.javawebinar.model.*;
 
 import java.io.*;
 import java.util.List;
@@ -23,27 +20,35 @@ public class DataStreamSerializer implements SerializableStrategy {
                 dos.writeUTF(entry.getKey().name());
                 dos.writeUTF(entry.getValue());
             }
-            Stream<Section> sectionss = resume.getSectionMap().values().stream();
 
 
-            resume.getSectionMap().values().stream();
+            Stream<Map.Entry<SectionType, Section>> sectionss = resume.getSectionMap().entrySet().stream();
+            sectionss.filter(x->x.getKey().equals(SectionType.OBJECTIVE))
+                    .map(Map.Entry::getValue)
+                    .forEach(x -> dos.writeInt(x))                    .
+
 
 
             Map<SectionType, Section> sections = resume.getSectionMap();
             dos.writeInt(sections.size());
             for (Map.Entry<SectionType, Section> entry : sections.entrySet()) {
+
                 String sectionName = entry.getKey().name();
                 if (sectionName.equals(SectionType.OBJECTIVE.name()) ||
                         sectionName.equals(SectionType.PERSONAL.name())) {
                     dos.writeUTF(sectionName);
-                    dos.writeUTF(entry.getValue().toString());
+                    dos.writeUTF(entry.getValue().getText());
                     continue;
                 }
 
                 if (sectionName.equals(SectionType.ACHIEVEMENT.name()) ||
                         sectionName.equals(SectionType.QUALIFICATIONS.name())) {
                     dos.writeUTF(sectionName);
-                    List<String> descriptionList = (List<String>) entry.getValue();
+
+
+                    List<String> descriptionList = (ListSection) entry.getValue();
+                    dos.writeInt(descriptionList.size());
+
                     for (String s : descriptionList) {
                         dos.writeUTF(s);
                     }
