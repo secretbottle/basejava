@@ -6,7 +6,6 @@ import ru.javawebinar.model.*;
 import java.io.*;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
 public class DataStreamSerializer implements SerializableStrategy {
     @Override
@@ -21,11 +20,30 @@ public class DataStreamSerializer implements SerializableStrategy {
                 dos.writeUTF(entry.getValue());
             }
 
+/*
 
             Stream<Map.Entry<SectionType, Section>> sectionss = resume.getSectionMap().entrySet().stream();
             sectionss.filter(x->x.getKey().equals(SectionType.OBJECTIVE))
                     .map(Map.Entry::getValue)
-                    .forEach(x -> dos.writeInt(x))                    .
+                    .forEach(x -> dos.writeInt(x));
+*/
+            Section sec = new Section(){
+
+                public <T extends Section> void forStreamList(List<T> listT){
+                    try {
+                        dos.writeInt(listT.size());
+                        for (T t : listT) {
+                            dos.writeUTF(t.toString());
+                        }
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+
+
+            };
 
 
 
@@ -37,34 +55,41 @@ public class DataStreamSerializer implements SerializableStrategy {
                 if (sectionName.equals(SectionType.OBJECTIVE.name()) ||
                         sectionName.equals(SectionType.PERSONAL.name())) {
                     dos.writeUTF(sectionName);
-                    dos.writeUTF(entry.getValue().getText());
+                    dos.writeUTF(entry.getValue().toString());
                     continue;
                 }
 
                 if (sectionName.equals(SectionType.ACHIEVEMENT.name()) ||
                         sectionName.equals(SectionType.QUALIFICATIONS.name())) {
                     dos.writeUTF(sectionName);
-
-
-                    List<String> descriptionList = (ListSection) entry.getValue();
+                    List<String> descriptionList = (List<String>) entry.getValue();
                     dos.writeInt(descriptionList.size());
-
                     for (String s : descriptionList) {
                         dos.writeUTF(s);
                     }
-                    descriptionList.forEach(x -> {
-                        try {
-                            dos.writeUTF(x);
-                        } catch (IOException e) {
-                            throw new StorageException("lmao", "lmao");
-                        }
-                    });
                 }
 
 
                 if (sectionName.equals(SectionType.EXPERIENCE.name()) ||
                             sectionName.equals(SectionType.EDUCATION.name())) {
+                    dos.writeUTF(sectionName);
+                    List<Organization> descriptionList = (List<Organization>) entry.getValue();
+                    dos.writeInt(descriptionList.size());
+                    for(Organization org : descriptionList){
+                        Map<Link, List<Organization.Position>> organizationMap = (Map<Link, List<Organization.Position>>) org;
 
+                        for(Map.Entry<Link, List<Organization.Position>> entryOrganization : organizationMap.entrySet()){
+
+                            List <Organization.Position> sectionList = entryOrganization.getValue();
+
+                            //ЕщЕ один лист, уууу сюка
+                            //  dos.writeUTF(sectionList.getStartPeriod());
+                            // dos.writeInt(descriptionList.size());
+                            // dos.writeInt(descriptionList.size());
+
+                        }
+
+                    }
                 }
 
 
@@ -75,6 +100,8 @@ public class DataStreamSerializer implements SerializableStrategy {
                 throw new StorageException("lmao", "lmao");
             }
         }
+
+
 
         @Override
         public Resume doRead (InputStream is) throws IOException {
@@ -89,4 +116,96 @@ public class DataStreamSerializer implements SerializableStrategy {
                 return resume;
             }
         }
+
+
+    public <T> void forStreamList(DataOutputStream dos, List<T> listT){
+        try {
+            dos.writeInt(listT.size());
+
+
+                for (T t : listT) {
+
+                    if(t instanceof List){
+                        forStreamList(dos, (List<T>) t);
+                    }
+
+                    if(t instanceof Map){
+                        forStreamMap(dos, t);
+                    }
+
+                    dos.writeUTF(t.toString());
+                }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public <K,V,T> void forStreamMap(DataOutputStream dos, T inputData){
+
+
+        if (inputData instanceof List ){
+            List<T>
+        }
+
+        if (inputData instanceof Map ){
+            Map<K, V> organizationMap = (Map<K, V>) inputData;
+
+            for(Map.Entry<K,V> entry: organizationMap.entrySet()){
+
+                V value = entry.getValue();
+
+                if(value instanceof List){
+                    forStreamList(dos, (List<T>) t);
+                }
+
+                if(value instanceof Map){
+                    forStreamMap(dos, value);
+                }
+            }
+        }
+
+
+
+
+    }
+
+
+        private static class Noumenon {
+
+
+            public static class Builder{
+                final DataOutputStream dos;
+
+                public Builder(DataOutputStream dos) {
+                    this.dos = dos;
+                }
+
+                public <T> Builder forStreamList(List<T> listT){
+                    try {
+                        dos.writeInt(listT.size());
+
+                        for (T t : listT) {
+
+                            dos.writeUTF(t.toString());
+                        }
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    return this;
+                }
+
+
+
+                public <K,V> Builder forStreamMap(Map <K,V> mapKV){
+
+                    return this;
+                }
+
+            }
+
+        }
+
     }
