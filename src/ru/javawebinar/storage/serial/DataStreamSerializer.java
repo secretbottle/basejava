@@ -28,7 +28,6 @@ public class DataStreamSerializer implements SerializableStrategy {
                     .forEach(x -> dos.writeInt(x));
 */
             Section sec = new Section(){
-
                 public <T extends Section> void forStreamList(List<T> listT){
                     try {
                         dos.writeInt(listT.size());
@@ -40,9 +39,6 @@ public class DataStreamSerializer implements SerializableStrategy {
                         e.printStackTrace();
                     }
                 }
-
-
-
             };
 
 
@@ -54,42 +50,52 @@ public class DataStreamSerializer implements SerializableStrategy {
                 String sectionName = entry.getKey().name();
                 if (sectionName.equals(SectionType.OBJECTIVE.name()) ||
                         sectionName.equals(SectionType.PERSONAL.name())) {
-                    dos.writeUTF(sectionName);
-                    dos.writeUTF(entry.getValue().toString());
+                    if (entry.getValue() instanceof TextSection) {
+                        System.out.println("This is TextSection!!");
+                        dos.writeUTF(sectionName);
+                        dos.writeUTF(((TextSection) entry.getValue()).getText());
+                    }
+
                     continue;
                 }
 
                 if (sectionName.equals(SectionType.ACHIEVEMENT.name()) ||
                         sectionName.equals(SectionType.QUALIFICATIONS.name())) {
                     dos.writeUTF(sectionName);
-                    List<String> descriptionList = (List<String>) entry.getValue();
-                    dos.writeInt(descriptionList.size());
-                    for (String s : descriptionList) {
-                        dos.writeUTF(s);
+                    if (entry.getValue() instanceof ListSection) {
+                        System.out.println("This is ListSection!!");
+                        List<String> descriptionList = ((ListSection) entry.getValue()).getDescriptionList();
+                        dos.writeInt(descriptionList.size());
+                        for (String s : descriptionList) {
+                            dos.writeUTF(s);
+                        }
                     }
+
                 }
 
 
                 if (sectionName.equals(SectionType.EXPERIENCE.name()) ||
                             sectionName.equals(SectionType.EDUCATION.name())) {
-                    dos.writeUTF(sectionName);
-                    List<Organization> descriptionList = (List<Organization>) entry.getValue();
-                    dos.writeInt(descriptionList.size());
-                    for(Organization org : descriptionList){
-                        Map<Link, List<Organization.Position>> organizationMap = (Map<Link, List<Organization.Position>>) org;
-
-                        for(Map.Entry<Link, List<Organization.Position>> entryOrganization : organizationMap.entrySet()){
-
-                            List <Organization.Position> sectionList = entryOrganization.getValue();
-
-                            //ЕщЕ один лист, уууу сюка
-                            //  dos.writeUTF(sectionList.getStartPeriod());
-                            // dos.writeInt(descriptionList.size());
-                            // dos.writeInt(descriptionList.size());
-
-                        }
-
-                    }
+//                    dos.writeUTF(sectionName);
+//                    List<Organization> descriptionList = (List<Organization>) entry.getValue();
+//                    dos.writeInt(descriptionList.size());
+//                    for(Organization org : descriptionList){
+//                        Map<Link, List<Organization.Position>> organizationMap = (Map<Link, List<Organization.Position>>) org;
+//
+//                        for(Map.Entry<Link, List<Organization.Position>> entryOrganization : organizationMap.entrySet()){
+//
+//                            List <Organization.Position> sectionList = entryOrganization.getValue();
+//
+//                            for(Organization.Position pos : sectionList){
+//                                dos.writeUTF(pos.getStartPeriod().toString());
+//                                dos.writeUTF(pos.getEndPeriod().toString());
+//                                dos.writeUTF(pos.getPosition());
+//                                dos.writeUTF(pos.getDescription());
+//                            }
+//
+//                        }
+//
+//                    }
                 }
 
 
@@ -146,7 +152,7 @@ public class DataStreamSerializer implements SerializableStrategy {
 
 
         if (inputData instanceof List ){
-            List<T>
+            //List<T>
         }
 
         if (inputData instanceof Map ){
@@ -157,7 +163,7 @@ public class DataStreamSerializer implements SerializableStrategy {
                 V value = entry.getValue();
 
                 if(value instanceof List){
-                    forStreamList(dos, (List<T>) t);
+                    //forStreamList(dos, (List<T>) t);
                 }
 
                 if(value instanceof Map){
