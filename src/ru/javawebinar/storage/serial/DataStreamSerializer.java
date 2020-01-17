@@ -7,6 +7,8 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -56,6 +58,7 @@ public class DataStreamSerializer implements SerializableStrategy {
                         dos.writeInt(orgValue.size());
 
                         for (Organization.Position pos : orgValue) {
+                            dos.writeInt(4);
                             dos.writeUTF(pos.getStartPeriod().toString());
                             dos.writeUTF(pos.getEndPeriod().toString());
                             dos.writeUTF(pos.getPosition());
@@ -86,39 +89,49 @@ public class DataStreamSerializer implements SerializableStrategy {
                 resume.putContactMap(ContactType.valueOf(dis.readUTF()), dis.readUTF());
             }
 
-
             resume.putSectionMap(SectionType.valueOf(dis.readUTF()), new TextSection(dis.readUTF()));
             resume.putSectionMap(SectionType.valueOf(dis.readUTF()), new TextSection(dis.readUTF()));
 
-            List<String> descriptionList1 = Stream.of(dis.readUTF()).limit(dis.readInt()).collect(Collectors.toList());
             resume.putSectionMap(SectionType.valueOf(dis.readUTF()),
-                    new ListSection(descriptionList1));
+                    new ListSection(
+                            Stream.of(dis.readUTF()).limit(dis.readInt()).collect(Collectors.toList())));
 
-            List<String> descriptionList2 = Stream.of(dis.readUTF()).limit(dis.readInt()).collect(Collectors.toList());
             resume.putSectionMap(SectionType.valueOf(dis.readUTF()),
-                    new ListSection(descriptionList2));
+                    new ListSection(
+                            Stream.of(dis.readUTF()).limit(dis.readInt()).collect(Collectors.toList())));
 
 
-            resume.putSectionMap(SectionType.valueOf(dis.readUTF()), new OrganizationsSection(dis.readUTF()));
-            resume.putSectionMap(SectionType.valueOf(dis.readUTF()), new OrganizationsSection(dis.readUTF()));
+            resume.putSectionMap(SectionType.valueOf(dis.readUTF()), new OrganizationsSection(
+            ));
+
+
+
+            resume.putSectionMap(SectionType.valueOf(dis.readUTF()), new OrganizationsSection());
 
 
             List<Organization> organizations;
+            Organization organization;
             Link link;
             List<Organization.Position> organizationsPos;
             Organization.Position orgPos;
 
 
-            resume.putSectionMap(SectionType.valueOf(dis.readUTF()), dis.readUTF());
 
 
             return resume;
+        } catch (IOException e) {
+            throw new StorageException("Error while Reading resume", e);
         }
+
     }
 
     private <T> List readToResume(DataInputStream dis, Resume resume){
         List<T> description = new ArrayList<>();
         return description;
+    }
+
+    private <T> List readFromSource(int steps ){
+        List<String> list = Stream.of(dis.readUTF()).limit(dis.readInt()).collect(Collectors.toList());
     }
 
 
