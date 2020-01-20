@@ -4,7 +4,6 @@ import ru.javawebinar.util.LocalDateAdapter;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -87,7 +86,7 @@ public class Organization implements Serializable {
             this.startPeriod = startPeriod;
             this.endPeriod = endPeriod;
             this.position = position;
-            this.description = description;
+            this.description  = description == null ? "" : description;
         }
 
         public LocalDate getStartPeriod() {

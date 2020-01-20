@@ -7,9 +7,6 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Predicate;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class DataStreamSerializer implements SerializableStrategy {
@@ -26,7 +23,7 @@ public class DataStreamSerializer implements SerializableStrategy {
             }
 
             Map<SectionType, Section> sections = resume.getSectionMap();
-            //dos.writeInt(sections.size());
+            dos.writeInt(sections.size());
             for (Map.Entry<SectionType, Section> entry : sections.entrySet()) {
                 dos.writeUTF(entry.getKey().name());
                 Section sectionValue = entry.getValue();
@@ -58,15 +55,10 @@ public class DataStreamSerializer implements SerializableStrategy {
                         dos.writeInt(orgValue.size());
 
                         for (Organization.Position pos : orgValue) {
-                            dos.writeInt(4);
                             dos.writeUTF(pos.getStartPeriod().toString());
                             dos.writeUTF(pos.getEndPeriod().toString());
                             dos.writeUTF(pos.getPosition());
-                            if (pos.getDescription() == null) {
-                                dos.writeUTF("");
-                            } else {
-                                dos.writeUTF(pos.getDescription());
-                            }
+                            dos.writeUTF(pos.getDescription());
                         }
                     }
                 }
@@ -89,6 +81,15 @@ public class DataStreamSerializer implements SerializableStrategy {
                 resume.putContactMap(ContactType.valueOf(dis.readUTF()), dis.readUTF());
             }
 
+            System.out.println("САМ ТЫ КИТАЙ");
+            Stream.of(dis.readUTF()).limit(dis.readInt()).forEach(System.out::println);
+
+            //test(dis);
+            System.out.println("ЯПОШКА");
+            //System.out.println(dis.readUTF());
+
+/*
+
             resume.putSectionMap(SectionType.valueOf(dis.readUTF()), new TextSection(dis.readUTF()));
             resume.putSectionMap(SectionType.valueOf(dis.readUTF()), new TextSection(dis.readUTF()));
 
@@ -102,21 +103,20 @@ public class DataStreamSerializer implements SerializableStrategy {
 
 
             resume.putSectionMap(SectionType.valueOf(dis.readUTF()), new OrganizationsSection(
-            ));
+                            Stream.of(new Organization(
+                                            new Link(dis.readUTF(), dis.readUTF()),
+                                            Stream.of(new Organization.Position(
+                                                            LocalDate.parse(dis.readUTF()), LocalDate.parse(dis.readUTF()), dis.readUTF(), dis.readUTF()
+                                                    )
+                                            ).limit(dis.readInt()).collect(Collectors.toList())
+                                    )
+                            ).limit(dis.readInt()).collect(Collectors.toList())
+                    )
+            );
+*/
 
 
-
-            resume.putSectionMap(SectionType.valueOf(dis.readUTF()), new OrganizationsSection());
-
-
-            List<Organization> organizations;
-            Organization organization;
-            Link link;
-            List<Organization.Position> organizationsPos;
-            Organization.Position orgPos;
-
-
-
+            //resume.putSectionMap(SectionType.valueOf(dis.readUTF()), new OrganizationsSection());
 
             return resume;
         } catch (IOException e) {
@@ -125,13 +125,23 @@ public class DataStreamSerializer implements SerializableStrategy {
 
     }
 
-    private <T> List readToResume(DataInputStream dis, Resume resume){
-        List<T> description = new ArrayList<>();
-        return description;
+    void test(DataInputStream dis){
+        System.out.println("ННИИИИИИНДЗЯЯЯ");
+
+        Stream.generate(() -> {
+            try {
+                return dis.readUTF();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }).limit(2).forEach(System.out::println);
+
     }
 
-    private <T> List readFromSource(int steps ){
-        List<String> list = Stream.of(dis.readUTF()).limit(dis.readInt()).collect(Collectors.toList());
+    private <T> List readToList(DataInputStream dis, Resume resume) {
+        List<T> description = new ArrayList<>();
+        return description;
     }
 
 
