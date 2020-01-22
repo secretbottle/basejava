@@ -30,27 +30,27 @@ public class ResumeTestData {
         resume.putContactMap(ContactType.HOMEPAGE, "http://gkislin.ru/");
 
         // Раздел "Позиция"
-        TextSection Position = new TextSection("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям" + generateRandomString(10));
+        TextSection Position = new TextSection("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям" + generateRandomString(2));
         resume.putSectionMap(SectionType.OBJECTIVE, Position);
 
         // Раздел "Личные качества"
-        TextSection personalDesc = new TextSection("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры." + generateRandomString(10));
+        TextSection personalDesc = new TextSection("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры." + generateRandomString(2));
         resume.putSectionMap(SectionType.PERSONAL, personalDesc);
 
         // Раздел "Достижения"
         List<String> listAchievements = new ArrayList<>();
-        listAchievements.add("С 2013 года: разработка проектов \"Разработка Web приложения\",\"Java Enterprise\", \"Многомодульный maven. Многопоточность. XML (JAXB/StAX). Веб сервисы (JAX-RS/SOAP). Удаленное взаимодействие (JMS/AKKA)\". Организация онлайн стажировок и ведение проектов. Более 1000 выпускников." + generateRandomString(10));
+        listAchievements.add("С 2013 года: разработка проектов \"Разработка Web приложения\",\"Java Enterprise\", \"Многомодульный maven. Многопоточность. XML (JAXB/StAX). Веб сервисы (JAX-RS/SOAP). Удаленное взаимодействие (JMS/AKKA)\". Организация онлайн стажировок и ведение проектов. Более 1000 выпускников." + generateRandomString(2));
         listAchievements.add("Реализация двухфакторной аутентификации для онлайн платформы управления проектами Wrike. Интеграция с Twilio, DuoSecurity, Google Authenticator, Jira, Zendesk." + generateRandomString(20));
-        listAchievements.add("Налаживание процесса разработки и непрерывной интеграции ERP системы River BPM. Интеграция с 1С, Bonita BPM, CMIS, LDAP. Разработка приложения управления окружением на стеке: Scala/Play/Anorm/JQuery. Разработка SSO аутентификации и авторизации различных ERP модулей, интеграция CIFS/SMB java сервера." + generateRandomString(20));
+        listAchievements.add("Налаживание процесса разработки и непрерывной интеграции ERP системы River BPM. Интеграция с 1С, Bonita BPM, CMIS, LDAP. Разработка приложения управления окружением на стеке: Scala/Play/Anorm/JQuery. Разработка SSO аутентификации и авторизации различных ERP модулей, интеграция CIFS/SMB java сервера." + generateRandomString(2));
 
         ListSection achievements = new ListSection(listAchievements);
         resume.putSectionMap(SectionType.ACHIEVEMENT, achievements);
 
         // Раздел "Квалификация"
         List<String> listQualification = new ArrayList<>();
-        listQualification.add("JEE AS: GlassFish (v2.1, v3), OC4J, JBoss, Tomcat, Jetty, WebLogic, WSO2 " + generateRandomString(20));
-        listQualification.add("Version control: Subversion, Git, Mercury, ClearCase, Perforce, " + generateRandomString(20));
-        listQualification.add("DB: PostgreSQL(наследование, pgplsql, PL/Python), Redis (Jedis), H2, Oracle," + generateRandomString(20));
+        listQualification.add("JEE AS: GlassFish (v2.1, v3), OC4J, JBoss, Tomcat, Jetty, WebLogic, WSO2 " + generateRandomString(2));
+        listQualification.add("Version control: Subversion, Git, Mercury, ClearCase, Perforce, " + generateRandomString(2));
+        listQualification.add("DB: PostgreSQL(наследование, pgplsql, PL/Python), Redis (Jedis), H2, Oracle," + generateRandomString(2));
 
         ListSection qualification = new ListSection(listQualification);
         resume.putSectionMap(SectionType.QUALIFICATIONS, qualification);

@@ -4,9 +4,10 @@ import ru.javawebinar.exception.StorageException;
 import ru.javawebinar.model.*;
 
 import java.io.*;
-import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class DataStreamSerializer implements SerializableStrategy {
@@ -23,6 +24,7 @@ public class DataStreamSerializer implements SerializableStrategy {
             }
 
             Map<SectionType, Section> sections = resume.getSectionMap();
+            System.out.println(sections.size());
             dos.writeInt(sections.size());
             for (Map.Entry<SectionType, Section> entry : sections.entrySet()) {
                 dos.writeUTF(entry.getKey().name());
@@ -30,12 +32,15 @@ public class DataStreamSerializer implements SerializableStrategy {
 
                 if (entry.getValue() instanceof TextSection) {
                     dos.writeUTF(((TextSection) sectionValue).getText());
+                    System.out.println(((TextSection) sectionValue).getText());
                     continue;
                 }
 
                 if (sectionValue instanceof ListSection) {
                     List<String> descriptionList = ((ListSection) sectionValue).getDescriptionList();
                     dos.writeInt(descriptionList.size());
+
+                    System.out.println(((ListSection) sectionValue).getDescriptionList());
 
                     for (String s : descriptionList) {
                         dos.writeUTF(s);
@@ -46,6 +51,9 @@ public class DataStreamSerializer implements SerializableStrategy {
                 if (sectionValue instanceof OrganizationsSection) {
                     List<Organization> descriptionList = ((OrganizationsSection) sectionValue).getOrganizations();
                     dos.writeInt(descriptionList.size());
+
+
+                    System.out.println(((OrganizationsSection) sectionValue).getOrganizations());
 
                     for (Organization org : descriptionList) {
                         dos.writeUTF(org.getLink().getTitle());
@@ -65,7 +73,7 @@ public class DataStreamSerializer implements SerializableStrategy {
             }
 
         } catch (IOException e) {
-            throw new StorageException("lmao", "lmao");
+            throw new StorageException("IOError while writing in file", e);
         }
     }
 
@@ -81,67 +89,54 @@ public class DataStreamSerializer implements SerializableStrategy {
                 resume.putContactMap(ContactType.valueOf(dis.readUTF()), dis.readUTF());
             }
 
-            System.out.println("САМ ТЫ КИТАЙ");
-            Stream.of(dis.readUTF()).limit(dis.readInt()).forEach(System.out::println);
+            if(dis.readInt() > 0) {
+                resume.putSectionMap(SectionType.valueOf(dis.readUTF()), new TextSection(dis.readUTF()));
+                resume.putSectionMap(SectionType.valueOf(dis.readUTF()), new TextSection(dis.readUTF()));
 
-            //test(dis);
-            System.out.println("ЯПОШКА");
-            //System.out.println(dis.readUTF());
+                resume.putSectionMap(SectionType.valueOf(dis.readUTF()),
+                        new ListSection(
+                                Stream.of(dis.readUTF()).limit(dis.readInt()).collect(Collectors.toList())));
 
-/*
-
-            resume.putSectionMap(SectionType.valueOf(dis.readUTF()), new TextSection(dis.readUTF()));
-            resume.putSectionMap(SectionType.valueOf(dis.readUTF()), new TextSection(dis.readUTF()));
-
-            resume.putSectionMap(SectionType.valueOf(dis.readUTF()),
-                    new ListSection(
-                            Stream.of(dis.readUTF()).limit(dis.readInt()).collect(Collectors.toList())));
-
-            resume.putSectionMap(SectionType.valueOf(dis.readUTF()),
-                    new ListSection(
-                            Stream.of(dis.readUTF()).limit(dis.readInt()).collect(Collectors.toList())));
+                resume.putSectionMap(SectionType.valueOf(dis.readUTF()),
+                        new ListSection(
+                                Stream.of(dis.readUTF()).limit(dis.readInt()).collect(Collectors.toList())));
 
 
-            resume.putSectionMap(SectionType.valueOf(dis.readUTF()), new OrganizationsSection(
-                            Stream.of(new Organization(
-                                            new Link(dis.readUTF(), dis.readUTF()),
-                                            Stream.of(new Organization.Position(
-                                                            LocalDate.parse(dis.readUTF()), LocalDate.parse(dis.readUTF()), dis.readUTF(), dis.readUTF()
-                                                    )
-                                            ).limit(dis.readInt()).collect(Collectors.toList())
-                                    )
-                            ).limit(dis.readInt()).collect(Collectors.toList())
-                    )
-            );
-*/
+                resume.putSectionMap(SectionType.valueOf(dis.readUTF()), new OrganizationsSection(
+                                Stream.of(new Organization(
+                                                new Link(dis.readUTF(), dis.readUTF()),
+                                                Stream.of(new Organization.Position(
+                                                                LocalDate.parse(dis.readUTF()), LocalDate.parse(dis.readUTF()), dis.readUTF(), dis.readUTF()
+                                                        )
+                                                ).limit(dis.readInt()).collect(Collectors.toList())
+                                        )
+                                ).limit(dis.readInt()).collect(Collectors.toList())
+                        )
+                );
 
-
-            //resume.putSectionMap(SectionType.valueOf(dis.readUTF()), new OrganizationsSection());
-
+            }
             return resume;
         } catch (IOException e) {
-            throw new StorageException("Error while Reading resume", e);
+            throw new StorageException("Error while reading resume", e);
         }
 
     }
 
-    void test(DataInputStream dis){
-        System.out.println("ННИИИИИИНДЗЯЯЯ");
-
-        Stream.generate(() -> {
-            try {
-                return dis.readUTF();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }).limit(2).forEach(System.out::println);
+    private void writer (){
 
     }
 
-    private <T> List readToList(DataInputStream dis, Resume resume) {
-        List<T> description = new ArrayList<>();
-        return description;
+    private void reader (){
+
+    }
+
+    private <T> List readToList(DataInputStream dis, int size) {
+        try {
+            return Stream.of(dis.readUTF()).limit(size).collect(Collectors.toList());
+        } catch (IOException e) {
+            throw new StorageException("IOError in read operation ",e);
+        }
+
     }
 
 
