@@ -24,23 +24,22 @@ public class DataStreamSerializer implements SerializableStrategy {
             }
 
             Map<SectionType, Section> sections = resume.getSectionMap();
-            System.out.println(sections.size());
             dos.writeInt(sections.size());
             for (Map.Entry<SectionType, Section> entry : sections.entrySet()) {
-                dos.writeUTF(entry.getKey().name());
+                SectionType sectionType =entry.getKey();
                 Section sectionValue = entry.getValue();
+                
+                dos.writeUTF(sectionType.name());
+
 
                 if (entry.getValue() instanceof TextSection) {
                     dos.writeUTF(((TextSection) sectionValue).getText());
-                    System.out.println(((TextSection) sectionValue).getText());
                     continue;
                 }
 
                 if (sectionValue instanceof ListSection) {
                     List<String> descriptionList = ((ListSection) sectionValue).getDescriptionList();
                     dos.writeInt(descriptionList.size());
-
-                    System.out.println(((ListSection) sectionValue).getDescriptionList());
 
                     for (String s : descriptionList) {
                         dos.writeUTF(s);
@@ -51,9 +50,6 @@ public class DataStreamSerializer implements SerializableStrategy {
                 if (sectionValue instanceof OrganizationsSection) {
                     List<Organization> descriptionList = ((OrganizationsSection) sectionValue).getOrganizations();
                     dos.writeInt(descriptionList.size());
-
-
-                    System.out.println(((OrganizationsSection) sectionValue).getOrganizations());
 
                     for (Organization org : descriptionList) {
                         dos.writeUTF(org.getLink().getTitle());
@@ -89,32 +85,38 @@ public class DataStreamSerializer implements SerializableStrategy {
                 resume.putContactMap(ContactType.valueOf(dis.readUTF()), dis.readUTF());
             }
 
-            if(dis.readInt() > 0) {
-                resume.putSectionMap(SectionType.valueOf(dis.readUTF()), new TextSection(dis.readUTF()));
-                resume.putSectionMap(SectionType.valueOf(dis.readUTF()), new TextSection(dis.readUTF()));
+            size = dis.readInt();
+            for (int i = 0; i < size; i++) {
+                SectionType sectionType = SectionType.valueOf(dis.readUTF());
 
-                resume.putSectionMap(SectionType.valueOf(dis.readUTF()),
-                        new ListSection(
-                                Stream.of(dis.readUTF()).limit(dis.readInt()).collect(Collectors.toList())));
+                if (sectionType.equals(SectionType.PERSONAL) || sectionType.equals(SectionType.OBJECTIVE)) {
+                    resume.putSectionMap(SectionType.valueOf(dis.readUTF()), new TextSection(dis.readUTF()));
+                    continue;
+                }
 
-                resume.putSectionMap(SectionType.valueOf(dis.readUTF()),
-                        new ListSection(
-                                Stream.of(dis.readUTF()).limit(dis.readInt()).collect(Collectors.toList())));
+                if (sectionType.equals(SectionType.ACHIEVEMENT) || sectionType.equals(SectionType.QUALIFICATIONS)) {
+                    resume.putSectionMap(SectionType.valueOf(dis.readUTF()),
+                            new ListSection(readtoList(dis.readInt(), dis.readUTF())));
+                    continue;
+                }
 
-
-                resume.putSectionMap(SectionType.valueOf(dis.readUTF()), new OrganizationsSection(
-                                Stream.of(new Organization(
-                                                new Link(dis.readUTF(), dis.readUTF()),
-                                                Stream.of(new Organization.Position(
-                                                                LocalDate.parse(dis.readUTF()), LocalDate.parse(dis.readUTF()), dis.readUTF(), dis.readUTF()
-                                                        )
-                                                ).limit(dis.readInt()).collect(Collectors.toList())
-                                        )
-                                ).limit(dis.readInt()).collect(Collectors.toList())
-                        )
-                );
-
+                if (sectionType.equals(SectionType.EXPERIENCE) || sectionType.equals(SectionType.EDUCATION))
+                    resume.putSectionMap(SectionType.valueOf(dis.readUTF()), new OrganizationsSection(
+                                    readtoList(dis.readInt(), new Organization(
+                                                    new Link(dis.readUTF(), dis.readUTF()),
+                                                    readtoList(dis.readInt(), new Organization.Position(
+                                                                    LocalDate.parse(dis.readUTF()),
+                                                                    LocalDate.parse(dis.readUTF()),
+                                                                    dis.readUTF(),
+                                                                    dis.readUTF()
+                                                            )
+                                                    )
+                                            )
+                                    )
+                            )
+                    );
             }
+
             return resume;
         } catch (IOException e) {
             throw new StorageException("Error while reading resume", e);
@@ -122,21 +124,35 @@ public class DataStreamSerializer implements SerializableStrategy {
 
     }
 
-    private void writer (){
-
-    }
-
-    private void reader (){
-
-    }
-
-    private <T> List readToList(DataInputStream dis, int size) {
+    private <T> void writer(DataOutputStream dos, List<T> list) {
         try {
-            return Stream.of(dis.readUTF()).limit(size).collect(Collectors.toList());
-        } catch (IOException e) {
-            throw new StorageException("IOError in read operation ",e);
-        }
+            dos.writeInt(list.size());
+            for(T t: list){
 
+            }
+
+
+        } catch (IOException e) {
+            throw new StorageException("IOError while writing in file", e);
+        }
+    }
+
+    private void reader(DataInputStream dis) {
+        try {
+            int size = dis.readInt();
+
+            for (int i = 0; i < size; i++) {
+
+            }
+
+
+        } catch (IOException e) {
+            throw new StorageException("IOError in read operation ", e);
+        }
+    }
+
+    private <T> List<T> readtoList(int size, T t) {
+        return Stream.of(t).limit(size).collect(Collectors.toList());
     }
 
 
