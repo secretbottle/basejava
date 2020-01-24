@@ -7,6 +7,7 @@ import java.io.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -26,45 +27,49 @@ public class DataStreamSerializer implements SerializableStrategy {
             Map<SectionType, Section> sections = resume.getSectionMap();
             dos.writeInt(sections.size());
             for (Map.Entry<SectionType, Section> entry : sections.entrySet()) {
-                SectionType sectionType =entry.getKey();
+                SectionType sectionType = entry.getKey();
                 Section sectionValue = entry.getValue();
-                
+
                 dos.writeUTF(sectionType.name());
-
-
-                if (entry.getValue() instanceof TextSection) {
+                if (sectionValue instanceof TextSection) {
                     dos.writeUTF(((TextSection) sectionValue).getText());
                     continue;
                 }
 
                 if (sectionValue instanceof ListSection) {
-                    List<String> descriptionList = ((ListSection) sectionValue).getDescriptionList();
-                    dos.writeInt(descriptionList.size());
+                    writer(dos, ((ListSection) sectionValue).getDescriptionList(), s -> {
+                        try {
+                            dos.writeUTF(s);
+                        } catch (IOException e) {
+                            throw new StorageException("IOError while writing in file", e);
+                        }
 
-                    for (String s : descriptionList) {
-                        dos.writeUTF(s);
-                    }
+                    });
                     continue;
                 }
 
                 if (sectionValue instanceof OrganizationsSection) {
-                    List<Organization> descriptionList = ((OrganizationsSection) sectionValue).getOrganizations();
-                    dos.writeInt(descriptionList.size());
+                    writer(dos, ((OrganizationsSection) sectionValue).getOrganizations(), org -> {
+                                try {
+                                    dos.writeUTF(org.getLink().getTitle());
+                                    dos.writeUTF(org.getLink().getUrlAdr());
+                                } catch (IOException e) {
+                                    throw new StorageException("IOError while writing in file", e);
+                                }
 
-                    for (Organization org : descriptionList) {
-                        dos.writeUTF(org.getLink().getTitle());
-                        dos.writeUTF(org.getLink().getUrlAdr());
-
-                        List<Organization.Position> orgValue = org.getPositions();
-                        dos.writeInt(orgValue.size());
-
-                        for (Organization.Position pos : orgValue) {
-                            dos.writeUTF(pos.getStartPeriod().toString());
-                            dos.writeUTF(pos.getEndPeriod().toString());
-                            dos.writeUTF(pos.getPosition());
-                            dos.writeUTF(pos.getDescription());
-                        }
-                    }
+                                writer(dos, org.getPositions(), (pos) -> {
+                                            try {
+                                                dos.writeUTF(pos.getStartPeriod().toString());
+                                                dos.writeUTF(pos.getEndPeriod().toString());
+                                                dos.writeUTF(pos.getPosition());
+                                                dos.writeUTF(pos.getDescription());
+                                            } catch (IOException e) {
+                                                throw new StorageException("IOError while writing in file", e);
+                                            }
+                                        }
+                                );
+                            }
+                    );
                 }
             }
 
@@ -124,28 +129,38 @@ public class DataStreamSerializer implements SerializableStrategy {
 
     }
 
-    private <T> void writer(DataOutputStream dos, List<T> list) {
+    private <T> void writer(DataOutputStream dos, List<T> list, Consumer<T> consumer) {
         try {
             dos.writeInt(list.size());
-            for(T t: list){
-
+            for (T t : list) {
+                consumer.accept(t);
+                /*
+                consumer = x -> {
+                utfWriter(dos, (String) x);
+                 };
+                */
             }
+        } catch (IOException e) {
+            throw new StorageException("Error while writing sections from Resume ", e);
+        }
 
+    }
 
+    private <T> void utfWriter(DataOutputStream dos, String s) {
+        try {
+            dos.writeUTF(s);
         } catch (IOException e) {
             throw new StorageException("IOError while writing in file", e);
         }
     }
 
+
     private void reader(DataInputStream dis) {
         try {
             int size = dis.readInt();
-
             for (int i = 0; i < size; i++) {
 
             }
-
-
         } catch (IOException e) {
             throw new StorageException("IOError in read operation ", e);
         }
