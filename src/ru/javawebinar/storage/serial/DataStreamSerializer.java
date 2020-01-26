@@ -5,9 +5,11 @@ import ru.javawebinar.model.*;
 
 import java.io.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -95,31 +97,55 @@ public class DataStreamSerializer implements SerializableStrategy {
                 SectionType sectionType = SectionType.valueOf(dis.readUTF());
 
                 if (sectionType.equals(SectionType.PERSONAL) || sectionType.equals(SectionType.OBJECTIVE)) {
-                    resume.putSectionMap(SectionType.valueOf(dis.readUTF()), new TextSection(dis.readUTF()));
+                    resume.putSectionMap(sectionType, new TextSection(dis.readUTF()));
                     continue;
                 }
 
                 if (sectionType.equals(SectionType.ACHIEVEMENT) || sectionType.equals(SectionType.QUALIFICATIONS)) {
-                    resume.putSectionMap(SectionType.valueOf(dis.readUTF()),
-                            new ListSection(readtoList(dis.readInt(), dis.readUTF())));
+                    readToList(dis, () -> {
+                        try {
+                            dis.readUTF();
+                        } catch (IOException e) {
+                            throw new StorageException("IOError while writing in file", e);
+                        }
+                        return null;
+                    });
                     continue;
                 }
 
-                if (sectionType.equals(SectionType.EXPERIENCE) || sectionType.equals(SectionType.EDUCATION))
-                    resume.putSectionMap(SectionType.valueOf(dis.readUTF()), new OrganizationsSection(
-                                    readtoList(dis.readInt(), new Organization(
-                                                    new Link(dis.readUTF(), dis.readUTF()),
-                                                    readtoList(dis.readInt(), new Organization.Position(
-                                                                    LocalDate.parse(dis.readUTF()),
-                                                                    LocalDate.parse(dis.readUTF()),
-                                                                    dis.readUTF(),
-                                                                    dis.readUTF()
+
+                if (sectionType.equals(SectionType.EXPERIENCE) || sectionType.equals(SectionType.EDUCATION)) {
+                    resume.putSectionMap(sectionType, new OrganizationsSection(
+                                    readToList(dis, () -> {
+                                                try {
+                                                    new Organization(
+                                                            new Link(dis.readUTF(), dis.readUTF()),
+                                                            readToList(dis, () -> {
+                                                                        try {
+                                                                            new Organization.Position(
+                                                                                    LocalDate.parse(dis.readUTF()),
+                                                                                    LocalDate.parse(dis.readUTF()),
+                                                                                    dis.readUTF(),
+                                                                                    dis.readUTF()
+                                                                            );
+                                                                        } catch (IOException e) {
+                                                                            throw new StorageException("IOError while reading from file", e);
+                                                                        }
+                                                                        return null;
+                                                                    }
                                                             )
-                                                    )
-                                            )
+                                                    );
+                                                } catch (IOException e) {
+                                                    throw new StorageException("IOError while reading from file", e);
+                                                }
+                                                return null;
+                                            }
                                     )
                             )
                     );
+                }
+
+
             }
 
             return resume;
@@ -129,7 +155,7 @@ public class DataStreamSerializer implements SerializableStrategy {
 
     }
 
-    private <T> void writer(DataOutputStream dos, List<T> list, Consumer<T> consumer) {
+    private <T> void writer(DataOutputStream dos, List<T> list, Consumer<T> consumer){
         try {
             dos.writeInt(list.size());
             for (T t : list) {
@@ -141,8 +167,9 @@ public class DataStreamSerializer implements SerializableStrategy {
                 */
             }
         } catch (IOException e) {
-            throw new StorageException("Error while writing sections from Resume ", e);
+            throw new StorageException("IOError while writing in file", e);
         }
+
 
     }
 
@@ -154,21 +181,25 @@ public class DataStreamSerializer implements SerializableStrategy {
         }
     }
 
+    private <T> List<T> readToList(DataInputStream dis, Supplier<T> supplier) throws IOException {
+        List<T> descriptionList = new ArrayList<>();
+        int size = dis.readInt();
+        for (int i = 0; i < size; i++) {
+            descriptionList.add(supplier.get());
+        }
+        return descriptionList;
+    }
 
-    private void reader(DataInputStream dis) {
+    private <T> List<T> readToList(DataInputStream dis, T t) {
         try {
             int size = dis.readInt();
-            for (int i = 0; i < size; i++) {
-
-            }
+            //return Stream.generate(supplier).limit(size).collect(Collectors.toList());
+            return Stream.of(t).limit(size).collect(Collectors.toList());
         } catch (IOException e) {
-            throw new StorageException("IOError in read operation ", e);
+            e.printStackTrace();
         }
-    }
 
-    private <T> List<T> readtoList(int size, T t) {
-        return Stream.of(t).limit(size).collect(Collectors.toList());
+        return null;
     }
-
 
 }
