@@ -7,6 +7,7 @@ import ru.javawebinar.storage.serial.functional.ConsumerThrowing;
 import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -16,31 +17,29 @@ public class DataStreamSerializer implements SerializableStrategy {
         try (DataOutputStream dos = new DataOutputStream(os)) {
             dos.writeUTF(resume.getUuid());
             dos.writeUTF(resume.getFullName());
+
             Map<ContactType, String> contacts = resume.getContactMap();
-            dos.writeInt(contacts.size());
-            for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
+            writer(dos, contacts.entrySet(), entry -> {
                 dos.writeUTF(entry.getKey().name());
                 dos.writeUTF(entry.getValue());
-            }
+            });
 
             Map<SectionType, Section> sections = resume.getSectionMap();
-            dos.writeInt(sections.size());
-            for (Map.Entry<SectionType, Section> entry : sections.entrySet()) {
-                String sectionType = entry.getKey().name();
+            writer(dos, sections.entrySet(), entry -> {
+                SectionType sectionType = entry.getKey();
                 Section sectionValue = entry.getValue();
-
-                dos.writeUTF(sectionType);
+                dos.writeUTF(sectionType.name());
                 switch (sectionType) {
-                    case "PERSONAL":
-                    case "OBJECTIVE":
+                    case PERSONAL:
+                    case OBJECTIVE:
                         dos.writeUTF(((TextSection) sectionValue).getText());
                         break;
-                    case "ACHIEVEMENT":
-                    case "QUALIFICATIONS":
+                    case ACHIEVEMENT:
+                    case QUALIFICATIONS:
                         writer(dos, ((ListSection) sectionValue).getDescriptionList(), dos::writeUTF);
                         break;
-                    case "EXPERIENCE":
-                    case "EDUCATION":
+                    case EXPERIENCE:
+                    case EDUCATION:
                         writer(dos, ((OrganizationsSection) sectionValue).getOrganizations(), org -> {
                                     dos.writeUTF(org.getLink().getTitle());
                                     dos.writeUTF(org.getLink().getUrlAdr());
@@ -52,17 +51,13 @@ public class DataStreamSerializer implements SerializableStrategy {
                                                 dos.writeUTF(pos.getDescription());
                                             }
                                     );
-
                                 }
                         );
                         break;
                 }
-
-            }
-
+            });
         }
     }
-
 
     @Override
     public Resume doRead(InputStream is) throws IOException {
@@ -70,26 +65,25 @@ public class DataStreamSerializer implements SerializableStrategy {
             String uuid = dis.readUTF();
             String fullName = dis.readUTF();
             Resume resume = new Resume(uuid, fullName);
-            int size = dis.readInt();
-            for (int i = 0; i < size; i++) {
+
+            readToList(dis, () -> {
                 resume.putContactMap(ContactType.valueOf(dis.readUTF()), dis.readUTF());
-            }
+                return null;
+            });
 
-            size = dis.readInt();
-            for (int i = 0; i < size; i++) {
+            readToList(dis, () -> {
                 SectionType sectionType = SectionType.valueOf(dis.readUTF());
-
-                switch (sectionType.name()) {
-                    case "PERSONAL":
-                    case "OBJECTIVE":
+                switch (sectionType) {
+                    case PERSONAL:
+                    case OBJECTIVE:
                         resume.putSectionMap(sectionType, new TextSection(dis.readUTF()));
                         break;
-                    case "ACHIEVEMENT":
-                    case "QUALIFICATIONS":
+                    case ACHIEVEMENT:
+                    case QUALIFICATIONS:
                         readToList(dis, dis::readUTF);
                         break;
-                    case "EXPERIENCE":
-                    case "EDUCATION":
+                    case EXPERIENCE:
+                    case EDUCATION:
                         resume.putSectionMap(sectionType, new OrganizationsSection(
                                         readToList(dis, () -> new Organization(
                                                         new Link(dis.readUTF(), dis.readUTF()),
@@ -106,17 +100,16 @@ public class DataStreamSerializer implements SerializableStrategy {
                         );
                         break;
                 }
-
-            }
-
+                return null;
+            });
             return resume;
         }
     }
 
-    private <T> void writer(DataOutputStream dos, List<T> list, ConsumerThrowing<T> consumer) throws IOException {
-        dos.writeInt(list.size());
-        for (T t : list) {
-            consumer.accept(t);
+    private <E> void writer(DataOutputStream dos, Collection<E> collection, ConsumerThrowing<E> consumer) throws IOException {
+        dos.writeInt(collection.size());
+        for (E e : collection) {
+            consumer.accept(e);
         }
     }
 
@@ -128,6 +121,4 @@ public class DataStreamSerializer implements SerializableStrategy {
         }
         return descriptionList;
     }
-
-
 }

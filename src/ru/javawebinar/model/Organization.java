@@ -86,7 +86,7 @@ public class Organization implements Serializable {
             this.startPeriod = startPeriod;
             this.endPeriod = endPeriod;
             this.position = position;
-            this.description  = description == null ? "" : description;
+            this.description = description == null ? "" : description;
         }
 
         public LocalDate getStartPeriod() {

@@ -18,7 +18,7 @@ public class Link implements Serializable {
     public Link(String title, String urlAdr) {
         Objects.requireNonNull(title, "Inputed title is null");
         this.title = title;
-        this.urlAdr = urlAdr;
+        this.urlAdr = urlAdr == null ? "" : urlAdr;
     }
 
     public String getTitle() {
