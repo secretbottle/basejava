@@ -1,6 +1,7 @@
 package ru.javawebinar.storage.serial;
 
 import ru.javawebinar.model.*;
+import ru.javawebinar.storage.serial.functional.FunctionThrowing;
 import ru.javawebinar.storage.serial.functional.SupplierThrowing;
 import ru.javawebinar.storage.serial.functional.ConsumerThrowing;
 
@@ -66,12 +67,11 @@ public class DataStreamSerializer implements SerializableStrategy {
             String fullName = dis.readUTF();
             Resume resume = new Resume(uuid, fullName);
 
-            readToList(dis, () -> {
+            reader(dis, () -> {
                 resume.putContactMap(ContactType.valueOf(dis.readUTF()), dis.readUTF());
-                return null;
             });
 
-            readToList(dis, () -> {
+            reader(dis, () -> {
                 SectionType sectionType = SectionType.valueOf(dis.readUTF());
                 switch (sectionType) {
                     case PERSONAL:
@@ -100,7 +100,6 @@ public class DataStreamSerializer implements SerializableStrategy {
                         );
                         break;
                 }
-                return null;
             });
             return resume;
         }
@@ -110,6 +109,13 @@ public class DataStreamSerializer implements SerializableStrategy {
         dos.writeInt(collection.size());
         for (E e : collection) {
             consumer.accept(e);
+        }
+    }
+
+    private void reader(DataInputStream dis, FunctionThrowing function) throws IOException {
+        int size = dis.readInt();
+        for (int i = 0; i < size; i++) {
+            function.accept();
         }
     }
 
