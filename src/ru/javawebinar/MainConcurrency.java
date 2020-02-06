@@ -8,7 +8,6 @@ public class MainConcurrency {
     private static int counter;
     private static final Object LOCK = new Object();
 
-
     public static void main(String[] args) throws InterruptedException {
         System.out.println(Thread.currentThread().getName());
         new Thread() {
@@ -36,8 +35,8 @@ public class MainConcurrency {
         Thread.sleep(500);
         System.out.println(counter);
 
-        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>");
-        deadlockTest();
+        System.out.println("Deadlock Test");
+        deadlock();
 
     }
 
@@ -53,45 +52,47 @@ public class MainConcurrency {
     }
 
 
-    private static void deadlockTest() throws InterruptedException {
-        Resource resourceOne = new Resource("res One");
-        Resource resourceTwo = new Resource("res Two");
+    private static void deadlock() throws InterruptedException {
+        String resourceOne = "res One";
+        String resourceTwo = "res Two";
 
         Thread threadOne = new Thread(() -> {
-            System.out.println(resourceTwo.getName());
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            synchronized (resourceOne) {
+                System.out.println(resourceOne);
+
+
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                synchronized (resourceTwo) {
+                    System.out.println(resourceTwo);
+                }
             }
-            System.out.println(resourceOne.getName());
-        });
+
+        }, "threadOne");
 
         Thread threadTwo = new Thread(() -> {
-            System.out.println(resourceOne.getName());
-            threadOne.start();
-            System.out.println(resourceTwo.getName());
-        });
+            synchronized (resourceTwo) {
+                System.out.println(resourceTwo);
 
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                synchronized (resourceOne) {
+                    System.out.println(resourceOne);
+                }
+            }
+        }, "threadTwo");
 
         threadOne.start();
-
         threadTwo.start();
 
     }
-
-
-    private static class Resource {
-        private String name;
-
-        Resource(String name) {
-            this.name = name;
-        }
-
-        public String getName() {
-            return name;
-        }
-    }
-
 
 }
