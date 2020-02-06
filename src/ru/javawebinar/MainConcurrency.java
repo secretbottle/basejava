@@ -36,6 +36,9 @@ public class MainConcurrency {
         Thread.sleep(500);
         System.out.println(counter);
 
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>");
+        deadlockTest();
+
     }
 
 
@@ -47,6 +50,47 @@ public class MainConcurrency {
 //                readFile
 //                ...
 //        }
+    }
+
+
+    private static void deadlockTest() throws InterruptedException {
+        Resource resourceOne = new Resource("res One");
+        Resource resourceTwo = new Resource("res Two");
+
+        Thread threadOne = new Thread(() -> {
+            System.out.println(resourceTwo.getName());
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println(resourceOne.getName());
+        });
+
+        Thread threadTwo = new Thread(() -> {
+            System.out.println(resourceOne.getName());
+            threadOne.start();
+            System.out.println(resourceTwo.getName());
+        });
+
+
+        threadOne.start();
+
+        threadTwo.start();
+
+    }
+
+
+    private static class Resource {
+        private String name;
+
+        Resource(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
     }
 
 
