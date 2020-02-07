@@ -51,32 +51,19 @@ public class MainConcurrency {
 //        }
     }
 
-
-    private static void deadlock() throws InterruptedException {
+    private static void deadlock() {
         String resourceOne = "res One";
         String resourceTwo = "res Two";
 
-        Thread threadOne = new Thread(() -> {
-            synchronized (resourceOne) {
-                System.out.println(resourceOne);
+        threadRes("threadOne", resourceOne, resourceTwo).start();
+        threadRes("threadTwo", resourceTwo, resourceOne).start();
 
+    }
 
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                synchronized (resourceTwo) {
-                    System.out.println(resourceTwo);
-                }
-            }
-
-        }, "threadOne");
-
-        Thread threadTwo = new Thread(() -> {
-            synchronized (resourceTwo) {
-                System.out.println(resourceTwo);
+    private static Thread threadRes(String threadName, Object objectOne, Object objectTwo) {
+        return new Thread(() -> {
+            synchronized (objectOne) {
+                System.out.println(objectOne);
 
                 try {
                     Thread.sleep(500);
@@ -84,14 +71,11 @@ public class MainConcurrency {
                     e.printStackTrace();
                 }
 
-                synchronized (resourceOne) {
-                    System.out.println(resourceOne);
+                synchronized (objectTwo) {
+                    System.out.println(objectTwo);
                 }
             }
-        }, "threadTwo");
-
-        threadOne.start();
-        threadTwo.start();
+        }, threadName);
 
     }
 
