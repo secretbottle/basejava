@@ -1,7 +1,6 @@
 package ru.javawebinar;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.*;
 
 public class MainConcurrency {
     public static final int THREADS_NUMBER = 10000;
@@ -23,17 +22,63 @@ public class MainConcurrency {
 
 
         final MainConcurrency mainConc = new MainConcurrency();
-        List<Thread> threads = new ArrayList<>(THREADS_NUMBER);
+
+        //java.util.concurrent.*;
+        CountDownLatch cdLatch = new CountDownLatch(THREADS_NUMBER);
+        ExecutorService executorService = Executors.newCachedThreadPool();
+
+
+        //List<Thread> threads = new ArrayList<>(THREADS_NUMBER);
         for (int i = 0; i < THREADS_NUMBER; i++) {
+            Future<Integer> future = executorService.submit(() -> {
+                for (int j = 0; j < 100; j++) {
+                    mainConc.inc();
+                }
+                cdLatch.countDown();
+                return 5;
+            });
+
+
+/*
+            executorService.submit(()->{
+                for (int j = 0; j < 100; j++) {
+                    mainConc.inc();
+                }
+                cdLatch.countDown();
+
+            });
+            */
+
+/*
+
             new Thread(() -> {
                 for (int j = 0; j < 100; j++) {
                     mainConc.inc();
                 }
+                cdLatch.countDown();
             }).start();
+            //threads.add(thread);
+            */
+
         }
 
         Thread.sleep(500);
         System.out.println(counter);
+
+/*
+
+        threads.forEach(t -> {
+            try {
+                t.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+*/
+        cdLatch.await(10, TimeUnit.SECONDS);
+        executorService.shutdown();
+
+        System.out.println(mainConc.counter);
 
         System.out.println("Deadlock Test");
         deadlock();
