@@ -2,6 +2,7 @@ package ru.javawebinar.storage;
 
 import org.junit.Before;
 import org.junit.Test;
+import ru.javawebinar.Config;
 import ru.javawebinar.exception.ExistStorageException;
 import ru.javawebinar.exception.NotExistStorageException;
 import ru.javawebinar.model.Resume;
@@ -14,7 +15,9 @@ import static org.junit.Assert.assertEquals;
 
 public abstract class AbstractStorageTest {
     protected Storage storage;
-    protected static final File STORAGE_DIR = new File(System.getenv("STORAGE_DIR"));
+    //protected static final File STORAGE_DIR = new File(System.getenv("STORAGE_DIR"));
+    protected static final File STORAGE_DIR = Config.getInstance().getStorageDir();
+    //protected static final File STORAGE_DIR = new File("E:\\workdir\\basejava\\storage");
 
     private static final String UUID_1 = "uuid1";
     private static final String UUID_2 = "uuid2";

@@ -1,3 +1,0 @@
-db.url=jdbc:postgresql://localhost:5432/resumesDB
-db.users=postgres
-db.url=12345
