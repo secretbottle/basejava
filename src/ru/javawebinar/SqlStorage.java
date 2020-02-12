@@ -1,5 +1,6 @@
 package ru.javawebinar;
 
+import ru.javawebinar.exception.ExistStorageException;
 import ru.javawebinar.exception.NotExistStorageException;
 import ru.javawebinar.exception.StorageException;
 import ru.javawebinar.model.Resume;
@@ -47,7 +48,7 @@ public class SqlStorage implements Storage {
             ps.setString(2, resume.getFullName());
             ps.executeUpdate();
         } catch (SQLException e) {
-            throw new StorageException(e);
+            throw new ExistStorageException(resume.getUuid(), e);
         }
     }
 
@@ -71,7 +72,10 @@ public class SqlStorage implements Storage {
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement ps = conn.prepareStatement("DELETE FROM resume WHERE uuid = ?")) {
             ps.setString(1, uuid);
-            ps.executeUpdate();
+            int check = ps.executeUpdate();
+            if (check == 0) {
+                throw new NotExistStorageException("SQLError: uuid was not delete");
+            }
         } catch (SQLException e) {
             throw new StorageException(e);
         }
@@ -83,8 +87,12 @@ public class SqlStorage implements Storage {
              Statement st = conn.createStatement()) {
             List<Resume> list = new ArrayList<>();
             ResultSet rs = st.executeQuery("SELECT * FROM resume ORDER BY full_name ASC");
-            while (rs.isLast()) {
-                list.add(new Resume(rs.getString(1), rs.getString(2)));
+            while (rs.next()) {
+                list.add(
+                        new Resume(
+                                rs.getString(1).replaceAll("\\s+", ""),
+                                rs.getString(2)
+                        ));
             }
             return list;
         } catch (SQLException e) {
