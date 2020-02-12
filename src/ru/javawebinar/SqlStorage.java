@@ -95,15 +95,11 @@ public class SqlStorage implements Storage {
     @Override
     public int size() {
         try (Connection conn = connectionFactory.getConnection();
-             Statement st = conn.createStatement()) {
-            ResultSet rs = st.executeQuery("SELECT COUNT(*) FROM resume");
-            int size = 0;
-            if (rs != null) {
-                rs.beforeFirst();
-                rs.last();
-                size = rs.getRow();
-            }
-            return size;
+             Statement st = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
+                     ResultSet.CONCUR_READ_ONLY)) {
+            ResultSet rs = st.executeQuery("SELECT * FROM resume");
+            rs.last();
+            return rs.getRow();
         } catch (SQLException e) {
             throw new StorageException(e);
         }
