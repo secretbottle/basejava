@@ -8,4 +8,5 @@ public class ExistStorageException extends StorageException {
     public ExistStorageException(String uuid, Exception e) {
         super("ERROR: '" + uuid + "' already exist.", e);
     }
+
 }

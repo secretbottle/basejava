@@ -1,8 +1,8 @@
 package ru.javawebinar.sql;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 public interface ExecutorStatement {
-    void execute(Statement st) throws SQLException;
+    void execute(ResultSet rs) throws SQLException;
 }
