@@ -1,5 +1,6 @@
 package ru.javawebinar.sql;
 
+import ru.javawebinar.exception.ExistStorageException;
 import ru.javawebinar.exception.StorageException;
 
 import java.sql.*;
@@ -7,28 +8,20 @@ import java.sql.*;
 public class SqlHelper {
     private ConnectionFactory connectionFactory;
 
-
-
     public SqlHelper(ConnectionFactory connectionFactory) {
         this.connectionFactory = connectionFactory;
     }
 
-    public void executePrepStatement(boolean checkExist, String sqlQuery, ExecutorPrepStatement exPs) {
+    public void executePrepStatement(String sqlQuery, ExecutorPrepStatement exPs) {
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement ps = conn.prepareStatement(sqlQuery)) {
-            String uuid = exPs.execute(ps);
-            boolean checkEx = ps.execute();
-
-            //if(!checkEx && checkExist) throw new ExistStorageException("SQLError: " + uuid + " is exists");
-
-            //if(!checkEx && checkExist) throw new NotExistStorageException("SQLError: " + uuid + " is not exists");
-
-
+            exPs.execute(ps);
         } catch (SQLException e) {
+            if(e.getSQLState().equals("23505"))
+                throw new ExistStorageException(e);
             throw new StorageException(e);
         }
     }
-
 
     public void executeStatement(String sqlQuery) {
         try (Connection conn = connectionFactory.getConnection();
@@ -39,8 +32,7 @@ public class SqlHelper {
         }
     }
 
-
-    public void executeResultSet(String sqlQuery, ExecutorStatement executor) {
+    public void executeResultSet(String sqlQuery, ExecutorResStatement executor) {
         try (Connection conn = connectionFactory.getConnection();
              ResultSet rs = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
                      ResultSet.CONCUR_READ_ONLY)
