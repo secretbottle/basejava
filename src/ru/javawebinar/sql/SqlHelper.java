@@ -12,12 +12,12 @@ public class SqlHelper {
         this.connectionFactory = connectionFactory;
     }
 
-    public void executePrepStatement(String sqlQuery, ExecutorPrepStatement exPs) {
+    public <T> T executePrepStatement(String sqlQuery, ExecutorStatement<T, PreparedStatement> exPs) {
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement ps = conn.prepareStatement(sqlQuery)) {
-            exPs.execute(ps);
+            return exPs.execute(ps);
         } catch (SQLException e) {
-            if(e.getSQLState().equals("23505"))
+            if (e.getSQLState().equals("23505"))
                 throw new ExistStorageException(e);
             throw new StorageException(e);
         }
@@ -26,18 +26,17 @@ public class SqlHelper {
     public void executeStatement(String sqlQuery) {
         try (Connection conn = connectionFactory.getConnection();
              Statement st = conn.createStatement()) {
-                st.execute(sqlQuery);
+            st.execute(sqlQuery);
         } catch (SQLException e) {
             throw new StorageException(e);
         }
     }
 
-    public void executeResultSet(String sqlQuery, ExecutorResStatement executor) {
+    public <T> T executeResultSet(String sqlQuery, ExecutorStatement<T, ResultSet> executor) {
         try (Connection conn = connectionFactory.getConnection();
-             ResultSet rs = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
-                     ResultSet.CONCUR_READ_ONLY)
-                     .executeQuery(sqlQuery)) {
-            executor.execute(rs);
+             Statement st = conn.createStatement()) {
+            ResultSet rs = st.executeQuery(sqlQuery);
+            return executor.execute(rs);
         } catch (SQLException e) {
             throw new StorageException(e);
         }

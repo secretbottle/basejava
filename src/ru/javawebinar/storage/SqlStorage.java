@@ -28,8 +28,9 @@ public class SqlStorage implements Storage {
                 (ps) -> {
                     ps.setString(1, resume.getFullName());
                     ps.setString(2, resume.getUuid());
-                    if(ps.executeUpdate() == 0)
+                    if (ps.executeUpdate() == 0)
                         throw new NotExistStorageException(resume.getUuid());
+                    return null;
                 });
     }
 
@@ -40,22 +41,21 @@ public class SqlStorage implements Storage {
                     ps.setString(1, resume.getUuid());
                     ps.setString(2, resume.getFullName());
                     ps.executeUpdate();
+                    return null;
                 });
     }
-    
+
     @Override
     public Resume get(String uuid) {
-        final Resume[] resume = new Resume[1];
-        sqlHelper.executePrepStatement("SELECT * FROM resume r WHERE r.uuid = ?",
+        return sqlHelper.executePrepStatement("SELECT * FROM resume r WHERE r.uuid = ?",
                 (ps) -> {
                     ps.setString(1, uuid);
                     ResultSet rs = ps.executeQuery();
                     if (!rs.next()) {
                         throw new NotExistStorageException(uuid);
                     }
-                    resume[0] = new Resume(uuid, rs.getString("full_name"));
+                    return new Resume(uuid, rs.getString("full_name"));
                 });
-        return resume[0];
     }
 
     @Override
@@ -64,36 +64,35 @@ public class SqlStorage implements Storage {
                 (ps) -> {
                     ps.setString(1, uuid);
                     int exUp = ps.executeUpdate();
-                    if(exUp == 0)
+                    if (exUp == 0)
                         throw new NotExistStorageException(uuid);
+                    return null;
                 });
     }
 
     @Override
     public List<Resume> getAllSorted() {
-        List<Resume> list = new ArrayList<>();
-        sqlHelper.executeResultSet("SELECT * FROM resume ORDER BY full_name ASC",
+        return sqlHelper.executeResultSet("SELECT * FROM resume ORDER BY full_name, uuid ASC",
                 (rs) -> {
+                    List<Resume> list = new ArrayList<>();
                     while (rs.next()) {
                         list.add(
                                 new Resume(
-                                        rs.getString(1).replaceAll("\\s+", ""),
+                                        rs.getString(1),
                                         rs.getString(2)
                                 ));
                     }
+                    return list;
                 });
-        return list;
     }
 
     @Override
     public int size() {
-        final int[] size = {0};
-        sqlHelper.executeResultSet("SELECT * FROM resume",
+        return sqlHelper.executeResultSet("SELECT COUNT(*) FROM resume",
                 (rs) -> {
-                    rs.last();
-                    size[0] = rs.getRow();
+                    rs.next();
+                    return rs.getInt(1);
                 });
-        return size[0];
     }
 
 }
