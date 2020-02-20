@@ -27,13 +27,29 @@ public class SqlStorage implements Storage {
 
     @Override
     public void update(Resume resume) {
-        sqlHelper.executePrepStatement("UPDATE resume SET full_name =? WHERE uuid = ?",
+        sqlHelper.transactionalExecute(conn -> {
+            try(PreparedStatement ps = conn.prepareStatement("UPDATE resume SET full_name =? WHERE uuid = ?")){
+                ps.setString(1, resume.getFullName());
+                ps.setString(2, resume.getUuid());
+                if (ps.executeUpdate() == 0)
+                    throw new NotExistStorageException(resume.getUuid());
+                return null;
+            }
+            try (PreparedStatement ps = conn.prepareStatement("UPDATE contact SET type = ?, value = ? WHERE resume_uuid = ?")) {
+                for (Map.Entry<ContactType, String> e : resume.getContactMap().entrySet()) {
+                    ps.setString(1, resume.getUuid());
+                    ps.setString(2, e.getKey().name());
+                    ps.setString(3, e.getValue());
+                    ps.addBatch();
+                }
+                ps.executeBatch();
+            }
+        })
+
+
+        sqlHelper.executePrepStatement(,
                 (ps) -> {
-                    ps.setString(1, resume.getFullName());
-                    ps.setString(2, resume.getUuid());
-                    if (ps.executeUpdate() == 0)
-                        throw new NotExistStorageException(resume.getUuid());
-                    return null;
+
                 });
     }
 
