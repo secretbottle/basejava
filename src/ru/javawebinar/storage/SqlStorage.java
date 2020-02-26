@@ -48,6 +48,7 @@ public class SqlStorage implements Storage {
                         ps.setString(2, resume.getFullName());
                         ps.execute();
                     }
+                    if(resume.getContactMap().size() != 0)
                     try (PreparedStatement ps = conn.prepareStatement("INSERT INTO contact (resume_uuid, type, value) VALUES (?,?,?)")) {
                         insContacts(resume, ps);
                     }
@@ -99,7 +100,7 @@ public class SqlStorage implements Storage {
                 " LEFT JOIN contact c ON c.resume_uuid = r.uuid " +
                 " ORDER BY r.full_name, r.uuid",
                 rs -> {
-                    Set<Resume> set = new HashSet<>();
+                    Set<Resume> set = new TreeSet<>();
                     while (rs.next()) {
                         set.add(new Resume(
                                 rs.getString("uuid"),

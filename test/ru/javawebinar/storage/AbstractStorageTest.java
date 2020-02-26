@@ -9,6 +9,7 @@ import ru.javawebinar.model.Resume;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -23,10 +24,10 @@ public abstract class AbstractStorageTest {
     private static final String UUID_3 = "uuid3";
     private static final String UUID_4 = "uuid4";
 
-    private static final String FULLNAME_1 = "FULLNAME1";
-    private static final String FULLNAME_2 = "FULLNAME2";
-    private static final String FULLNAME_3 = "FULLNAME3";
-    private static final String FULLNAME_4 = "FULLNAME4";
+    private static final String FULLNAME_1 = "FULLNAME14";
+    private static final String FULLNAME_2 = "FULLNAME25";
+    private static final String FULLNAME_3 = "FULLNAME31";
+    private static final String FULLNAME_4 = "FULLNAME42";
 
     private static final Resume RESUME_1;
     private static final Resume RESUME_2;
@@ -34,11 +35,18 @@ public abstract class AbstractStorageTest {
     private static final Resume RESUME_4;
 
     static {
-
+/*
         RESUME_1 = ResumeTestData.generateResume(UUID_1, FULLNAME_1);
         RESUME_2 = ResumeTestData.generateResume(UUID_2, FULLNAME_2);
         RESUME_3 = ResumeTestData.generateResume(UUID_3, FULLNAME_3);
         RESUME_4 = ResumeTestData.generateResume(UUID_4, FULLNAME_4);
+*/
+        RESUME_1 = ResumeTestData.genNullContacts(FULLNAME_1);
+        RESUME_2 = ResumeTestData.genNullContacts(FULLNAME_2);
+        RESUME_3 = ResumeTestData.genNullContacts(FULLNAME_3);
+        RESUME_4 = ResumeTestData.genNullContacts(FULLNAME_4);
+
+
 /*
         RESUME_1 = new Resume(UUID_1, FULLNAME_1);
         RESUME_2 = new Resume(UUID_2, FULLNAME_2);
@@ -116,11 +124,11 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void getAllSorted() throws Exception {
-        List<Resume> listTest = storage.getAllSorted();
-        assertEquals(3, listTest.size());
-
-        Resume[] arrTest = new Resume[]{RESUME_1, RESUME_2, RESUME_3};
-        assertEquals(listTest, Arrays.asList(arrTest));
+        List<Resume> actualList = storage.getAllSorted();
+        assertEquals(3, actualList.size());
+        List<Resume> expectedList = Arrays.asList(RESUME_1, RESUME_2, RESUME_3);
+        Collections.sort(expectedList);
+        assertEquals(expectedList, actualList);
     }
 
     @Test
