@@ -108,7 +108,7 @@ public class ResumeTestData {
         Resume resume = new Resume(uuid, fullname);
         //Контакты
         resume.putContactMap(ContactType.PHONE, "+7(921) 855-0482");
-        resume.putContactMap(ContactType.EMAIL, "skype:grigory.kislin" + generateRandomString(3));
+        //resume.putContactMap(ContactType.EMAIL, "skype:grigory.kislin" + generateRandomString(3));
         resume.putContactMap(ContactType.LINKEDIN, "адрес");
         resume.putContactMap(ContactType.GITHUB, "https://github.com/gkislin" + generateRandomString(3));
         resume.putContactMap(ContactType.STACKOVERFLOW, "https://stackoverflow.com/users/548473" + generateRandomString(3));

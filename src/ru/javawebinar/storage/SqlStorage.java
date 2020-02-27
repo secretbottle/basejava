@@ -5,10 +5,7 @@ import ru.javawebinar.model.ContactType;
 import ru.javawebinar.model.Resume;
 import ru.javawebinar.sql.SqlHelper;
 
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.*;
 
 public class SqlStorage implements Storage {
@@ -34,37 +31,11 @@ public class SqlStorage implements Storage {
                     throw new NotExistStorageException(resume.getUuid());
             }
 
-
-            try (PreparedStatement ps = conn.prepareStatement("DELETE FROM contact WHERE resume_uuid =? AND type = ? AND value = ?")) {
-                Resume oldResume = get(resume.getUuid());
-                Map<ContactType, String> oldContacts = oldResume.getContactMap();
-                Map<ContactType, String> newContacts = resume.getContactMap();
-
-                for (Map.Entry<ContactType, String> e : oldContacts.entrySet()) {
-                    ContactType keyOld = e.getKey();
-
-                    if (newContacts.containsKey(keyOld))
-                        continue;
-
-                    ps.setString(1, resume.getUuid());
-                    ps.setString(2, e.getKey().name());
-                    ps.setString(3, e.getValue());
-                    ps.addBatch();
-
-                }
+            try (PreparedStatement ps = conn.prepareStatement("DELETE FROM contact WHERE resume_uuid = ?")) {
+                ps.setString(1, resume.getUuid());
+                ps.executeUpdate();
             }
-
-            try (PreparedStatement ps = conn.prepareStatement("" +
-                    " INSERT INTO contact (resume_uuid, type, value) VALUES (?,?,?) " +
-                    " ON CONFLICT (type, value) DO UPDATE SET type = ?, value = ? WHERE resume_uuid = ?")) {
-                insContacts(resume, ps);
-            }
-
-/*
-            try (PreparedStatement ps = conn.prepareStatement("UPDATE contact SET type = ?, value = ? WHERE resume_uuid = ?")) {
-                insContacts(resume, ps);
-            }
-*/
+            saveContacts(resume, conn);
 
             return null;
         });
@@ -78,10 +49,9 @@ public class SqlStorage implements Storage {
                         ps.setString(2, resume.getFullName());
                         ps.execute();
                     }
-                    if (resume.getContactMap().size() != 0)
-                        try (PreparedStatement ps = conn.prepareStatement("INSERT INTO contact (resume_uuid, type, value) VALUES (?,?,?)")) {
-                            insContacts(resume, ps);
-                        }
+
+                    saveContacts(resume, conn);
+
                     return null;
                 }
         );
@@ -160,6 +130,13 @@ public class SqlStorage implements Storage {
             ps.addBatch();
         }
         ps.executeBatch();
+    }
+
+    private void saveContacts(Resume resume, Connection conn) throws SQLException {
+        if (resume.getContactMap().size() != 0)
+            try (PreparedStatement ps = conn.prepareStatement("INSERT INTO contact (resume_uuid, type, value) VALUES (?,?,?)")) {
+                insContacts(resume, ps);
+            }
     }
 
 }
