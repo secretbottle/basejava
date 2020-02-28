@@ -70,7 +70,7 @@ public class Resume implements Comparable<Resume>, Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, fullName);
+        return Objects.hash(uuid, fullName, contactMap, sectionMap);
     }
 
     @Override
