@@ -11,10 +11,10 @@ public class SqlHelper {
         this.connectionFactory = connectionFactory;
     }
 
-    public <T> T executePrepStatement(String sqlQuery, ExecutorStatement<T, PreparedStatement> exPs) {
+    public <T> T executePrepStatement(String sqlQuery, ExecutorStatement<T> executor) {
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement ps = conn.prepareStatement(sqlQuery)) {
-            return exPs.execute(ps);
+            return executor.execute(ps);
         } catch (SQLException e) {
             throw ExceptionUtil.convertException(e);
         }
@@ -24,16 +24,6 @@ public class SqlHelper {
         try (Connection conn = connectionFactory.getConnection();
              Statement st = conn.createStatement()) {
             st.execute(sqlQuery);
-        } catch (SQLException e) {
-            throw ExceptionUtil.convertException(e);
-        }
-    }
-
-    public <T> T executeResultSet(String sqlQuery, ExecutorStatement<T, ResultSet> executor) {
-        try (Connection conn = connectionFactory.getConnection();
-             Statement st = conn.createStatement()) {
-            ResultSet rs = st.executeQuery(sqlQuery);
-            return executor.execute(rs);
         } catch (SQLException e) {
             throw ExceptionUtil.convertException(e);
         }

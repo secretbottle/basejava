@@ -1,7 +1,8 @@
 package ru.javawebinar.sql;
 
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public interface ExecutorStatement<T, S> {
-    T execute(S s) throws SQLException;
+public interface ExecutorStatement<T> {
+    T execute(PreparedStatement ps) throws SQLException;
 }

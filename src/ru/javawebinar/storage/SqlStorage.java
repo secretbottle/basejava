@@ -35,7 +35,8 @@ public class SqlStorage implements Storage {
                 ps.setString(1, resume.getUuid());
                 ps.executeUpdate();
             }
-            saveContacts(resume, conn);
+
+            insContacts(resume, conn);
 
             return null;
         });
@@ -50,7 +51,7 @@ public class SqlStorage implements Storage {
                         ps.execute();
                     }
 
-                    saveContacts(resume, conn);
+                    insContacts(resume, conn);
 
                     return null;
                 }
@@ -97,12 +98,13 @@ public class SqlStorage implements Storage {
 
     @Override
     public List<Resume> getAllSorted() {
-        return sqlHelper.executeResultSet("" +
+        return sqlHelper.executePrepStatement("" +
                         " SELECT * FROM resume r " +
                         " LEFT JOIN contact c ON c.resume_uuid = r.uuid " +
                         " ORDER BY r.full_name, r.uuid",
-                rs -> {
-                    Set<Resume> set = new TreeSet<>();
+                ps -> {
+                    ResultSet rs = ps.executeQuery();
+                    Set<Resume> set = new LinkedHashSet<>();
                     while (rs.next()) {
                         set.add(new Resume(
                                 rs.getString("uuid"),
@@ -115,27 +117,24 @@ public class SqlStorage implements Storage {
 
     @Override
     public int size() {
-        return sqlHelper.executeResultSet("SELECT COUNT(*) FROM resume",
-                (rs) -> {
+        return sqlHelper.executePrepStatement("SELECT COUNT(*) FROM resume",
+                ps -> {
+                    ResultSet rs = ps.executeQuery();
                     rs.next();
                     return rs.getInt(1);
                 });
     }
 
-    private void insContacts(Resume resume, PreparedStatement ps) throws SQLException {
-        for (Map.Entry<ContactType, String> e : resume.getContactMap().entrySet()) {
-            ps.setString(1, resume.getUuid());
-            ps.setString(2, e.getKey().name());
-            ps.setString(3, e.getValue());
-            ps.addBatch();
-        }
-        ps.executeBatch();
-    }
-
-    private void saveContacts(Resume resume, Connection conn) throws SQLException {
+    private void insContacts(Resume resume, Connection conn) throws SQLException {
         if (resume.getContactMap().size() != 0)
             try (PreparedStatement ps = conn.prepareStatement("INSERT INTO contact (resume_uuid, type, value) VALUES (?,?,?)")) {
-                insContacts(resume, ps);
+                for (Map.Entry<ContactType, String> e : resume.getContactMap().entrySet()) {
+                    ps.setString(1, resume.getUuid());
+                    ps.setString(2, e.getKey().name());
+                    ps.setString(3, e.getValue());
+                    ps.addBatch();
+                }
+                ps.executeBatch();
             }
     }
 
