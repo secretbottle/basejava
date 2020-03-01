@@ -35,19 +35,18 @@ public abstract class AbstractStorageTest {
     private static final Resume RESUME_4;
 
     static {
-/*
+
         RESUME_1 = ResumeTestData.generateResume(UUID_1, FULLNAME_1);
         RESUME_2 = ResumeTestData.generateResume(UUID_2, FULLNAME_2);
         RESUME_3 = ResumeTestData.generateResume(UUID_3, FULLNAME_3);
         RESUME_4 = ResumeTestData.generateResume(UUID_4, FULLNAME_4);
-*/
-        RESUME_1 = ResumeTestData.generateResume(UUID_1, FULLNAME_1);
-        RESUME_2 = ResumeTestData.genNullContacts(FULLNAME_2);
-        RESUME_3 = ResumeTestData.generateResume(UUID_3, FULLNAME_3);
-        RESUME_4 = ResumeTestData.genNullContacts(FULLNAME_4);
-
-
 /*
+        RESUME_1 = ResumeTestData.genNullSections(UUID_1, FULLNAME_1);
+        RESUME_2 = ResumeTestData.genNullSections(UUID_2, FULLNAME_2);
+        RESUME_3 = ResumeTestData.genNullSections(UUID_3, FULLNAME_3);
+        RESUME_4 = ResumeTestData.genNullSections(UUID_4, FULLNAME_4);
+
+
         RESUME_1 = new Resume(UUID_1, FULLNAME_1);
         RESUME_2 = new Resume(UUID_2, FULLNAME_2);
         RESUME_3 = new Resume(UUID_3, FULLNAME_3);
@@ -75,7 +74,7 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void update() throws Exception {
-        Resume resume = ResumeTestData.generateRandomContact(UUID_1, "New FULLNAME");
+        Resume resume = ResumeTestData.genNullSections(UUID_1, "New FULLNAME");
         storage.update(resume);
         assertEquals(resume, storage.get(UUID_1));
     }

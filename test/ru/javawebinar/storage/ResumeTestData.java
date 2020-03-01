@@ -18,7 +18,7 @@ public class ResumeTestData {
 
     }
 
-    public static Resume generateResume(String uuid, String fullname) {
+    static Resume generateResume(String uuid, String fullname) {
         Resume resume = new Resume(uuid, fullname);
         //Контакты
         resume.putContactMap(ContactType.PHONE, "+7(921) 855-0482");
@@ -104,7 +104,7 @@ public class ResumeTestData {
         return resume;
     }
 
-    public static Resume generateRandomContact(String uuid, String fullname) {
+    static Resume generateRandomContact(String uuid, String fullname) {
         Resume resume = new Resume(uuid, fullname);
         //Контакты
         resume.putContactMap(ContactType.PHONE, "+7(921) 855-0482");
@@ -190,7 +190,7 @@ public class ResumeTestData {
     }
 
 
-    public static Resume genNullContacts(String fullname) {
+    static Resume genNullContacts(String fullname) {
         Resume resume = new Resume(fullname);
         /*//Контакты
         resume.putContactMap(ContactType.PHONE, "+7(921) 855-0482");
@@ -272,6 +272,20 @@ public class ResumeTestData {
         OrganizationsSection education = new OrganizationsSection(educationExpList);
 
         resume.putSectionMap(SectionType.EDUCATION, education);
+
+        return resume;
+    }
+
+    static Resume genNullSections(String uuid, String fullname) {
+        Resume resume = new Resume(uuid, fullname);
+        //Контакты
+        resume.putContactMap(ContactType.PHONE, "+7(921) 855-0482" + generateRandomString(1));
+        resume.putContactMap(ContactType.EMAIL, "skype:grigory.kislin" + generateRandomString(3));
+        resume.putContactMap(ContactType.SKYPE, "gkislin@yandex.ru");
+        resume.putContactMap(ContactType.LINKEDIN, "https://www.linkedin.com/in/gkislin" + generateRandomString(3));
+        resume.putContactMap(ContactType.GITHUB, "https://github.com/gkislin" + generateRandomString(3));
+        resume.putContactMap(ContactType.STACKOVERFLOW, "https://stackoverflow.com/users/548473" + generateRandomString(3));
+        resume.putContactMap(ContactType.HOMEPAGE, "http://gkislin.ru" + generateRandomString(3)+ "/");
 
         return resume;
     }

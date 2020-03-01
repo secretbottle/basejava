@@ -99,8 +99,8 @@ public class SqlStorage implements Storage {
     @Override
     public List<Resume> getAllSorted() {
         return sqlHelper.executePrepStatement("" +
-                        " SELECT * FROM resume r " +
-                        " LEFT JOIN contact c ON c.resume_uuid = r.uuid " +
+                        " SELECT * FROM resume r" +
+                        " LEFT JOIN contact c ON c.resume_uuid = r.uuid" +
                         " ORDER BY r.full_name, r.uuid",
                 ps -> {
                     ResultSet rs = ps.executeQuery();
@@ -111,6 +111,7 @@ public class SqlStorage implements Storage {
                                 rs.getString("full_name"))
                         );
                     }
+
                     return new ArrayList<>(set);
                 });
     }
