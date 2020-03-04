@@ -190,7 +190,7 @@ public class ResumeTestData {
     }
 
 
-    static Resume genNullContacts(String fullname) {
+    static Resume genNullContactsButSections(String uuid, String fullname) {
         Resume resume = new Resume(fullname);
         /*//Контакты
         resume.putContactMap(ContactType.PHONE, "+7(921) 855-0482");
@@ -272,6 +272,12 @@ public class ResumeTestData {
         OrganizationsSection education = new OrganizationsSection(educationExpList);
 
         resume.putSectionMap(SectionType.EDUCATION, education);
+
+        return resume;
+    }
+
+    static Resume genNullContacts(String uuid, String fullname) {
+        Resume resume = new Resume(uuid, fullname);
 
         return resume;
     }

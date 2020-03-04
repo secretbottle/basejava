@@ -96,7 +96,6 @@ public class SqlStorage implements Storage {
                     ResultSet rs = ps.executeQuery();
                     Set<Resume> set = new LinkedHashSet<>();
                     while (rs.next()) {
-                        System.out.println("ROW getAllSorted1 " + rs.getRow());
                         Resume resume = new Resume(
                                 rs.getString("uuid"),
                                 rs.getString("full_name"));
@@ -121,12 +120,17 @@ public class SqlStorage implements Storage {
         rs.absolute(rs.getRow() - 1);
         while (rs.next()) {
             String value = rs.getString("value");
-            ContactType type = ContactType.valueOf(rs.getString("type"));
-            if (resume.getContactMap().containsKey(type) || value == null) {
+            String type = rs.getString("type");
+            if(type == null)
+                break;
+
+            ContactType contactType = ContactType.valueOf(type);
+            if (resume.getContactMap().containsKey(contactType) || value == null) {
                 rs.absolute(rs.getRow() - 1);
                 break;
             }
-            resume.putContactMap(type, value);
+
+            resume.putContactMap(contactType, value);
         }
         return resume;
     }
