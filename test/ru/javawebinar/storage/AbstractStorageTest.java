@@ -5,6 +5,7 @@ import org.junit.Test;
 import ru.javawebinar.Config;
 import ru.javawebinar.exception.ExistStorageException;
 import ru.javawebinar.exception.NotExistStorageException;
+import ru.javawebinar.model.ContactType;
 import ru.javawebinar.model.Resume;
 
 import java.io.File;
@@ -48,17 +49,25 @@ public abstract class AbstractStorageTest {
         RESUME_3 = ResumeTestData.genNullSections(UUID_3, FULLNAME_3);
         RESUME_4 = ResumeTestData.genNullSections(UUID_4, FULLNAME_4);
 */
+
+/*
         RESUME_1 = ResumeTestData.genNullContacts(UUID_1, FULLNAME_1);
         RESUME_2 = ResumeTestData.genNullContacts(UUID_2, FULLNAME_2);
         RESUME_3 = ResumeTestData.genNullContacts(UUID_3, FULLNAME_3);
         RESUME_4 = ResumeTestData.genNullContacts(UUID_4, FULLNAME_4);
-
-/*
-        RESUME_1 = new Resume(UUID_1, FULLNAME_1);
-        RESUME_2 = new Resume(UUID_2, FULLNAME_2);
-        RESUME_3 = new Resume(UUID_3, FULLNAME_3);
-        RESUME_4 = new Resume(UUID_4, FULLNAME_4);
 */
+
+
+        RESUME_1 = new Resume(UUID_1, FULLNAME_1);
+        RESUME_1.putContactMap(ContactType.PHONE, "+7999999999");
+        RESUME_2 = new Resume(UUID_2, FULLNAME_2);
+        RESUME_2.putContactMap(ContactType.PHONE, null);
+        RESUME_2.putContactMap(ContactType.SKYPE, "SKYPENAME");
+        RESUME_3 = new Resume(UUID_3, FULLNAME_3);
+        RESUME_3.putContactMap(ContactType.EMAIL, "email@mail.com");
+        RESUME_4 = new Resume(UUID_4, FULLNAME_4);
+        RESUME_4.putContactMap(ContactType.HOMEPAGE, "homepage.com");
+
     }
 
     public AbstractStorageTest(Storage storage) {
