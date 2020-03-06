@@ -107,7 +107,9 @@ public class SqlStorage implements Storage {
                 for (Map.Entry<String, Resume> entry : sortedMap.entrySet()) {
                     ps.setString(1, entry.getKey());
                     getContacts(entry.getValue(), ps.executeQuery());
+                    ps.addBatch();
                 }
+                ps.executeBatch();
             }
             return new ArrayList<>(sortedMap.values());
         });
