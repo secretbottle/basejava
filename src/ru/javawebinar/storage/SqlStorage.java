@@ -70,7 +70,9 @@ public class SqlStorage implements Storage {
             try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM contact WHERE resume_uuid = ?")) {
                 ps.setString(1, uuid);
                 ResultSet rs = ps.executeQuery();
-                getContacts(resume, rs);
+                while (rs.next()) {
+                    getContacts(resume, rs);
+                }
             }
 
             return resume;
@@ -93,7 +95,7 @@ public class SqlStorage implements Storage {
     public List<Resume> getAllSorted() {
         return sqlHelper.transactionalExecute(conn -> {
             Map<String, Resume> sortedMap = new LinkedHashMap<>();
-            try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM resume ORDER BY full_name, uuid ASC")) {
+            try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM resume ORDER BY full_name, uuid")) {
                 ResultSet rs = ps.executeQuery();
                 while (rs.next()) {
                     String uuid = rs.getString("uuid");
@@ -103,14 +105,13 @@ public class SqlStorage implements Storage {
                 }
             }
 
-            try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM contact WHERE resume_uuid = ?")) {
-                for (Map.Entry<String, Resume> entry : sortedMap.entrySet()) {
-                    ps.setString(1, entry.getKey());
-                    getContacts(entry.getValue(), ps.executeQuery());
-                    ps.addBatch();
+            try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM contact ORDER BY resume_uuid")) {
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
+                    getContacts(sortedMap.get(rs.getString("resume_uuid")), rs);
                 }
-                ps.executeBatch();
             }
+            
             return new ArrayList<>(sortedMap.values());
         });
     }
@@ -126,11 +127,9 @@ public class SqlStorage implements Storage {
     }
 
     private Resume getContacts(Resume resume, ResultSet rs) throws SQLException {
-        while (rs.next()) {
-            String value = rs.getString("value");
-            ContactType type = ContactType.valueOf(rs.getString("type"));
-            resume.putContactMap(type, value);
-        }
+        String value = rs.getString("value");
+        ContactType type = ContactType.valueOf(rs.getString("type"));
+        resume.putContactMap(type, value);
         return resume;
     }
 
