@@ -111,7 +111,7 @@ public class SqlStorage implements Storage {
                     getContacts(sortedMap.get(rs.getString("resume_uuid")), rs);
                 }
             }
-            
+
             return new ArrayList<>(sortedMap.values());
         });
     }
