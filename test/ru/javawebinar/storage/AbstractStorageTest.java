@@ -5,7 +5,6 @@ import org.junit.Test;
 import ru.javawebinar.Config;
 import ru.javawebinar.exception.ExistStorageException;
 import ru.javawebinar.exception.NotExistStorageException;
-import ru.javawebinar.model.ContactType;
 import ru.javawebinar.model.Resume;
 
 import java.io.File;
@@ -37,12 +36,12 @@ public abstract class AbstractStorageTest {
 
     static {
 
-/*
+
         RESUME_1 = ResumeTestData.generateResume(UUID_1, FULLNAME_1);
         RESUME_2 = ResumeTestData.generateResume(UUID_2, FULLNAME_2);
         RESUME_3 = ResumeTestData.generateResume(UUID_3, FULLNAME_3);
         RESUME_4 = ResumeTestData.generateResume(UUID_4, FULLNAME_4);
-*/
+
 /*
         RESUME_1 = ResumeTestData.genNullSections(UUID_1, FULLNAME_1);
         RESUME_2 = ResumeTestData.genNullSections(UUID_2, FULLNAME_2);
@@ -57,7 +56,7 @@ public abstract class AbstractStorageTest {
         RESUME_4 = ResumeTestData.genNullContacts(UUID_4, FULLNAME_4);
 */
 
-
+/*
         RESUME_1 = new Resume(UUID_1, FULLNAME_1);
         RESUME_1.putContactMap(ContactType.PHONE, "+7999999999");
         RESUME_2 = new Resume(UUID_2, FULLNAME_2);
@@ -66,7 +65,7 @@ public abstract class AbstractStorageTest {
         RESUME_3.putContactMap(ContactType.EMAIL, "email@mail.com");
         RESUME_4 = new Resume(UUID_4, FULLNAME_4);
         RESUME_4.putContactMap(ContactType.HOMEPAGE, "homepage.com");
-
+*/
     }
 
     public AbstractStorageTest(Storage storage) {
@@ -89,7 +88,7 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void update() throws Exception {
-        Resume resume = ResumeTestData.genNullContacts(UUID_1, "New FULLNAME");
+        Resume resume = ResumeTestData.generateResume(UUID_1, "New FULLNAME");
         storage.update(resume);
         assertEquals(resume, storage.get(UUID_1));
     }

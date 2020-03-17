@@ -14,7 +14,8 @@ public class resumeServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
-        String name = request.getParameter("name");
-        response.getWriter().write(name == null? "Hello Servlet!" : "Hello " + name + "!");
+        //String name = request.getParameter("name");
+        //response.getWriter().write(name == null? "Hello Servlet!" : "Hello " + name + "!");
+        request.getRequestDispatcher("resumesTable.html").forward(request, response);
     }
 }
