@@ -18,7 +18,7 @@ public class ResumeTestData {
 
     }
 
-    static Resume generateResume(String uuid, String fullname) {
+    public static Resume generateResume(String uuid, String fullname) {
         Resume resume = new Resume(uuid, fullname);
         //Контакты
         resume.putContactMap(ContactType.PHONE, "+7(921) 855-0482");
@@ -106,7 +106,7 @@ public class ResumeTestData {
         return resume;
     }
 
-    static Resume generateRandomContact(String uuid, String fullname) {
+    public static Resume generateRandomContact(String uuid, String fullname) {
         Resume resume = new Resume(uuid, fullname);
         //Контакты
         resume.putContactMap(ContactType.PHONE, "+7(921) 855-0482");
@@ -192,7 +192,7 @@ public class ResumeTestData {
     }
 
 
-    static Resume genNullContactsButSections(String uuid, String fullname) {
+    public static Resume genNullContactsButSections(String uuid, String fullname) {
         Resume resume = new Resume(fullname);
         /*//Контакты
         resume.putContactMap(ContactType.PHONE, "+7(921) 855-0482");
@@ -278,13 +278,13 @@ public class ResumeTestData {
         return resume;
     }
 
-    static Resume genNullContacts(String uuid, String fullname) {
+    public static Resume genNullContacts(String uuid, String fullname) {
         Resume resume = new Resume(uuid, fullname);
 
         return resume;
     }
 
-    static Resume genNullSections(String uuid, String fullname) {
+    public static Resume genNullSections(String uuid, String fullname) {
         Resume resume = new Resume(uuid, fullname);
         //Контакты
         resume.putContactMap(ContactType.PHONE, "+7(921) 855-0482" + generateRandomString(1));
