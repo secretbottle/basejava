@@ -1,8 +1,7 @@
 package ru.javawebinar.storage;
 
 import ru.javawebinar.exception.NotExistStorageException;
-import ru.javawebinar.model.ContactType;
-import ru.javawebinar.model.Resume;
+import ru.javawebinar.model.*;
 import ru.javawebinar.sql.SqlHelper;
 
 import java.sql.*;
@@ -35,7 +34,14 @@ public class SqlStorage implements Storage {
                 ps.setString(1, resume.getUuid());
                 ps.executeUpdate();
             }
-            insContacts(resume, conn);
+            insContact(resume, conn);
+
+            try (PreparedStatement ps = conn.prepareStatement("DELETE FROM section WHERE resume_uuid = ?")) {
+                ps.setString(1, resume.getUuid());
+                ps.executeUpdate();
+            }
+            insSection(resume, conn);
+
             return null;
         });
     }
@@ -48,7 +54,8 @@ public class SqlStorage implements Storage {
                         ps.setString(2, resume.getFullName());
                         ps.execute();
                     }
-                    insContacts(resume, conn);
+                    insContact(resume, conn);
+                    insSection(resume, conn);
                     return null;
                 }
         );
@@ -71,7 +78,15 @@ public class SqlStorage implements Storage {
                 ps.setString(1, uuid);
                 ResultSet rs = ps.executeQuery();
                 while (rs.next()) {
-                    getContacts(resume, rs);
+                    getContact(resume, rs);
+                }
+            }
+
+            try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM section WHERE resume_uuid = ?")) {
+                ps.setString(1, uuid);
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
+                    getSection(resume, rs);
                 }
             }
 
@@ -108,7 +123,14 @@ public class SqlStorage implements Storage {
             try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM contact ORDER BY resume_uuid")) {
                 ResultSet rs = ps.executeQuery();
                 while (rs.next()) {
-                    getContacts(sortedMap.get(rs.getString("resume_uuid")), rs);
+                    getContact(sortedMap.get(rs.getString("resume_uuid")), rs);
+                }
+            }
+
+            try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM section ORDER BY resume_uuid")) {
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
+                    getSection(sortedMap.get(rs.getString("resume_uuid")), rs);
                 }
             }
 
@@ -126,14 +148,13 @@ public class SqlStorage implements Storage {
                 });
     }
 
-    private Resume getContacts(Resume resume, ResultSet rs) throws SQLException {
+    private void getContact(Resume resume, ResultSet rs) throws SQLException {
         String value = rs.getString("value");
         ContactType type = ContactType.valueOf(rs.getString("type"));
         resume.putContactMap(type, value);
-        return resume;
     }
 
-    private void insContacts(Resume resume, Connection conn) throws SQLException {
+    private void insContact(Resume resume, Connection conn) throws SQLException {
         if (resume.getContactMap().size() != 0)
             try (PreparedStatement ps = conn.prepareStatement("INSERT INTO contact (resume_uuid, type, value) VALUES (?,?,?)")) {
                 for (Map.Entry<ContactType, String> e : resume.getContactMap().entrySet()) {
@@ -145,5 +166,65 @@ public class SqlStorage implements Storage {
                 ps.executeBatch();
             }
     }
+
+    private void getSection(Resume resume, ResultSet rs) throws SQLException {
+        String value = rs.getString("value");
+        SectionType type = SectionType.valueOf(rs.getString("type"));
+        switch (type) {
+            case PERSONAL:
+            case OBJECTIVE:
+                TextSection textSection = new TextSection(value);
+                resume.putSectionMap(type, textSection);
+                break;
+            case ACHIEVEMENT:
+            case QUALIFICATIONS:
+                List<String> descList = new ArrayList<>(Arrays.asList(value.split("\n")));
+                ListSection listSection = new ListSection(descList);
+                resume.putSectionMap(type, listSection);
+                break;
+            case EXPERIENCE:
+            case EDUCATION:
+                //Place for OrganizationSection
+                break;
+        }
+    }
+
+    private void insSection(Resume resume, Connection conn) throws SQLException {
+        if (resume.getSectionMap().size() != 0)
+            try (PreparedStatement ps = conn.prepareStatement("INSERT INTO section (resume_uuid, type, value) VALUES (?,?,?)")) {
+                for (Map.Entry<SectionType, Section> e : resume.getSectionMap().entrySet()) {
+                    SectionType st = e.getKey();
+                    switch (st) {
+                        case PERSONAL:
+                        case OBJECTIVE:
+                            ps.setString(1, resume.getUuid());
+                            ps.setString(2, st.name());
+                            TextSection ts = (TextSection) e.getValue();
+                            ps.setString(3, ts.getText());
+                            ps.addBatch();
+                            break;
+                        case ACHIEVEMENT:
+                        case QUALIFICATIONS:
+                            ListSection ls = (ListSection) e.getValue();
+                            StringBuilder insertText = new StringBuilder();
+                            for (String s : ls.getDescriptionList()) {
+                                insertText.append(s).append("\n");
+                            }
+                            ps.setString(1, resume.getUuid());
+                            ps.setString(2, st.name());
+                            ps.setString(3, insertText.toString());
+                            ps.addBatch();
+                            break;
+                        case EXPERIENCE:
+                        case EDUCATION:
+                            //Place for OrganizationSection
+                            break;
+                    }
+
+                }
+                ps.executeBatch();
+            }
+    }
+
 
 }

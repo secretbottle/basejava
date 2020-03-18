@@ -74,7 +74,8 @@ public class ResumeTestData {
 
         OrganizationsSection experienceSection = new OrganizationsSection(organizationExpList);
 
-        resume.putSectionMap(SectionType.EXPERIENCE, experienceSection);
+        //TODO Потом включить для OrganizationSection
+        //resume.putSectionMap(SectionType.EXPERIENCE, experienceSection);
 
         // Раздел "Образование
         List <Organization> educationExpList = new ArrayList<>();
@@ -99,7 +100,8 @@ public class ResumeTestData {
 
         OrganizationsSection education = new OrganizationsSection(educationExpList);
 
-        resume.putSectionMap(SectionType.EDUCATION, education);
+        //TODO Потом включить для OrganizationSection
+        //resume.putSectionMap(SectionType.EDUCATION, education);
 
         return resume;
     }
