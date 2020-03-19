@@ -3,6 +3,7 @@ package ru.javawebinar.storage;
 import ru.javawebinar.exception.NotExistStorageException;
 import ru.javawebinar.model.*;
 import ru.javawebinar.sql.SqlHelper;
+import ru.javawebinar.storage.serial.functional.FunctionThrowing;
 
 import java.sql.*;
 import java.util.*;
@@ -134,9 +135,20 @@ public class SqlStorage implements Storage {
                 }
             }
 
+
+            sort(conn, )
+
             return new ArrayList<>(sortedMap.values());
         });
     }
+
+    private void sort(PreparedStatement ps, FunctionThrowing func) throws SQLException {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                getSection(sortedMap.get(rs.getString("resume_uuid")), rs);
+            }
+    }
+
 
     @Override
     public int size() {
@@ -158,10 +170,9 @@ public class SqlStorage implements Storage {
         if (resume.getContactMap().size() != 0)
             try (PreparedStatement ps = conn.prepareStatement("INSERT INTO contact (resume_uuid, type, value) VALUES (?,?,?)")) {
                 for (Map.Entry<ContactType, String> e : resume.getContactMap().entrySet()) {
-                    ps.setString(1, resume.getUuid());
-                    ps.setString(2, e.getKey().name());
-                    ps.setString(3, e.getValue());
-                    ps.addBatch();
+                    writer(ps, resume.getUuid(),
+                            e.getKey().name(),
+                            e.getValue());
                 }
                 ps.executeBatch();
             }
@@ -197,23 +208,17 @@ public class SqlStorage implements Storage {
                     switch (st) {
                         case PERSONAL:
                         case OBJECTIVE:
-                            ps.setString(1, resume.getUuid());
-                            ps.setString(2, st.name());
                             TextSection ts = (TextSection) e.getValue();
-                            ps.setString(3, ts.getText());
-                            ps.addBatch();
+                            writer(ps, resume.getUuid(),
+                                    st.name(),
+                                    ts.getText());
                             break;
                         case ACHIEVEMENT:
                         case QUALIFICATIONS:
                             ListSection ls = (ListSection) e.getValue();
-                            StringBuilder insertText = new StringBuilder();
-                            for (String s : ls.getDescriptionList()) {
-                                insertText.append(s).append("\n");
-                            }
-                            ps.setString(1, resume.getUuid());
-                            ps.setString(2, st.name());
-                            ps.setString(3, insertText.toString());
-                            ps.addBatch();
+                            writer(ps, resume.getUuid(),
+                                    st.name(),
+                                    String.join("\n", ls.getDescriptionList()));
                             break;
                         case EXPERIENCE:
                         case EDUCATION:
@@ -226,5 +231,13 @@ public class SqlStorage implements Storage {
             }
     }
 
+    private void writer(PreparedStatement ps, String... values) throws SQLException {
+        int i = 1;
+        for (String s : values) {
+            ps.setString(i, s);
+            i++;
+        }
+        ps.addBatch();
+    }
 
 }
