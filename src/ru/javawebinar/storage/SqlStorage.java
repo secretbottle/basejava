@@ -71,12 +71,12 @@ public class SqlStorage implements Storage {
 
             try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM contact WHERE resume_uuid = ?")) {
                 ps.setString(1, uuid);
-                sort(ps, rs -> getContact(resume, rs));
+                selector(ps, rs -> getContact(resume, rs));
             }
 
             try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM section WHERE resume_uuid = ?")) {
                 ps.setString(1, uuid);
-                sort(ps, rs -> getSection(resume, rs));
+                selector(ps, rs -> getSection(resume, rs));
             }
 
             return resume;
@@ -110,11 +110,11 @@ public class SqlStorage implements Storage {
             }
 
             try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM contact ORDER BY resume_uuid")) {
-                sort(ps, rs -> getContact(sortedMap.get(rs.getString("resume_uuid")), rs));
+                selector(ps, rs -> getContact(sortedMap.get(rs.getString("resume_uuid")), rs));
             }
 
             try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM section ORDER BY resume_uuid")) {
-                sort(ps, rs -> getSection(sortedMap.get(rs.getString("resume_uuid")), rs));
+                selector(ps, rs -> getSection(sortedMap.get(rs.getString("resume_uuid")), rs));
             }
 
             return new ArrayList<>(sortedMap.values());
@@ -141,9 +141,9 @@ public class SqlStorage implements Storage {
         if (resume.getContactMap().size() != 0)
             try (PreparedStatement ps = conn.prepareStatement("INSERT INTO contact (resume_uuid, type, value) VALUES (?,?,?)")) {
                 for (Map.Entry<ContactType, String> e : resume.getContactMap().entrySet()) {
-                    writer(ps, resume.getUuid(),
-                            e.getKey().name(),
-                            e.getValue());
+                    writer(ps, resume.getUuid(), e.getKey().name());
+                    ps.setString(3, e.getValue());
+                    ps.addBatch();
                 }
                 ps.executeBatch();
             }
@@ -180,38 +180,33 @@ public class SqlStorage implements Storage {
                         case PERSONAL:
                         case OBJECTIVE:
                             TextSection ts = (TextSection) e.getValue();
-                            writer(ps, resume.getUuid(),
-                                    type.name(),
-                                    ts.getText());
+                            writer(ps, resume.getUuid(), type.name());
+                            ps.setString(3, ts.getText());
+                            ps.addBatch();
                             break;
                         case ACHIEVEMENT:
                         case QUALIFICATIONS:
                             ListSection ls = (ListSection) e.getValue();
-                            writer(ps, resume.getUuid(),
-                                    type.name(),
-                                    String.join("\n", ls.getDescriptionList()));
+                            writer(ps, resume.getUuid(), type.name());
+                            ps.setString(3, String.join("\n", ls.getDescriptionList()));
+                            ps.addBatch();
                             break;
                         case EXPERIENCE:
                         case EDUCATION:
                             //Place for OrganizationSection
                             break;
                     }
-
                 }
                 ps.executeBatch();
             }
     }
 
-    private void writer(PreparedStatement ps, String... values) throws SQLException {
-        int i = 1;
-        for (String s : values) {
-            ps.setString(i, s);
-            i++;
-        }
-        ps.addBatch();
+    private void writer(PreparedStatement ps, String value1, String value2) throws SQLException {
+        ps.setString(1, value1);
+        ps.setString(2, value2);
     }
 
-    private void sort(PreparedStatement ps, ConsumerRS consumer) throws SQLException {
+    private void selector(PreparedStatement ps, ConsumerRS consumer) throws SQLException {
         ResultSet rs = ps.executeQuery();
         while (rs.next()) {
             consumer.accept(rs);
