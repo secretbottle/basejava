@@ -180,22 +180,19 @@ public class SqlStorage implements Storage {
                         case PERSONAL:
                         case OBJECTIVE:
                             TextSection ts = (TextSection) e.getValue();
-                            writer(ps, resume.getUuid(), type.name());
                             ps.setString(3, ts.getText());
-                            ps.addBatch();
                             break;
                         case ACHIEVEMENT:
                         case QUALIFICATIONS:
                             ListSection ls = (ListSection) e.getValue();
-                            writer(ps, resume.getUuid(), type.name());
                             ps.setString(3, String.join("\n", ls.getDescriptionList()));
-                            ps.addBatch();
                             break;
                         case EXPERIENCE:
                         case EDUCATION:
                             //Place for OrganizationSection
                             break;
                     }
+                    writer(ps, resume.getUuid(), type.name());
                 }
                 ps.executeBatch();
             }
@@ -204,6 +201,7 @@ public class SqlStorage implements Storage {
     private void writer(PreparedStatement ps, String value1, String value2) throws SQLException {
         ps.setString(1, value1);
         ps.setString(2, value2);
+        ps.addBatch();
     }
 
     private void selector(PreparedStatement ps, ConsumerRS consumer) throws SQLException {
