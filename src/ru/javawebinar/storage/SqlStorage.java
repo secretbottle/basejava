@@ -4,6 +4,7 @@ import ru.javawebinar.exception.NotExistStorageException;
 import ru.javawebinar.model.*;
 import ru.javawebinar.sql.ConsumerRS;
 import ru.javawebinar.sql.SqlHelper;
+import ru.javawebinar.util.JsonParser;
 
 import java.sql.*;
 import java.util.*;
@@ -32,7 +33,7 @@ public class SqlStorage implements Storage {
             }
 
             delete("DELETE FROM contact WHERE resume_uuid = ?", conn, resume);
-            insContact(resume, conn);
+            insContacts(resume, conn);
 
             delete("DELETE FROM section WHERE resume_uuid = ?", conn, resume);
             insSection(resume, conn);
@@ -49,7 +50,7 @@ public class SqlStorage implements Storage {
                         ps.setString(2, resume.getFullName());
                         ps.execute();
                     }
-                    insContact(resume, conn);
+                    insContacts(resume, conn);
                     insSection(resume, conn);
                     return null;
                 }
@@ -71,12 +72,12 @@ public class SqlStorage implements Storage {
 
             try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM contact WHERE resume_uuid = ?")) {
                 ps.setString(1, uuid);
-                selector(ps, rs -> getContact(resume, rs));
+                selector(ps, rs -> getContacts(resume, rs));
             }
 
             try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM section WHERE resume_uuid = ?")) {
                 ps.setString(1, uuid);
-                selector(ps, rs -> getSection(resume, rs));
+                selector(ps, rs -> getSections(resume, rs));
             }
 
             return resume;
@@ -110,11 +111,11 @@ public class SqlStorage implements Storage {
             }
 
             try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM contact ORDER BY resume_uuid")) {
-                selector(ps, rs -> getContact(sortedMap.get(rs.getString("resume_uuid")), rs));
+                selector(ps, rs -> getContacts(sortedMap.get(rs.getString("resume_uuid")), rs));
             }
 
             try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM section ORDER BY resume_uuid")) {
-                selector(ps, rs -> getSection(sortedMap.get(rs.getString("resume_uuid")), rs));
+                selector(ps, rs -> getSections(sortedMap.get(rs.getString("resume_uuid")), rs));
             }
 
             return new ArrayList<>(sortedMap.values());
@@ -131,13 +132,23 @@ public class SqlStorage implements Storage {
                 });
     }
 
-    private void getContact(Resume resume, ResultSet rs) throws SQLException {
+    private void getContacts(Resume resume, ResultSet rs) throws SQLException {
         String value = rs.getString("value");
-        ContactType type = ContactType.valueOf(rs.getString("type"));
-        resume.putContactMap(type, value);
+        if(value != null) {
+            ContactType type = ContactType.valueOf(rs.getString("type"));
+            resume.putContactMap(type, value);
+        }
     }
 
-    private void insContact(Resume resume, Connection conn) throws SQLException {
+    private void addContact(Resume resume, ResultSet rs) throws SQLException {
+        String content = rs.getString("value");
+        if(content != null) {
+            SectionType type = SectionType.valueOf(rs.getString("type"));
+            resume.putSectionMap(type, JsonParser.read(content, Section.class));
+        }
+    }
+
+    private void insContacts(Resume resume, Connection conn) throws SQLException {
         if (resume.getContactMap().size() != 0)
             try (PreparedStatement ps = conn.prepareStatement("INSERT INTO contact (resume_uuid, type, value) VALUES (?,?,?)")) {
                 for (Map.Entry<ContactType, String> e : resume.getContactMap().entrySet()) {
@@ -149,7 +160,7 @@ public class SqlStorage implements Storage {
             }
     }
 
-    private void getSection(Resume resume, ResultSet rs) throws SQLException {
+    private void getSections(Resume resume, ResultSet rs) throws SQLException {
         String value = rs.getString("value");
         SectionType type = SectionType.valueOf(rs.getString("type"));
         switch (type) {
