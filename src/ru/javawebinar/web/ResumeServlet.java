@@ -1,7 +1,6 @@
 package ru.javawebinar.web;
 
 import ru.javawebinar.Config;
-import ru.javawebinar.model.Resume;
 import ru.javawebinar.storage.SqlStorage;
 
 import javax.servlet.ServletConfig;
@@ -29,32 +28,9 @@ public class ResumeServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
-        response.setCharacterEncoding("UTF-8");
-        //String name = request.getParameter("name");
-        //response.getWriter().write(name == null ? "Hello Servlet!" : "Hello " + name + "!");
-        response.getWriter().write("<!DOCTYPE html>" +
-                "<html lang=\"en\">" +
-                "<head>" +
-                "<meta charset=\"UTF-8\">" +
-                "<title>Resumes table</title>" +
-                "</head>" +
-                "<body>" +
-                "<table border=\"1\">" +
-                getTableRows() +
-                "</table>" +
-                "</body>" +
-                "</html>");
+        request.setAttribute("resumes", storage.getAllSorted());
+        request.getRequestDispatcher("/WEB-INF/jsp/jList.jsp").forward(request, response);
+
     }
 
-    private String getTableRows() {
-        StringBuilder writer = new StringBuilder();
-        for (Resume r : storage.getAllSorted()) {
-            writer.append("<tr>");
-            writer.append("<td>").append(r.getUuid()).append("</td>");
-            writer.append("<td>").append(r.getFullName()).append("</td>");
-            writer.append("</tr>");
-        }
-        return writer.toString();
-    }
 }
