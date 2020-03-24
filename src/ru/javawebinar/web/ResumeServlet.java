@@ -4,6 +4,7 @@ import ru.javawebinar.Config;
 import ru.javawebinar.model.Resume;
 import ru.javawebinar.storage.SqlStorage;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -11,13 +12,18 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class ResumeServlet extends HttpServlet {
-    private static Config CONFIG = Config.getInstance();
-    private static SqlStorage storage = new SqlStorage(
+    private Config CONFIG = Config.getInstance();
+    private SqlStorage storage = new SqlStorage(
             CONFIG.getDbUrl(),
             CONFIG.getDbUser(),
             CONFIG.getDbPassword()
     );
 
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+    }
+    
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
     }
@@ -42,12 +48,6 @@ public class ResumeServlet extends HttpServlet {
     }
 
     private String getTableRows() {
-        try {
-            Class.forName("org.postgresql.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
         StringBuilder writer = new StringBuilder();
         for (Resume r : storage.getAllSorted()) {
             writer.append("<tr>");
