@@ -140,8 +140,8 @@ public class SqlStorage implements Storage {
         }
     }
 
-    private void addContact(Resume resume, ResultSet rs) throws SQLException {
-        String content = rs.getString("value");
+    private void getSections(Resume resume, ResultSet rs) throws SQLException {
+        String content = rs.getString("content");
         if(content != null) {
             SectionType type = SectionType.valueOf(rs.getString("type"));
             resume.putSectionMap(type, JsonParser.read(content, Section.class));
@@ -160,59 +160,21 @@ public class SqlStorage implements Storage {
             }
     }
 
-    private void getSections(Resume resume, ResultSet rs) throws SQLException {
-        String value = rs.getString("value");
-        SectionType type = SectionType.valueOf(rs.getString("type"));
-        switch (type) {
-            case PERSONAL:
-            case OBJECTIVE:
-                TextSection textSection = new TextSection(value);
-                resume.putSectionMap(type, textSection);
-                break;
-            case ACHIEVEMENT:
-            case QUALIFICATIONS:
-                List<String> descList = new ArrayList<>(Arrays.asList(value.split("\n")));
-                ListSection listSection = new ListSection(descList);
-                resume.putSectionMap(type, listSection);
-                break;
-            case EXPERIENCE:
-            case EDUCATION:
-                //Place for OrganizationSection
-                break;
-        }
-    }
-
     private void insSection(Resume resume, Connection conn) throws SQLException {
-        if (resume.getSectionMap().size() != 0)
-            try (PreparedStatement ps = conn.prepareStatement("INSERT INTO section (resume_uuid, type, value) VALUES (?,?,?)")) {
-                for (Map.Entry<SectionType, Section> e : resume.getSectionMap().entrySet()) {
-                    SectionType type = e.getKey();
-                    switch (type) {
-                        case PERSONAL:
-                        case OBJECTIVE:
-                            TextSection ts = (TextSection) e.getValue();
-                            ps.setString(3, ts.getText());
-                            break;
-                        case ACHIEVEMENT:
-                        case QUALIFICATIONS:
-                            ListSection ls = (ListSection) e.getValue();
-                            ps.setString(3, String.join("\n", ls.getDescriptionList()));
-                            break;
-                        case EXPERIENCE:
-                        case EDUCATION:
-                            //Place for OrganizationSection
-                            break;
-                    }
-                    writer(ps, resume.getUuid(), type.name());
-                }
-                ps.executeBatch();
+        try (PreparedStatement ps = conn.prepareStatement("INSERT INTO section (resume_uuid, type, content) VALUES (?,?,?)")) {
+            for (Map.Entry<SectionType, Section> e : resume.getSectionMap().entrySet()) {
+                writer(ps, resume.getUuid(), e.getKey().name());
+                Section section = e.getValue();
+                ps.setString(3, JsonParser.write(section, Section.class));
+                ps.addBatch();
             }
+            ps.executeBatch();
+        }
     }
 
     private void writer(PreparedStatement ps, String value1, String value2) throws SQLException {
         ps.setString(1, value1);
         ps.setString(2, value2);
-        ps.addBatch();
     }
 
     private void selector(PreparedStatement ps, ConsumerRS consumer) throws SQLException {

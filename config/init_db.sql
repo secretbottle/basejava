@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS section
         CONSTRAINT section_pk PRIMARY KEY,
     resume_uuid VARCHAR(36) NOT NULL REFERENCES resume (uuid) ON DELETE CASCADE,
     type TEXT NOT NULL,
-    value TEXT NOT NULL
+    content TEXT NOT NULL
 );
 
 CREATE UNIQUE INDEX section_uuid_type_index
