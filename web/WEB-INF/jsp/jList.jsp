@@ -23,9 +23,12 @@
                 <td><a href="resume?uuid=${resume.uuid}&action=view">${resume.fullName}</a></td>
                 <td><%=ContactType.EMAIL.toHtml(resume.getContact(ContactType.EMAIL))%></td>
                 <td><a href="resume?uuid=${resume.uuid}&action=delete"><img src="img/delete.png" alt="Delete"></a></td>
-                <td><a href="resume?uuid=${resume.uuid}&action=edit"><img src="img/pencil.png" alt="Edit"></a> </td>
+                <td><a href="resume?uuid=${resume.uuid}&action=edit"><img src="img/pencil.png" alt="Edit"></a></td>
             </tr>
         </c:forEach>
+        <tr>
+            <td><a href="resume?action=add"><img src="img/add.png" alt="Create"></a></td>
+        </tr>
     </table>
 </section>
 <jsp:include page="fragments/footer.jsp"/>
