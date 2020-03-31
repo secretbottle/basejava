@@ -18,6 +18,11 @@
                 <%=contactEntry.getKey().toHtml(contactEntry.getValue())%><br/>
         </c:forEach>
     <p>
+    <c:forEach var="sectionEntry" items="${resume.sectionMap}">
+        <jsp:useBean id="sectionEntry"
+                     type="java.util.Map.Entry<ru.javawebinar.model.SectionType, ru.javawebinar.model.Section>"/>
+            <%=contactEntry.getKey().toHtml(contactEntry.getValue())%><br/>
+    </c:forEach>
 </section>
 <jsp:include page="fragments/footer.jsp"/>
 </body>

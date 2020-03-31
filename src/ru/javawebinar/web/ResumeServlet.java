@@ -56,6 +56,7 @@ public class ResumeServlet extends HttpServlet {
         switch (action) {
             case "add":
                 resume = new Resume("");
+                storage.save(resume);
                 break;
             case "delete":
                 storage.delete(uuid);
