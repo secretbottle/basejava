@@ -1,41 +1,11 @@
 package ru.javawebinar.model;
 
 public enum SectionType {
-    PERSONAL("Личные качества"){
-        @Override
-        protected String toHtml0(Section section) {
-            TextSection value = (TextSection) section;
-            return getTitle() + "\n" + value.getText();
-        }
-    },
-    OBJECTIVE("Позиция"){
-
-    },
-    ACHIEVEMENT("Достижения") {
-        @Override
-        protected String toHtml0(Section section) {
-            ListSection value = (ListSection) section;
-            StringBuilder sb = new StringBuilder().append(getTitle());
-            for(String s: value.getDescriptionList()){
-                sb.append(s).append("\n");
-            }
-            return sb.toString();
-        }
-    },
-    QUALIFICATIONS("Квалификация") {
-
-    },
-    EXPERIENCE("Опыт работы"){
-        @Override
-        protected String toHtml0(Section section) {
-            OrganizationsSection value = (OrganizationsSection) section;
-            StringBuilder sb = new StringBuilder().append(getTitle()).append(": ");
-            for(Organization s: value.getOrganizations()){
-                sb.append(s).append("\n");
-            }
-            return sb.toString();
-        }
-    },
+    PERSONAL("Личные качества"),
+    OBJECTIVE("Позиция"),
+    ACHIEVEMENT("Достижения"),
+    QUALIFICATIONS("Квалификация"),
+    EXPERIENCE("Опыт работы"),
     EDUCATION("Образование"){
 
     };
