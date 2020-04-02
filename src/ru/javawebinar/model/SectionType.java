@@ -6,9 +6,7 @@ public enum SectionType {
     ACHIEVEMENT("Достижения"),
     QUALIFICATIONS("Квалификация"),
     EXPERIENCE("Опыт работы"),
-    EDUCATION("Образование"){
-
-    };
+    EDUCATION("Образование");
 
     private final String title;
 
@@ -20,11 +18,4 @@ public enum SectionType {
         return title;
     }
 
-    public String toHtml(Section section) {
-        return (section == null) ? "" : toHtml0(section);
-    }
-
-    protected String toHtml0(Section section) {
-        return title + ": " + section;
-    }
 }
