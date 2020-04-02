@@ -4,7 +4,6 @@
 <%@ page import="ru.javawebinar.model.ListSection" %>
 <%@ page import="ru.javawebinar.model.OrganizationsSection" %>
 <%@ page import="ru.javawebinar.model.TextSection" %>
-<%@ page import="java.util.Date" %>
 <%@ page trimDirectiveWhitespaces="true" %>
 <html>
 <head>
@@ -54,7 +53,6 @@
         <h2>${sectionType.title}</h2>
         <%
             OrganizationsSection orgSection = (OrganizationsSection) sectionEntry.getValue();
-            Date dateFormat = new Date();
             request.setAttribute("orgSection", orgSection);
         %>
         <c:forEach items="${orgSection.organizations}" var="org">
@@ -63,12 +61,18 @@
                 <table>
                     <c:forEach items="${org.positions}" var="pos">
                         <tr>
-                            <td width="15%" style="vertical-align: top">
-                                <fmt:parseDate value="${pos.startPeriod}" pattern="dd/MM/yyyy" var="startDate" type="date"/>
-                                <fmt:formatDate value="${startDate}" pattern="dd/MM/yyyy"/>
-                                <%--- <fmt:formatDate value="${pos.endPeriod}" type="date" pattern="dd/MM/yyyy"/>--%>
-
-                               <%-- <c:out value="${pos.startPeriod} - ${pos.endPeriod}"/>--%>
+                            <td style="vertical-align: top">
+                                <fmt:parseDate value="${pos.startPeriod}" type="date" pattern="yyyy-MM-dd"
+                                               var="parsedSDate"/>
+                                <fmt:formatDate value="${parsedSDate}" type="date" pattern="dd/MM/yyyy"
+                                                var="startDate"/>
+                                <c:out value="${startDate} -"/>
+                            </td>
+                            <td style="vertical-align: top">
+                                <fmt:parseDate value="${pos.endPeriod}" type="date" pattern="yyyy-MM-dd"
+                                               var="parsedEDate"/>
+                                <fmt:formatDate value="${parsedEDate}" type="date" pattern="dd/MM/yyyy" var="endDate"/>
+                                <c:out value="${endDate}"/>
                             </td>
                             <td><b>${pos.position}</b>.<br>${pos.description}</td>
                         </tr>
