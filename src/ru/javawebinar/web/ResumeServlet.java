@@ -3,6 +3,7 @@ package ru.javawebinar.web;
 import ru.javawebinar.Config;
 import ru.javawebinar.model.ContactType;
 import ru.javawebinar.model.Resume;
+import ru.javawebinar.model.SectionType;
 import ru.javawebinar.storage.SqlStorage;
 
 import javax.servlet.ServletConfig;
@@ -31,12 +32,14 @@ public class ResumeServlet extends HttpServlet {
         String fullName = request.getParameter("fullName");
         Resume resume;
 
-        if (uuid == null) {
-            resume = new Resume();
+        if (uuid.equals("")) {
+            resume = new Resume(fullName);
         } else {
             resume = storage.get(uuid);
+            resume.setFullName(fullName);
         }
-        resume.setFullName(fullName);
+
+
         for (ContactType type : ContactType.values()) {
             String value = request.getParameter(type.name());
             if (value != null && value.trim().length() != 0) {
@@ -46,7 +49,24 @@ public class ResumeServlet extends HttpServlet {
             }
         }
 
-        if (uuid == null) {
+        for (SectionType secType : SectionType.values()){
+            switch (secType){
+                case PERSONAL:
+                case OBJECTIVE:
+
+                    break;
+                case ACHIEVEMENT:
+                case QUALIFICATIONS:
+
+                    break;
+                case EDUCATION:
+                case EXPERIENCE:
+
+                    break;
+            }
+        }
+
+        if (uuid.equals("")) {
             storage.save(resume);
         } else {
             storage.update(resume);
