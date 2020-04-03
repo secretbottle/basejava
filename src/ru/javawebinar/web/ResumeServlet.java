@@ -29,7 +29,13 @@ public class ResumeServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         String uuid = request.getParameter("uuid");
         String fullName = request.getParameter("fullName");
-        Resume resume = storage.get(uuid);
+        Resume resume;
+
+        if (uuid == null) {
+            resume = new Resume();
+        } else {
+            resume = storage.get(uuid);
+        }
         resume.setFullName(fullName);
         for (ContactType type : ContactType.values()) {
             String value = request.getParameter(type.name());
@@ -39,7 +45,13 @@ public class ResumeServlet extends HttpServlet {
                 resume.getContactMap().remove(type);
             }
         }
-        storage.update(resume);
+
+        if (uuid == null) {
+            storage.save(resume);
+        } else {
+            storage.update(resume);
+        }
+
         response.sendRedirect("resume");
     }
 
@@ -55,8 +67,7 @@ public class ResumeServlet extends HttpServlet {
         Resume resume;
         switch (action) {
             case "add":
-                resume = new Resume("");
-                storage.save(resume);
+                resume = new Resume();
                 break;
             case "delete":
                 storage.delete(uuid);
@@ -69,6 +80,7 @@ public class ResumeServlet extends HttpServlet {
             default:
                 throw new IllegalArgumentException("Action " + action + " is illegal");
         }
+
         request.setAttribute("resume", resume);
         request.getRequestDispatcher(
                 ("view".equals(action) ? "/WEB-INF/jsp/view.jsp" : "/WEB-INF/jsp/edit.jsp")
