@@ -39,7 +39,6 @@ public class ResumeServlet extends HttpServlet {
             resume.setFullName(fullName);
         }
 
-
         for (ContactType type : ContactType.values()) {
             String value = request.getParameter(type.name());
             if (value != null && value.trim().length() != 0) {
@@ -53,7 +52,6 @@ public class ResumeServlet extends HttpServlet {
             switch (secType){
                 case PERSONAL:
                 case OBJECTIVE:
-
                     break;
                 case ACHIEVEMENT:
                 case QUALIFICATIONS:

@@ -1,4 +1,5 @@
 <%@ page import="ru.javawebinar.model.ContactType" %>
+<%@ page import="ru.javawebinar.model.SectionType" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
@@ -25,9 +26,26 @@
             </dl>
         </c:forEach>
         <h3>Секции:</h3>
-        <input type="text" name="section" size=30 value="1"><br/>
-        <input type="text" name="section" size=30 value="2"><br/>
-        <input type="text" name="section" size=30 value="3"><br/>
+        <c:forEach var="secType" items="<%=SectionType.values()%>">
+            <c:choose>
+                <c:when test="${secType=='PERSONAL' || secType=='OBJECTIVE'}">
+                    <dl>
+                        <dt>${secType.title}</dt>
+                        <dd><input type="text" name="${secType.name()}" size=30 value="1"></dd>
+                    </dl>
+                </c:when>
+                <c:when test="${secType=='ACHIEVEMENT' || secType=='QUALIFICATIONS'}">
+                    <dl>
+                        <dt>${secType.title}</dt>
+                    </dl>
+                </c:when>
+                <c:when test="${secType=='EXPERIENCE' || secType=='EDUCATION'}">
+                    <dl>
+                        <dt>${secType.title}</dt>
+                    </dl>
+                </c:when>
+            </c:choose>
+        </c:forEach>
         <hr>
         <button type="submit">Сохранить</button>
         <button onclick="window.history.back()">Отменить</button>
