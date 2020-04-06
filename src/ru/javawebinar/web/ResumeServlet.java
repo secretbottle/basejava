@@ -1,9 +1,7 @@
 package ru.javawebinar.web;
 
 import ru.javawebinar.Config;
-import ru.javawebinar.model.ContactType;
-import ru.javawebinar.model.Resume;
-import ru.javawebinar.model.SectionType;
+import ru.javawebinar.model.*;
 import ru.javawebinar.storage.SqlStorage;
 
 import javax.servlet.ServletConfig;
@@ -12,6 +10,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class ResumeServlet extends HttpServlet {
     private Config CONFIG = Config.getInstance();
@@ -49,13 +50,16 @@ public class ResumeServlet extends HttpServlet {
         }
 
         for (SectionType secType : SectionType.values()){
+            String value = request.getParameter(secType.name());
             switch (secType){
                 case PERSONAL:
                 case OBJECTIVE:
+                    resume.putSectionMap(secType, new TextSection(value));
                     break;
                 case ACHIEVEMENT:
                 case QUALIFICATIONS:
-
+                    List<String> descList = new ArrayList<>(Arrays.asList(value.split("\n")));
+                    resume.putSectionMap(secType, new ListSection(descList));
                     break;
                 case EDUCATION:
                 case EXPERIENCE:
@@ -86,6 +90,22 @@ public class ResumeServlet extends HttpServlet {
         switch (action) {
             case "add":
                 resume = new Resume();
+                for(SectionType secType : SectionType.values()){
+                    switch (secType){
+                        case PERSONAL:
+                        case OBJECTIVE:
+                            resume.putSectionMap(secType, new TextSection(""));
+                            break;
+                        case ACHIEVEMENT:
+                        case QUALIFICATIONS:
+                            resume.putSectionMap(secType, new ListSection(new ArrayList<>()));
+                            break;
+                        case EDUCATION:
+                        case EXPERIENCE:
+                            resume.putSectionMap(secType, new OrganizationsSection(new ArrayList<>()));
+                            break;
+                    }
+                }
                 break;
             case "delete":
                 storage.delete(uuid);
