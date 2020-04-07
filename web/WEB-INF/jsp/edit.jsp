@@ -5,6 +5,7 @@
 <%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page trimDirectiveWhitespaces="true" %>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -31,7 +32,7 @@
         </c:forEach>
 
         <h3>Секции:</h3>
-        <c:forEach var="secType" items="<%=SectionType.values()%>">
+        <c:forEach var="secType" items="<%=SectionType.values()%>" end="3">
         <dl>
             <dt>${secType.title}</dt>
                 <c:set var="section" value="${resume.getSection(secType)}"/>
@@ -42,16 +43,16 @@
                         TextSection textSection = (TextSection) section;
                         request.setAttribute("textSection", textSection);
                     %>
-            <dd><input type="text" name="${secType.name()}" size=70 value="${textSection}"/></dd>
+            <dd><input type="text" name="${secType.name()}" size=70 value="${textSection}" required /></dd>
             </c:when>
             <c:when test="${secType=='ACHIEVEMENT' || secType=='QUALIFICATIONS'}">
                     <%
                         ListSection listSection = (ListSection) section;
                         String ls = String.join("\n", listSection.getDescriptionList());
-                        request.setAttribute("listSection", ls);
+                        request.setAttribute("ls", ls);
                     %>
-            <dd><textarea name="${secType.name()}" rows="4" cols="70" style="resize: none;">
-                        <${listSection}>
+            <dd><textarea name="${secType.name()}" rows="4" cols="70" style="resize:none;" style="text-align:left" required >
+                ${ls}
                 </textarea></dd>
             </c:when>
             <c:when test="${secType=='EXPERIENCE' || secType=='EDUCATION'}">
