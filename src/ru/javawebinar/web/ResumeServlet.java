@@ -64,7 +64,10 @@ public class ResumeServlet extends HttpServlet {
                         break;
                     case EDUCATION:
                     case EXPERIENCE:
+                        List<Organization> orgs = new ArrayList<>();
 
+
+                        resume.putSectionMap(secType, new OrganizationsSection(orgs));
                         break;
                 }
             } else {
@@ -106,7 +109,7 @@ public class ResumeServlet extends HttpServlet {
                             break;
                         case EDUCATION:
                         case EXPERIENCE:
-                            //resume.putSectionMap(secType, new OrganizationsSection(new ArrayList<>()));
+                            resume.putSectionMap(secType, new OrganizationsSection(new ArrayList<>()));
                             break;
                     }
                 }

@@ -31,31 +31,19 @@
         <c:choose>
         <c:when test="${sectionType == 'PERSONAL' || sectionType == 'OBJECTIVE'}">
     <h2>${sectionType.title}</h2>
-    <%
-        TextSection textSections = (TextSection) sectionEntry.getValue();
-        request.setAttribute("textSections", textSections);
-    %>
-    <c:out value="${textSections.text}"/>
+    <c:out value="<%=((TextSection) sectionEntry.getValue()).getText()%>"/>
     </c:when>
     <c:when test="${sectionType == 'ACHIEVEMENT' || sectionType == 'QUALIFICATIONS'}">
         <h2>${sectionType.title}</h2>
         <ul>
-            <%
-                ListSection listSection = (ListSection) sectionEntry.getValue();
-                request.setAttribute("listSection", listSection);
-            %>
-            <c:forEach items="${listSection.descriptionList}" var="s">
+            <c:forEach items="<%=((ListSection) sectionEntry.getValue()).getDescriptionList()%>" var="s">
                 <li><c:out value="${s}"/></li>
             </c:forEach>
         </ul>
     </c:when>
     <c:when test="${sectionType == 'EXPERIENCE' || sectionType == 'EDUCATION'}">
         <h2>${sectionType.title}</h2>
-        <%
-            OrganizationsSection orgSection = (OrganizationsSection) sectionEntry.getValue();
-            request.setAttribute("orgSection", orgSection);
-        %>
-        <c:forEach items="${orgSection.organizations}" var="org">
+        <c:forEach items="<%=((OrganizationsSection) sectionEntry.getValue()).getOrganizations()%>" var="org">
             <td colspan="2">
                 <h3><a href=${org.link.urlAdr}>${org.link.title}</a></h3>
                 <table>

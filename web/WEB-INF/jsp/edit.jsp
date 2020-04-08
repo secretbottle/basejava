@@ -1,8 +1,7 @@
 <%@ page import="ru.javawebinar.model.ContactType" %>
 <%@ page import="ru.javawebinar.model.ListSection" %>
+<%@ page import="ru.javawebinar.model.OrganizationsSection" %>
 <%@ page import="ru.javawebinar.model.SectionType" %>
-<%@ page import="ru.javawebinar.model.TextSection" %>
-<%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page trimDirectiveWhitespaces="true" %>
@@ -32,31 +31,71 @@
         </c:forEach>
 
         <h3>Секции:</h3>
-        <c:forEach var="secType" items="<%=SectionType.values()%>" end="3">
+        <c:forEach var="secType" items="<%=SectionType.values()%>">
         <dl>
-            <dt>${secType.title}</dt>
+            <dt><b>${secType.title}</b></dt>
                 <c:set var="section" value="${resume.getSection(secType)}"/>
                 <jsp:useBean id="section" type="ru.javawebinar.model.Section"/>
             <c:choose>
             <c:when test="${secType=='PERSONAL' || secType=='OBJECTIVE'}">
-                    <%
-                        TextSection textSection = (TextSection) section;
-                        request.setAttribute("textSection", textSection);
-                    %>
-            <dd><input type="text" name="${secType.name()}" size=70 value="${textSection}" required /></dd>
+            <dd><input type="text" name="${secType.name()}" size=70 value="<%=section%>>" required/></dd>
             </c:when>
             <c:when test="${secType=='ACHIEVEMENT' || secType=='QUALIFICATIONS'}">
-                    <%
-                        ListSection listSection = (ListSection) section;
-                        String ls = String.join("\n", listSection.getDescriptionList());
-                        request.setAttribute("ls", ls);
-                    %>
-            <dd><textarea name="${secType.name()}" rows="4" cols="70" style="resize:none;" style="text-align:left" required >
-                ${ls}
+            <dd><textarea name="${secType.name()}" rows="4" cols="70" style="resize:none;" style="text-align:left"
+                          required>
+                <%=String.join("\n", ((ListSection) section).getDescriptionList())%>
                 </textarea></dd>
             </c:when>
             <c:when test="${secType=='EXPERIENCE' || secType=='EDUCATION'}">
+            <c:forEach items="<%=((OrganizationsSection) section).getOrganizations()%>" var="org">
+            <br>
+            <dt>Название организации</dt>
+            <dd><input type="text" name="${secType.name()}title" size=20 value="${org.link.title}" required/></dd>
+            <br>
+            <dt>Ссылка</dt>
+            <dd><input type="text" name="${secType.name()}urlAdr" size=20 value="${org.link.urlAdr}" required/></dd>
+            <br>
 
+            <c:forEach items="${org.positions}" var="pos">
+            <dt>Начало работы</dt>
+            <dd><input type="date" name="${secType.name()}startPeriod" value="${pos.startPeriod}" required></dd>
+            <br>
+            <dt>Окончание</dt>
+            <dd><input type="date" name="${secType.name()}endPeriod" value="${pos.endPeriod}" required></dd>
+            <br>
+            <dt>Позиция</dt>
+            <dd><input type="text" name="${secType.name()}position" size=40 value="${pos.position}" required/></dd>
+            <br>
+            <dt>Описание</dt>
+            <dd><textarea name="${secType.name()}" rows="4" cols="70" style="resize:none;" style="text-align:left"
+                          required ></textarea></dd>
+            <br>
+
+            </c:forEach>
+
+
+            </c:forEach>
+
+
+            <br>
+            <dt>Название организации</dt>
+            <dd><input type="text" name="Название организации" size=20 value="" required/></dd>
+            <br>
+            <dt>Ссылка</dt>
+            <dd><input type="text" name="Ссылка" size=20 value="" required/></dd>
+            <br>
+            <dt>Начало работы</dt>
+            <dd><input type="text" name="Начало работы" size=20 value="" required/></dd>
+            <br>
+            <dt>Окончание</dt>
+            <dd><input type="text" name="Окончание" size=20 value="" required/></dd>
+            <br>
+            <dt>Позиция</dt>
+            <dd><input type="text" name="Позиция" size=40 value="" required/></dd>
+            <br>
+            <dt>Описание</dt>
+            <dd><textarea name="${secType.name()}" rows="4" cols="70" style="resize:none;" style="text-align:left"
+                          required></textarea></dd>
             </c:when>
             </c:choose>
             <dl>
