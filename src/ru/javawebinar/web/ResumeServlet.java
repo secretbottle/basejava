@@ -50,12 +50,10 @@ public class ResumeServlet extends HttpServlet {
             }
         }
 
-        String[] testpar = req.getParameterValues("EXPERIENCE" + "title");
-        String[] testpar2 = req.getParameterValues("EDUCATION" + "title");
-
         for (SectionType secType : SectionType.values()) {
             String value = req.getParameter(secType.name());
-            if (value != null && value.trim().length() != 0) {
+            String[] values = req.getParameterValues(secType.name());
+            if (value != null && value.trim().length() != 0 && values.length < 2) {
                 switch (secType) {
                     case PERSONAL:
                     case OBJECTIVE:
@@ -68,17 +66,19 @@ public class ResumeServlet extends HttpServlet {
                         break;
                     case EDUCATION:
                     case EXPERIENCE:
+                        String[] tittles = req.getParameterValues(value + "title");
+                        String[] urls = req.getParameterValues(value + "urlAdr");
                         List<Organization> orgs = new ArrayList<>();
-                        for (int i = 0; i < req.getIntHeader("counterOrgs"); i++) {
-                            Link link = new Link(req.getParameter(value + "title"), req.getParameter(value + "urlAdr"));
+                        for (int i = 0; i < tittles.length; i++) {
+                            Link link = new Link(tittles[i], urls[i]);
                             List<Organization.Position> positionList = new ArrayList<>();
                             for (int j = 0; j < req.getIntHeader("counterPos"); j++) {
                                 positionList.add(
                                         new Organization.Position(
-                                                LocalDate.parse(req.getParameter(value + "startPeriod")),
-                                                LocalDate.parse(req.getParameter(value + "endPeriod")),
-                                                req.getParameter(value + "position"),
-                                                req.getParameter(value + "desc")
+                                                LocalDate.parse(req.getParameter(value + urls[i] + "startPeriod")),
+                                                LocalDate.parse(req.getParameter(value + urls[i] + "endPeriod")),
+                                                req.getParameter(value + urls[i] + "position"),
+                                                req.getParameter(value + urls[i] + "desc")
                                         ));
                             }
                             orgs.add(new Organization(link, positionList));
