@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,10 +28,10 @@ public class ResumeServlet extends HttpServlet {
         super.init(config);
     }
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
-        String uuid = request.getParameter("uuid");
-        String fullName = request.getParameter("fullName");
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
+        String uuid = req.getParameter("uuid");
+        String fullName = req.getParameter("fullName");
         Resume resume;
 
         if (uuid.equals("")) {
@@ -41,7 +42,7 @@ public class ResumeServlet extends HttpServlet {
         }
 
         for (ContactType type : ContactType.values()) {
-            String value = request.getParameter(type.name());
+            String value = req.getParameter(type.name());
             if (value != null && value.trim().length() != 0) {
                 resume.putContact(type, value);
             } else {
@@ -49,8 +50,11 @@ public class ResumeServlet extends HttpServlet {
             }
         }
 
+        String[] testpar = req.getParameterValues("EXPERIENCE" + "title");
+        String[] testpar2 = req.getParameterValues("EDUCATION" + "title");
+
         for (SectionType secType : SectionType.values()) {
-            String value = request.getParameter(secType.name());
+            String value = req.getParameter(secType.name());
             if (value != null && value.trim().length() != 0) {
                 switch (secType) {
                     case PERSONAL:
@@ -65,8 +69,20 @@ public class ResumeServlet extends HttpServlet {
                     case EDUCATION:
                     case EXPERIENCE:
                         List<Organization> orgs = new ArrayList<>();
-
-
+                        for (int i = 0; i < req.getIntHeader("counterOrgs"); i++) {
+                            Link link = new Link(req.getParameter(value + "title"), req.getParameter(value + "urlAdr"));
+                            List<Organization.Position> positionList = new ArrayList<>();
+                            for (int j = 0; j < req.getIntHeader("counterPos"); j++) {
+                                positionList.add(
+                                        new Organization.Position(
+                                                LocalDate.parse(req.getParameter(value + "startPeriod")),
+                                                LocalDate.parse(req.getParameter(value + "endPeriod")),
+                                                req.getParameter(value + "position"),
+                                                req.getParameter(value + "desc")
+                                        ));
+                            }
+                            orgs.add(new Organization(link, positionList));
+                        }
                         resume.putSectionMap(secType, new OrganizationsSection(orgs));
                         break;
                 }
@@ -81,7 +97,7 @@ public class ResumeServlet extends HttpServlet {
             storage.update(resume);
         }
 
-        response.sendRedirect("resume");
+        resp.sendRedirect("resume");
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

@@ -80,7 +80,7 @@ public class ResumeTestData {
         // Раздел "Образование
         List <Organization> educationExpList = new ArrayList<>();
         // Первое место
-        Organization.Position Coursera = new Organization.Position(createRandomDate(1999, 2019), createRandomDate(1999, 2019), "\"Functional Programming Principles in Scala\" by Martin Odersky", "");
+        Organization.Position Coursera = new Organization.Position(createRandomDate(1999, 2019), createRandomDate(1999, 2019), "\"Functional Programming Principles in Scala\" by Martin Odersky", "Description");
         Link CourseraLink = new Link(generateRandomString(20), "https://www.coursera.org/course/progfun");
         List<Organization.Position> firstEdu = new ArrayList<>();
         firstEdu.add(Coursera);
@@ -88,8 +88,8 @@ public class ResumeTestData {
 
         educationExpList.add(firstEducation);
         // Второе место
-        Organization.Position itmo1 = new Organization.Position(createRandomDate(1999, 2019), createRandomDate(1999, 2019), "Аспирантура (программист С, С++)", "");
-        Organization.Position itmo2 = new Organization.Position(createRandomDate(1999, 2019), createRandomDate(1999, 2019), "Инженер (программист Fortran, C)", "");
+        Organization.Position itmo1 = new Organization.Position(createRandomDate(1999, 2019), createRandomDate(1999, 2019), "Аспирантура (программист С, С++)", "Description");
+        Organization.Position itmo2 = new Organization.Position(createRandomDate(1999, 2019), createRandomDate(1999, 2019), "Инженер (программист Fortran, C)", "Description");
         Link itmoLink = new Link(generateRandomString(20), "http://www.ifmo.ru/");
         List<Organization.Position> secondEdu = new ArrayList<>();
         secondEdu.add(itmo1);

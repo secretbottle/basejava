@@ -47,55 +47,39 @@
                 </textarea></dd>
             </c:when>
             <c:when test="${secType=='EXPERIENCE' || secType=='EDUCATION'}">
-            <c:forEach items="<%=((OrganizationsSection) section).getOrganizations()%>" var="org">
-            <br>
-            <dt>Название организации</dt>
-            <dd><input type="text" name="${secType.name()}title" size=20 value="${org.link.title}" required/></dd>
-            <br>
-            <dt>Ссылка</dt>
-            <dd><input type="text" name="${secType.name()}urlAdr" size=20 value="${org.link.urlAdr}" required/></dd>
-            <br>
 
-            <c:forEach items="${org.positions}" var="pos">
-            <dt>Начало работы</dt>
-            <dd><input type="date" name="${secType.name()}startPeriod" value="${pos.startPeriod}" required></dd>
-            <br>
-            <dt>Окончание</dt>
-            <dd><input type="date" name="${secType.name()}endPeriod" value="${pos.endPeriod}" required></dd>
-            <br>
-            <dt>Позиция</dt>
-            <dd><input type="text" name="${secType.name()}position" size=40 value="${pos.position}" required/></dd>
-            <br>
-            <dt>Описание</dt>
-            <dd><textarea name="${secType.name()}" rows="4" cols="70" style="resize:none;" style="text-align:left"
-                          required ></textarea></dd>
-            <br>
+
+
+            <c:forEach items="<%=((OrganizationsSection) section).getOrganizations()%>" var="org" varStatus="countOrg">
+                <c:set var = "counterOrgs" value = "${countOrg.index}" scope="page" />
+                <h3>${counterOrgs}</h3>
+                <br>
+                <dt>Название организации</dt>
+                <dd><input type="text" name="${secType.name()}title" size=20 value="${org.link.title}" required/></dd>
+                <br>
+                <dt>Ссылка</dt>
+                <dd><input type="text" name="${secType.name()}urlAdr" size=20 value="${org.link.urlAdr}" required/></dd>
+                <br>
+                    <c:forEach items="${org.positions}" var="pos" varStatus="countPos">
+                    <c:set var = "counterPos" value = "${countPos.index}" scope="page" />
+                    <h3>${counterPos}</h3>
+                        <dt>Начало</dt>
+                        <dd><input type="date" name="${secType.name()}startPeriod" value="${pos.startPeriod}" required></dd>
+                        <br>
+                        <dt>Окончание</dt>
+                        <dd><input type="date" name="${secType.name()}endPeriod" value="${pos.endPeriod}" required></dd>
+                        <br>
+                        <dt>Позиция</dt>
+                        <dd><input type="text" name="${secType.name()}position" size=40 value="${pos.position}" required/></dd>
+                        <br>
+                        <dt>Описание</dt>
+                        <dd><textarea name="${secType.name()}desc" rows="4" cols="70" style="resize:none;" style="text-align:left"
+                                      required>${pos.description}</textarea></dd>
+                        <br>
+                    </c:forEach>
 
             </c:forEach>
 
-
-            </c:forEach>
-
-
-            <br>
-            <dt>Название организации</dt>
-            <dd><input type="text" name="Название организации" size=20 value="" required/></dd>
-            <br>
-            <dt>Ссылка</dt>
-            <dd><input type="text" name="Ссылка" size=20 value="" required/></dd>
-            <br>
-            <dt>Начало работы</dt>
-            <dd><input type="text" name="Начало работы" size=20 value="" required/></dd>
-            <br>
-            <dt>Окончание</dt>
-            <dd><input type="text" name="Окончание" size=20 value="" required/></dd>
-            <br>
-            <dt>Позиция</dt>
-            <dd><input type="text" name="Позиция" size=40 value="" required/></dd>
-            <br>
-            <dt>Описание</dt>
-            <dd><textarea name="${secType.name()}" rows="4" cols="70" style="resize:none;" style="text-align:left"
-                          required></textarea></dd>
             </c:when>
             </c:choose>
             <dl>
