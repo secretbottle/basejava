@@ -47,33 +47,31 @@
                 </textarea></dd>
             </c:when>
             <c:when test="${secType=='EXPERIENCE' || secType=='EDUCATION'}">
+                <c:forEach items="<%=((OrganizationsSection) section).getOrganizations()%>" var="org">
+                    <br>
+                    <dt>Название организации</dt>
+                    <dd><input type="text" name="${secType.name()}" size=20 value="${org.link.title}" required/></dd>
+                    <br>
+                    <dt>Ссылка</dt>
+                    <dd><input type="text" name="${secType.name()}urlAdr" size=20 value="${org.link.urlAdr}" required/></dd>
+                    <br>
+                        <c:forEach items="${org.positions}" var="pos">
+                            <dt>Начало</dt>
+                            <dd><input type="date" name="${secType.name()}${org.link.urlAdr}startPeriod" value="${pos.startPeriod}" required></dd>
+                            <br>
+                            <dt>Окончание</dt>
+                            <dd><input type="date" name="${secType.name()}${org.link.urlAdr}endPeriod" value="${pos.endPeriod}" required></dd>
+                            <br>
+                            <dt>Позиция</dt>
+                            <dd><input type="text" name="${secType.name()}${org.link.urlAdr}position" size=40 value="${pos.position}" required/></dd>
+                            <br>
+                            <dt>Описание</dt>
+                            <dd><textarea name="${secType.name()}${org.link.urlAdr}desc" rows="4" cols="70" style="resize:none;" style="text-align:left"
+                                          required>${pos.description}</textarea></dd>
+                            <br>
+                        </c:forEach>
 
-            <c:forEach items="<%=((OrganizationsSection) section).getOrganizations()%>" var="org">
-                <br>
-                <dt>Название организации</dt>
-                <dd><input type="text" name="${secType.name()}" size=20 value="${org.link.title}" required/></dd>
-                <br>
-                <dt>Ссылка</dt>
-                <dd><input type="text" name="${secType.name()}urlAdr" size=20 value="${org.link.urlAdr}" required/></dd>
-                <br>
-                    <c:forEach items="${org.positions}" var="pos">
-                        <dt>Начало</dt>
-                        <dd><input type="date" name="${secType.name()}${org.link.urlAdr}startPeriod" value="${pos.startPeriod}" required></dd>
-                        <br>
-                        <dt>Окончание</dt>
-                        <dd><input type="date" name="${secType.name()}${org.link.urlAdr}endPeriod" value="${pos.endPeriod}" required></dd>
-                        <br>
-                        <dt>Позиция</dt>
-                        <dd><input type="text" name="${secType.name()}${org.link.urlAdr}position" size=40 value="${pos.position}" required/></dd>
-                        <br>
-                        <dt>Описание</dt>
-                        <dd><textarea name="${secType.name()}${org.link.urlAdr}desc" rows="4" cols="70" style="resize:none;" style="text-align:left"
-                                      required>${pos.description}</textarea></dd>
-                        <br>
-                    </c:forEach>
-
-            </c:forEach>
-
+                </c:forEach>
             </c:when>
             </c:choose>
             <dl>

@@ -53,7 +53,7 @@ public class ResumeServlet extends HttpServlet {
         for (SectionType secType : SectionType.values()) {
             String value = req.getParameter(secType.name());
             String[] values = req.getParameterValues(secType.name());
-            if (value != null && value.trim().length() != 0 && values.length < 2) {
+            if (value != null && value.trim().length() != 0) {
                 switch (secType) {
                     case PERSONAL:
                     case OBJECTIVE:
@@ -64,21 +64,21 @@ public class ResumeServlet extends HttpServlet {
                         List<String> descList = new ArrayList<>(Arrays.asList(value.split("\n")));
                         resume.putSectionMap(secType, new ListSection(descList));
                         break;
-                    case EDUCATION:
                     case EXPERIENCE:
-                        String[] tittles = req.getParameterValues(value + "title");
-                        String[] urls = req.getParameterValues(value + "urlAdr");
+                    case EDUCATION:
                         List<Organization> orgs = new ArrayList<>();
-                        for (int i = 0; i < tittles.length; i++) {
-                            Link link = new Link(tittles[i], urls[i]);
+                        for (int i = 0; i < values.length; i++) {
+                            String[] urls = req.getParameterValues(secType.name() + "urlAdr");
+                            Link link = new Link(values[i], urls[i]);
                             List<Organization.Position> positionList = new ArrayList<>();
-                            for (int j = 0; j < req.getIntHeader("counterPos"); j++) {
+                            String[] positions = req.getParameterValues(secType.name() + urls[i] + "position");
+                            for (int j = 0; j < positions.length; j++) {
                                 positionList.add(
                                         new Organization.Position(
-                                                LocalDate.parse(req.getParameter(value + urls[i] + "startPeriod")),
-                                                LocalDate.parse(req.getParameter(value + urls[i] + "endPeriod")),
-                                                req.getParameter(value + urls[i] + "position"),
-                                                req.getParameter(value + urls[i] + "desc")
+                                                LocalDate.parse(req.getParameter(secType.name() + urls[i] + "startPeriod")),
+                                                LocalDate.parse(req.getParameter(secType.name() + urls[i] + "endPeriod")),
+                                                req.getParameter(positions[j]),
+                                                req.getParameter(secType.name() + urls[i] + "desc")
                                         ));
                             }
                             orgs.add(new Organization(link, positionList));
@@ -125,7 +125,16 @@ public class ResumeServlet extends HttpServlet {
                             break;
                         case EDUCATION:
                         case EXPERIENCE:
-                            resume.putSectionMap(secType, new OrganizationsSection(new ArrayList<>()));
+                            List<Organization> orgs = new ArrayList<>();
+                            List<Organization.Position> positions = new ArrayList<>();
+                            Link orgLink = new Link("", "");
+                            positions.add(new Organization.Position(
+                                    LocalDate.of(1900, 1, 1),
+                                    LocalDate.of(1900, 1, 1),
+                                    "",
+                                    ""));
+                            orgs.add(new Organization(orgLink, positions));
+                            resume.putSectionMap(secType, new OrganizationsSection(orgs));
                             break;
                     }
                 }
