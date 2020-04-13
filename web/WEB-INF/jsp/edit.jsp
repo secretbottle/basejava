@@ -47,26 +47,26 @@
                 </textarea></dd>
             </c:when>
             <c:when test="${secType=='EXPERIENCE' || secType=='EDUCATION'}">
-                <c:forEach items="<%=((OrganizationsSection) section).getOrganizations()%>" var="org">
+                <c:forEach items="<%=((OrganizationsSection) section).getOrganizations()%>" var="org" varStatus="orgStat">
                     <br>
                     <dt>Название организации</dt>
                     <dd><input type="text" name="${secType.name()}" size=20 value="${org.link.title}" required/></dd>
                     <br>
                     <dt>Ссылка</dt>
-                    <dd><input type="text" name="${secType.name()}urlAdr" size=20 value="${org.link.urlAdr}" required/></dd>
+                    <dd><input type="text" name="${secType.name()}${orgStat.index}urlAdr" size=20 value="${org.link.urlAdr}" required/></dd>
                     <br>
-                        <c:forEach items="${org.positions}" var="pos">
+                        <c:forEach items="${org.positions}" var="pos" varStatus="posStat">
                             <dt>Начало</dt>
-                            <dd><input type="date" name="${secType.name()}${org.link.urlAdr}startPeriod" value="${pos.startPeriod}" required></dd>
+                            <dd><input type="date" name="${secType.name()}${orgStat.index}startPeriod" value="${pos.startPeriod}" required></dd>
                             <br>
                             <dt>Окончание</dt>
-                            <dd><input type="date" name="${secType.name()}${org.link.urlAdr}endPeriod" value="${pos.endPeriod}" required></dd>
+                            <dd><input type="date" name="${secType.name()}${orgStat.index}endPeriod" value="${pos.endPeriod}" required></dd>
                             <br>
                             <dt>Позиция</dt>
-                            <dd><input type="text" name="${secType.name()}${org.link.urlAdr}position" size=40 value="${pos.position}" required/></dd>
+                            <dd><input type="text" name="${secType.name()}${orgStat.index}position" size=40 value="${pos.position}" required/></dd>
                             <br>
                             <dt>Описание</dt>
-                            <dd><textarea name="${secType.name()}${org.link.urlAdr}desc" rows="4" cols="70" style="resize:none;" style="text-align:left"
+                            <dd><textarea name="${secType.name()}${orgStat.index}desc" rows="4" cols="70" style="resize:none;" style="text-align:left"
                                           required>${pos.description}</textarea></dd>
                             <br>
                         </c:forEach>

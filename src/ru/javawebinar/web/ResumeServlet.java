@@ -51,34 +51,35 @@ public class ResumeServlet extends HttpServlet {
         }
 
         for (SectionType secType : SectionType.values()) {
-            String value = req.getParameter(secType.name());
-            String[] values = req.getParameterValues(secType.name());
-            if (value != null && value.trim().length() != 0) {
+            String secName = req.getParameter(secType.name());
+            if (secName != null && secName.trim().length() != 0) {
                 switch (secType) {
                     case PERSONAL:
                     case OBJECTIVE:
-                        resume.putSectionMap(secType, new TextSection(value));
+                        resume.putSectionMap(secType, new TextSection(secName));
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
-                        List<String> descList = new ArrayList<>(Arrays.asList(value.split("\n")));
+                        List<String> descList = new ArrayList<>(Arrays.asList(secName.split("\n")));
                         resume.putSectionMap(secType, new ListSection(descList));
                         break;
                     case EXPERIENCE:
                     case EDUCATION:
+                        String[] orgNames = req.getParameterValues(secType.name());
                         List<Organization> orgs = new ArrayList<>();
-                        for (int i = 0; i < values.length; i++) {
-                            String[] urls = req.getParameterValues(secType.name() + "urlAdr");
-                            Link link = new Link(values[i], urls[i]);
+                        for (int i = 0; i < orgNames.length; i++) {
+                            String url = req.getParameter(secType.name() + i + "urlAdr");
+                            Link link = new Link(orgNames[i], url);
                             List<Organization.Position> positionList = new ArrayList<>();
-                            String[] positions = req.getParameterValues(secType.name() + urls[i] + "position");
-                            for (int j = 0; j < positions.length; j++) {
+                            String orgTag = secType.name() + i;
+                            String[] posPeriods = req.getParameterValues(orgTag + "startPeriod");
+                            for (String startPer : posPeriods) {
                                 positionList.add(
                                         new Organization.Position(
-                                                LocalDate.parse(req.getParameter(secType.name() + urls[i] + "startPeriod")),
-                                                LocalDate.parse(req.getParameter(secType.name() + urls[i] + "endPeriod")),
-                                                req.getParameter(positions[j]),
-                                                req.getParameter(secType.name() + urls[i] + "desc")
+                                                LocalDate.parse(startPer),
+                                                LocalDate.parse(req.getParameter(orgTag + "endPeriod")),
+                                                req.getParameter(orgTag + "position"),
+                                                req.getParameter(orgTag + "desc")
                                         ));
                             }
                             orgs.add(new Organization(link, positionList));
