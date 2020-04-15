@@ -38,13 +38,11 @@
                 <jsp:useBean id="section" type="ru.javawebinar.model.Section"/>
             <c:choose>
             <c:when test="${secType=='PERSONAL' || secType=='OBJECTIVE'}">
-            <dd><input type="text" name="${secType.name()}" size=70 value="<%=section%>>" required /></dd>
+            <dd><input type="text" name="${secType.name()}" size=70 value="<%=section%>" required /></dd>
             </c:when>
             <c:when test="${secType=='ACHIEVEMENT' || secType=='QUALIFICATIONS'}">
-            <dd><textarea name="${secType.name()}" rows="4" cols="70" style="resize:none;" style="text-align:left"
-                          required >
-                <%=String.join("\n", ((ListSection) section).getDescriptionList())%>
-                </textarea></dd>
+            <dd><textarea name="${secType.name()}" rows="4" cols="70" style="resize:none;"
+                          required ><%=String.join("\n",((ListSection) section).getDescriptionList())%></textarea></dd>
             </c:when>
             <c:when test="${secType=='EXPERIENCE' || secType=='EDUCATION'}">
                 <c:forEach items="<%=((OrganizationsSection) section).getOrganizations()%>" var="org" varStatus="orgStat">
@@ -70,7 +68,6 @@
                                           required>${pos.description}</textarea></dd>
                             <br>
                         </c:forEach>
-
                 </c:forEach>
             </c:when>
             </c:choose>
