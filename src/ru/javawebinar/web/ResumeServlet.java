@@ -114,31 +114,7 @@ public class ResumeServlet extends HttpServlet {
         switch (action) {
             case "add":
                 resume = new Resume();
-                for (SectionType secType : SectionType.values()) {
-                    switch (secType) {
-                        case PERSONAL:
-                        case OBJECTIVE:
-                            resume.putSectionMap(secType, new TextSection(""));
-                            break;
-                        case ACHIEVEMENT:
-                        case QUALIFICATIONS:
-                            resume.putSectionMap(secType, new ListSection(new ArrayList<>()));
-                            break;
-                        case EDUCATION:
-                        case EXPERIENCE:
-                            List<Organization> orgs = new ArrayList<>();
-                            List<Organization.Position> positions = new ArrayList<>();
-                            Link orgLink = new Link("", "");
-                            positions.add(new Organization.Position(
-                                    LocalDate.of(1900, 1, 1),
-                                    LocalDate.of(1900, 1, 1),
-                                    "",
-                                    ""));
-                            orgs.add(new Organization(orgLink, positions));
-                            resume.putSectionMap(secType, new OrganizationsSection(orgs));
-                            break;
-                    }
-                }
+                setResumeSections(resume);
                 break;
             case "delete":
                 storage.delete(uuid);
@@ -147,6 +123,7 @@ public class ResumeServlet extends HttpServlet {
             case "view":
             case "edit":
                 resume = storage.get(uuid);
+                setResumeSections(resume);
                 break;
             default:
                 throw new IllegalArgumentException("Action " + action + " is illegal");
@@ -157,5 +134,37 @@ public class ResumeServlet extends HttpServlet {
                 ("view".equals(action) ? "/WEB-INF/jsp/view.jsp" : "/WEB-INF/jsp/edit.jsp")
         ).forward(request, response);
     }
+
+    private Resume setResumeSections(Resume resume) {
+        for (SectionType secType : SectionType.values()) {
+            if (resume.getSectionMap().get(secType) != null)
+                continue;
+            switch (secType) {
+                case PERSONAL:
+                case OBJECTIVE:
+                    resume.putSectionMap(secType, new TextSection(""));
+                    break;
+                case ACHIEVEMENT:
+                case QUALIFICATIONS:
+                    resume.putSectionMap(secType, new ListSection(new ArrayList<>()));
+                    break;
+                case EDUCATION:
+                case EXPERIENCE:
+                    List<Organization> orgs = new ArrayList<>();
+                    List<Organization.Position> positions = new ArrayList<>();
+                    Link orgLink = new Link("", "");
+                    positions.add(new Organization.Position(
+                            LocalDate.of(1900, 1, 1),
+                            LocalDate.of(1900, 1, 1),
+                            "",
+                            ""));
+                    orgs.add(new Organization(orgLink, positions));
+                    resume.putSectionMap(secType, new OrganizationsSection(orgs));
+                    break;
+            }
+        }
+        return resume;
+    }
+
 
 }
