@@ -1,7 +1,4 @@
-<%@ page import="ru.javawebinar.model.ContactType" %>
-<%@ page import="ru.javawebinar.model.ListSection" %>
-<%@ page import="ru.javawebinar.model.OrganizationsSection" %>
-<%@ page import="ru.javawebinar.model.SectionType" %>
+<%@ page import="ru.javawebinar.model.*" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page trimDirectiveWhitespaces="true" %>
@@ -38,9 +35,19 @@
                 <jsp:useBean id="section" type="ru.javawebinar.model.Section"/>
             <c:choose>
             <c:when test="${secType=='PERSONAL' || secType=='OBJECTIVE'}">
-            <dd><input type="text" name="${secType.name()}" size=70 value="<%=section%>" required /></dd>
+                <c:if test='<%=((TextSection) section).getText().equals(" ")%>'>
+                    <button onclick="window.location.href = 'resume?uuid=${resume.uuid}&action=addSection&section=${secType}';">Добавить</button>
+                </c:if>
+                <c:if test='<%=((TextSection) section).getText().equals("")%>'>
+                    <dd><input type="text" name="${secType.name()}" size=70 value="<%=section%>" required /></dd>
+                    <button onclick="window.location.href = 'resume?uuid=${resume.uuid}&action=deleteSection&section=${secType}';">Удалить</button>
+                </c:if>
             </c:when>
             <c:when test="${secType=='ACHIEVEMENT' || secType=='QUALIFICATIONS'}">
+            <c:if test='<%=((ListSection) section).getDescriptionList() == null%>'>
+            <button onclick="window.location.href = 'resume?uuid=${resume.uuid}&action=addSection&section=${secType}';">Добавить</button>
+            </c:if>
+
             <dd><textarea name="${secType.name()}" rows="4" cols="70" style="resize:none;"
                           required ><%=String.join("\n",((ListSection) section).getDescriptionList())%></textarea></dd>
             </c:when>

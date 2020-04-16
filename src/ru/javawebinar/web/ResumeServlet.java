@@ -44,7 +44,7 @@ public class ResumeServlet extends HttpServlet {
         for (ContactType type : ContactType.values()) {
             String value = req.getParameter(type.name());
             if (value != null && value.trim().length() != 0) {
-                resume.putContact(type, value);
+                resume.putContactMap(type, value);
             } else {
                 resume.getContactMap().remove(type);
             }
@@ -104,17 +104,17 @@ public class ResumeServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String uuid = request.getParameter("uuid");
         String action = request.getParameter("action");
+        String section = request.getParameter("section");
         if (action == null) {
             request.setAttribute("resumes", storage.getAllSorted());
             request.getRequestDispatcher("/WEB-INF/jsp/jList.jsp").forward(request, response);
             return;
         }
-
         Resume resume;
         switch (action) {
             case "add":
                 resume = new Resume();
-                setResumeSections(resume);
+                newSections(resume);
                 break;
             case "delete":
                 storage.delete(uuid);
@@ -123,26 +123,35 @@ public class ResumeServlet extends HttpServlet {
             case "view":
             case "edit":
                 resume = storage.get(uuid);
-                setResumeSections(resume);
+                newSections(resume);
+                break;
+            case "deleteSection":
+                resume = storage.get(uuid);
+                deleteSection(resume, SectionType.valueOf(section));
+                storage.update(resume);
+                break;
+            case "addSection":
+                resume = storage.get(uuid);
+                addSection(resume, SectionType.valueOf(section));
+                storage.update(resume);
                 break;
             default:
                 throw new IllegalArgumentException("Action " + action + " is illegal");
         }
-
         request.setAttribute("resume", resume);
         request.getRequestDispatcher(
                 ("view".equals(action) ? "/WEB-INF/jsp/view.jsp" : "/WEB-INF/jsp/edit.jsp")
         ).forward(request, response);
     }
 
-    private Resume setResumeSections(Resume resume) {
+    private Resume newSections(Resume resume) {
         for (SectionType secType : SectionType.values()) {
             if (resume.getSectionMap().get(secType) != null)
                 continue;
             switch (secType) {
                 case PERSONAL:
                 case OBJECTIVE:
-                    resume.putSectionMap(secType, new TextSection(""));
+                    resume.putSectionMap(secType, new TextSection(" "));
                     break;
                 case ACHIEVEMENT:
                 case QUALIFICATIONS:
@@ -162,9 +171,64 @@ public class ResumeServlet extends HttpServlet {
                     resume.putSectionMap(secType, new OrganizationsSection(orgs));
                     break;
             }
+            return resume;
         }
         return resume;
     }
 
+    private Resume deleteSection(Resume resume, SectionType secType){
+        switch (secType) {
+            case PERSONAL:
+            case OBJECTIVE:
+                resume.getSectionMap().replace(secType, new TextSection(""));
+                break;
+            case ACHIEVEMENT:
+            case QUALIFICATIONS:
+                resume.getSectionMap().replace(secType, new ListSection(new ArrayList<>()));
+                break;
+            case EDUCATION:
+            case EXPERIENCE:
+                List<Organization> orgs = new ArrayList<>();
+                List<Organization.Position> positions = new ArrayList<>();
+                Link orgLink = new Link("", "");
+                positions.add(new Organization.Position(
+                        LocalDate.of(1900, 1, 1),
+                        LocalDate.of(1900, 1, 1),
+                        "",
+                        ""));
+                orgs.add(new Organization(orgLink, positions));
+                resume.getSectionMap().replace(secType, new OrganizationsSection(orgs));
+                break;
+        }
+        return resume;
+    }
+
+    private Resume addSection(Resume resume, SectionType secType){
+        switch (secType) {
+            case PERSONAL:
+            case OBJECTIVE:
+                resume.putSectionMap(secType, new TextSection(" "));
+                break;
+            case ACHIEVEMENT:
+            case QUALIFICATIONS:
+                resume.putSectionMap(secType, new ListSection(new ArrayList<>()));
+                break;
+            case EDUCATION:
+            case EXPERIENCE:
+                List<Organization> orgs = new ArrayList<>();
+                List<Organization.Position> positions = new ArrayList<>();
+                Link orgLink = new Link("", "");
+                positions.add(new Organization.Position(
+                        LocalDate.of(1900, 1, 1),
+                        LocalDate.of(1900, 1, 1),
+                        "",
+                        ""));
+                orgs.add(new Organization(orgLink, positions));
+                resume.getSectionMap().remove(secType);
+                resume.putSectionMap(secType, new OrganizationsSection(orgs));
+                break;
+        }
+        return resume;
+    }
 
 }
