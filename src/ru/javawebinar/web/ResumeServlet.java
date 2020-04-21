@@ -104,7 +104,6 @@ public class ResumeServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String uuid = request.getParameter("uuid");
         String action = request.getParameter("action");
-        String section = request.getParameter("section");
         if (action == null) {
             request.setAttribute("resumes", storage.getAllSorted());
             request.getRequestDispatcher("/WEB-INF/jsp/jList.jsp").forward(request, response);
@@ -125,16 +124,6 @@ public class ResumeServlet extends HttpServlet {
                 resume = storage.get(uuid);
                 newSections(resume);
                 break;
-            case "deleteSection":
-                resume = storage.get(uuid);
-                deleteSection(resume, SectionType.valueOf(section));
-                storage.update(resume);
-                break;
-            case "addSection":
-                resume = storage.get(uuid);
-                addSection(resume, SectionType.valueOf(section));
-                storage.update(resume);
-                break;
             default:
                 throw new IllegalArgumentException("Action " + action + " is illegal");
         }
@@ -151,7 +140,7 @@ public class ResumeServlet extends HttpServlet {
             switch (secType) {
                 case PERSONAL:
                 case OBJECTIVE:
-                    resume.putSectionMap(secType, new TextSection(" "));
+                    resume.putSectionMap(secType, new TextSection(""));
                     break;
                 case ACHIEVEMENT:
                 case QUALIFICATIONS:
@@ -171,62 +160,6 @@ public class ResumeServlet extends HttpServlet {
                     resume.putSectionMap(secType, new OrganizationsSection(orgs));
                     break;
             }
-            return resume;
-        }
-        return resume;
-    }
-
-    private Resume deleteSection(Resume resume, SectionType secType){
-        switch (secType) {
-            case PERSONAL:
-            case OBJECTIVE:
-                resume.getSectionMap().replace(secType, new TextSection(""));
-                break;
-            case ACHIEVEMENT:
-            case QUALIFICATIONS:
-                resume.getSectionMap().replace(secType, new ListSection(new ArrayList<>()));
-                break;
-            case EDUCATION:
-            case EXPERIENCE:
-                List<Organization> orgs = new ArrayList<>();
-                List<Organization.Position> positions = new ArrayList<>();
-                Link orgLink = new Link("", "");
-                positions.add(new Organization.Position(
-                        LocalDate.of(1900, 1, 1),
-                        LocalDate.of(1900, 1, 1),
-                        "",
-                        ""));
-                orgs.add(new Organization(orgLink, positions));
-                resume.getSectionMap().replace(secType, new OrganizationsSection(orgs));
-                break;
-        }
-        return resume;
-    }
-
-    private Resume addSection(Resume resume, SectionType secType){
-        switch (secType) {
-            case PERSONAL:
-            case OBJECTIVE:
-                resume.putSectionMap(secType, new TextSection(" "));
-                break;
-            case ACHIEVEMENT:
-            case QUALIFICATIONS:
-                resume.putSectionMap(secType, new ListSection(new ArrayList<>()));
-                break;
-            case EDUCATION:
-            case EXPERIENCE:
-                List<Organization> orgs = new ArrayList<>();
-                List<Organization.Position> positions = new ArrayList<>();
-                Link orgLink = new Link("", "");
-                positions.add(new Organization.Position(
-                        LocalDate.of(1900, 1, 1),
-                        LocalDate.of(1900, 1, 1),
-                        "",
-                        ""));
-                orgs.add(new Organization(orgLink, positions));
-                resume.getSectionMap().remove(secType);
-                resume.putSectionMap(secType, new OrganizationsSection(orgs));
-                break;
         }
         return resume;
     }

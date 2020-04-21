@@ -4,6 +4,7 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <html>
 <head>
+    <script src="js/editSection.js"></script>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link rel="stylesheet" href="css/style.css">
     <jsp:useBean id="resume" type="ru.javawebinar.model.Resume" scope="request"/>
@@ -30,52 +31,74 @@
         <h3>Секции:</h3>
         <c:forEach var="secType" items="<%=SectionType.values()%>">
         <dl>
-            <dt><b>${secType.title}</b></dt>
                 <c:set var="section" value="${resume.getSection(secType)}"/>
                 <jsp:useBean id="section" type="ru.javawebinar.model.Section"/>
             <c:choose>
             <c:when test="${secType=='PERSONAL' || secType=='OBJECTIVE'}">
-                <c:if test='<%=((TextSection) section).getText().equals(" ")%>'>
-                    <button onclick="window.location.href = 'resume?uuid=${resume.uuid}&action=addSection&section=${secType}';">Добавить</button>
-                </c:if>
+            <div id="${secType.name()}div">
+                <dt><b>${secType.title}</b></dt>
+
                 <c:if test='<%=((TextSection) section).getText().equals("")%>'>
-                    <dd><input type="text" name="${secType.name()}" size=70 value="<%=section%>" required /></dd>
-                    <button onclick="window.location.href = 'resume?uuid=${resume.uuid}&action=deleteSection&section=${secType}';">Удалить</button>
+                    <button type="button" id="${secType.name()}addButton" onclick="addSection('${secType.name()}')">
+                        Добавить
+                    </button>
                 </c:if>
+
+                <c:if test='<%=!((TextSection) section).getText().equals("")%>'>
+                    <dd><input type="text" id="${secType.name()}" name="${secType.name()}" size=70 value="<%=section%>"
+                               required/></dd>
+                    <button type="button" id="${secType.name()}deleteButton"
+                            onclick="deleteSection('${secType.name()}')">
+                        Удалить
+                    </button>
+                </c:if>
+            </div>
             </c:when>
             <c:when test="${secType=='ACHIEVEMENT' || secType=='QUALIFICATIONS'}">
-            <c:if test='<%=((ListSection) section).getDescriptionList() == null%>'>
-            <button onclick="window.location.href = 'resume?uuid=${resume.uuid}&action=addSection&section=${secType}';">Добавить</button>
-            </c:if>
+            <div id="${secType.name()}div">
+                <dt><b>${secType.title}</b></dt>
 
-            <dd><textarea name="${secType.name()}" rows="4" cols="70" style="resize:none;"
-                          required ><%=String.join("\n",((ListSection) section).getDescriptionList())%></textarea></dd>
+                <dd><textarea name="${secType.name()}" rows="4" cols="70" style="resize:none;"
+                              required><%=String.join("\n", ((ListSection) section).getDescriptionList())%></textarea>
+                </dd>
+            </div>
             </c:when>
             <c:when test="${secType=='EXPERIENCE' || secType=='EDUCATION'}">
-                <c:forEach items="<%=((OrganizationsSection) section).getOrganizations()%>" var="org" varStatus="orgStat">
+            <div id="${secType.name()}div">
+                <dt><b>${secType.title}</b></dt>
+
+                <c:forEach items="<%=((OrganizationsSection) section).getOrganizations()%>" var="org"
+                           varStatus="orgStat">
                     <br>
                     <dt>Название организации</dt>
-                    <dd><input type="text" name="${secType.name()}" size=20 value="${org.link.title}" required/></dd>
+                    <dd><input type="text" name="${secType.name()}" size=20 value="${org.link.title}" required/>
+                    </dd>
                     <br>
                     <dt>Ссылка</dt>
-                    <dd><input type="text" name="${secType.name()}${orgStat.index}urlAdr" size=20 value="${org.link.urlAdr}" required/></dd>
+                    <dd><input type="text" name="${secType.name()}${orgStat.index}urlAdr" size=20
+                               value="${org.link.urlAdr}" required/></dd>
                     <br>
-                        <c:forEach items="${org.positions}" var="pos" varStatus="posStat">
-                            <dt>Начало</dt>
-                            <dd><input type="date" name="${secType.name()}${orgStat.index}startPeriod" value="${pos.startPeriod}" required></dd>
-                            <br>
-                            <dt>Окончание</dt>
-                            <dd><input type="date" name="${secType.name()}${orgStat.index}endPeriod" value="${pos.endPeriod}" required></dd>
-                            <br>
-                            <dt>Позиция</dt>
-                            <dd><input type="text" name="${secType.name()}${orgStat.index}position" size=40 value="${pos.position}" required/></dd>
-                            <br>
-                            <dt>Описание</dt>
-                            <dd><textarea name="${secType.name()}${orgStat.index}desc" rows="4" cols="70" style="resize:none;" style="text-align:left"
-                                          required>${pos.description}</textarea></dd>
-                            <br>
-                        </c:forEach>
+                    <c:forEach items="${org.positions}" var="pos" varStatus="posStat">
+                        <dt>Начало</dt>
+                        <dd><input type="date" name="${secType.name()}${orgStat.index}startPeriod"
+                                   value="${pos.startPeriod}" required></dd>
+                        <br>
+                        <dt>Окончание</dt>
+                        <dd><input type="date" name="${secType.name()}${orgStat.index}endPeriod"
+                                   value="${pos.endPeriod}" required></dd>
+                        <br>
+                        <dt>Позиция</dt>
+                        <dd><input type="text" name="${secType.name()}${orgStat.index}position" size=40
+                                   value="${pos.position}" required/></dd>
+                        <br>
+                        <dt>Описание</dt>
+                        <dd><textarea name="${secType.name()}${orgStat.index}desc" rows="4" cols="70"
+                                      style="resize:none;" style="text-align:left"
+                                      required>${pos.description}</textarea></dd>
+                        <br>
+                    </c:forEach>
                 </c:forEach>
+            </div>
             </c:when>
             </c:choose>
             <dl>
