@@ -58,9 +58,19 @@
             <div id="${secType.name()}div">
                 <dt><b>${secType.title}</b></dt>
 
-                <dd><textarea name="${secType.name()}" rows="4" cols="70" style="resize:none;"
+                <c:if test = '<%=((ListSection) section).getDescriptionList().size() == 0%>'>
+                    <button type="button" id="${secType.name()}addButton" onclick="addSection('${secType.name()}')">
+                        Добавить
+                    </button>
+                </c:if>
+
+                <c:if test = '<%=((ListSection) section).getDescriptionList().size() != 0%>'>
+                <dd><textarea id="${secType.name()}" name="${secType.name()}" rows="4" cols="70" style="resize:none;"
                               required><%=String.join("\n", ((ListSection) section).getDescriptionList())%></textarea>
                 </dd>
+                <button type="button" id="${secType.name()}deleteButton"
+                        onclick="deleteSection('${secType.name()}')">
+                </c:if>
             </div>
             </c:when>
             <c:when test="${secType=='EXPERIENCE' || secType=='EDUCATION'}">
