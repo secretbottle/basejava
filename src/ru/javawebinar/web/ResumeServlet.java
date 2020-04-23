@@ -68,6 +68,7 @@ public class ResumeServlet extends HttpServlet {
                         String[] orgNames = req.getParameterValues(secType.name());
                         List<Organization> orgs = new ArrayList<>();
                         for (int i = 0; i < orgNames.length; i++) {
+                            //TODO Fix this
                             String url = req.getParameter(secType.name() + i + "urlAdr");
                             Link link = new Link(orgNames[i], url);
                             List<Organization.Position> positionList = new ArrayList<>();
@@ -151,12 +152,12 @@ public class ResumeServlet extends HttpServlet {
                     List<Organization> orgs = new ArrayList<>();
                     List<Organization.Position> positions = new ArrayList<>();
                     Link orgLink = new Link("", "");
-                    positions.add(new Organization.Position(
+/*                    positions.add(new Organization.Position(
                             LocalDate.of(1900, 1, 1),
                             LocalDate.of(1900, 1, 1),
                             "",
-                            ""));
-                    orgs.add(new Organization(orgLink, positions));
+                            ""));*/
+                    //orgs.add(new Organization(orgLink, positions));
                     resume.putSectionMap(secType, new OrganizationsSection(orgs));
                     break;
             }
