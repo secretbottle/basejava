@@ -89,43 +89,41 @@
                 </c:if>
 
                 <c:forEach items="${OrgList}" var="org" varStatus="orgStat"><br>
-
-                    <%--<div id="${secType.name()}org${orgStat.index}">--%>
                     <div class="${secType.name()}orgs">
-
                         <c:if test="${OrgList.size() != 0}">
                             <dl>
                                 <dt>Название организации</dt>
                                 <dd><input type="text" id="${secType.name()}" name="${secType.name()}" size=20
-                                           value="${org.link.title}" required/>
+                                           value="${org.link.title}" class="${secType.name()}${orgStat.index}"
+                                           required/>
                                 </dd>
                                 <dt>Ссылка</dt>
-                                <%--TODO Fix this--%>
                                 <dd><input type="text" name="${secType.name()}urlAdr" size=20
-                                           value="${org.link.urlAdr}" required/></dd>
+                                           value="${org.link.urlAdr}" class="${secType.name()}${orgStat.index}"
+                                           required/></dd>
                                 <c:forEach items="${org.positions}" var="pos" varStatus="posStat">
-                                    <div id="${secType.name()}${orgStat.index}pos">
+                                    <div class="${secType.name()}pos">
                                         <dl>
                                             <dt>Начало</dt>
                                             <dd><input type="date" name="${secType.name()}${orgStat.index}startPeriod"
-                                                       value="${pos.startPeriod}" required></dd>
+                                                       value="${pos.startPeriod}" class="${secType.name()}${orgStat.index}" required></dd>
                                             <dt>Окончание</dt>
                                             <dd><input type="date" name="${secType.name()}${orgStat.index}endPeriod"
-                                                       value="${pos.endPeriod}" required></dd>
+                                                       value="${pos.endPeriod}" class="${secType.name()}${orgStat.index}" required></dd>
                                             <dt>Позиция</dt>
                                             <dd><input type="text" name="${secType.name()}${orgStat.index}position"
                                                        size=40
-                                                       value="${pos.position}" required/></dd>
+                                                       value="${pos.position}" class="${secType.name()}${orgStat.index}" required/></dd>
                                             <dt>Описание</dt>
                                             <dd><textarea name="${secType.name()}${orgStat.index}desc" rows="4"
                                                           cols="70"
-                                                          style="resize:none;" style="text-align:left"
+                                                          style="resize:none;" style="text-align:left" class="${secType.name()}${orgStat.index}"
                                                           required>${pos.description}</textarea></dd>
                                         </dl>
                                     </div>
                                 </c:forEach>
                                 <button type="button" id="deleteButtonOrg + ${orgStat.index}"
-                                        onclick="deleteOrganization('org' + ${orgStat.index})">
+                                        onclick="deleteOrganization('org' + ${orgStat.index})" class="${secType.name()}${orgStat.index}">
                                     Удалить организацию
                                 </button>
                             </dl>
