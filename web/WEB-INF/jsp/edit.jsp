@@ -100,53 +100,41 @@
                         <dl>
                             <dt>Название организации</dt>
                             <dd><input type="text" id="${secType.name()}" name="${secType.name()}" size=20
-                                       value="${org.link.title}" class="${secType.name()}${orgStat.index}"
-                                       required/>
+                                       value="${org.link.title}" required/>
                             </dd>
                         </dl>
                         <dl>
                             <dt>Ссылка</dt>
                             <dd><input type="text" name="${secType.name()}urlAdr" size=20
-                                       value="${org.link.urlAdr}" class="${secType.name()}${orgStat.index}"
-                                       required/></dd>
+                                       value="${org.link.urlAdr}" required/></dd>
                         </dl>
                         <c:forEach items="${org.positions}" var="pos" varStatus="posStat">
-                            <div class="${secType.name()}pos">
+                            <div id="${secType.name()}${orgStat.index}pos" class="${secType.name()}${orgStat.index}pos">
                                 <dl>
                                     <dt>Начало</dt>
-                                    <dd><input type="date"
-                                               name="${secType.name()}${orgStat.index}startPeriod"
-                                               value="${pos.startPeriod}"
-                                               class="${secType.name()}${orgStat.index}" required></dd>
+                                    <dd><input type="date" name="${secType.name()}${orgStat.index}startPeriod"
+                                               value="${pos.startPeriod}" required></dd>
                                 </dl>
                                 <dl>
                                     <dt>Окончание</dt>
-                                    <dd><input type="date"
-                                               name="${secType.name()}${orgStat.index}endPeriod"
-                                               value="${pos.endPeriod}"
-                                               class="${secType.name()}${orgStat.index}" required></dd>
+                                    <dd><input type="date" name="${secType.name()}${orgStat.index}endPeriod"
+                                               value="${pos.endPeriod}" required></dd>
                                 </dl>
                                 <dl>
                                     <dt>Позиция</dt>
-                                    <dd><input type="text"
-                                               name="${secType.name()}${orgStat.index}position"
-                                               size=40
-                                               value="${pos.position}"
-                                               class="${secType.name()}${orgStat.index}" required/></dd>
+                                    <dd><input type="text" name="${secType.name()}${orgStat.index}position"
+                                               size=40 value="${pos.position}" required/></dd>
                                 </dl>
                                 <dl>
                                     <dt>Описание</dt>
-                                    <dd><textarea name="${secType.name()}${orgStat.index}desc" rows="4"
-                                                  cols="70"
+                                    <dd><textarea name="${secType.name()}${orgStat.index}desc" rows="4" cols="70"
                                                   style="resize:none;" style="text-align:left"
-                                                  class="${secType.name()}${orgStat.index}"
                                                   required>${pos.description}</textarea></dd>
                                 </dl>
                             </div>
                         </c:forEach>
                         <button type="button" id="${secType.name()}"
-                                onclick="deleteOrganization('${secType.name()}${orgStat.index}div')"
-                                class="${secType.name()}${orgStat.index}">
+                                onclick="deleteOrganization('${secType.name()}${orgStat.index}div')">
                             Удалить организацию
                         </button>
                         </dl>
