@@ -1,90 +1,60 @@
 function addSection(section) {
+    var sectionDiv = document.getElementById(section + "div");
     switch (section) {
         case 'PERSONAL':
         case 'OBJECTIVE':
-            var inputField = document.createElement("input");
-            inputField.type = "text";
-            inputField.id = section;
-            inputField.name = section;
-            inputField.size = 70;
-            inputField.required;
-            addDeleteButton(section, inputField);
+            addDescriptionList(sectionDiv, "", "text", section);
+            createDeleteButton(sectionDiv, "", section + "deleteButton",  function () {
+                deleteSection(section);
+            });
+            document.getElementById(section + "addButton").remove();
             break;
         case 'ACHIEVEMENT':
         case 'QUALIFICATIONS':
-            var textArea = document.createElement("textarea");
-            textArea.id = section;
-            textArea.name = section;
-            textArea.rows = 4;
-            textArea.cols = 70;
-            textArea.style.resize = 'none';
-            //textArea.value = "";
-            textArea.required;
-            addDeleteButton(section, textArea);
+            addDescriptionList(sectionDiv, "", "textarea", section);
+            createDeleteButton(sectionDiv, "", section + "deleteButton",  function () {
+                deleteSection(section);
+            });
+            document.getElementById(section + "addButton").remove();
+            break;
+        case 'EXPERIENCE':
+        case 'EDUCATION':
+            var orgDivs = document.getElementsByClassName(section + "orgs");
+            var index = section + orgDivs.length;
+            var orgDiv = document.createElement("div");
+            orgDiv.id = index + "orgs";
+            orgDiv.className = section + "orgs";
+            addDescriptionList(orgDiv, "Название организации", "text", section);
+            addDescriptionList(orgDiv, "Ссылка", "text", index + "urlAdr");
+            addDescriptionList(orgDiv, "Начало", "date", index + "startPeriod");
+            addDescriptionList(orgDiv, "Окончание", "date", index + "endPeriod");
+            addDescriptionList(orgDiv, "Позиция", "text", index + "position");
+            addDescriptionList(orgDiv, "Описание", "textarea", index + "desc");
+            sectionDiv.append(orgDiv);
+            createDeleteButton(orgDiv, "организацию", index + "deleteButton", function () {
+                deleteOrganization(index + "orgs");
+            });
             break;
     }
 }
 
-function addDeleteButton(section, field) {
-    var dl = document.createElement("dl");
-    var ddFld = document.createElement("dd");
-    ddFld.append(field);
-
-    var ddBtn = document.createElement("dd");
-    var delButton = document.createElement("button");
-    delButton.type = "button";
-    delButton.id = section + "deleteButton";
-    delButton.onclick = function () {
-        deleteSection(section);
-    };
-    delButton.textContent = "Удалить";
-    ddBtn.append(delButton);
-    dl.append(ddFld);
-    dl.append(ddBtn);
-    document.getElementById(section + "div").append(dl);
-    document.getElementById(section + "addButton").remove();
+function deleteSection(id) {
+    createAddButton(id, "");
+    document.getElementById(id).remove();
+    document.getElementById(id + "deleteButton").remove();
 }
 
-function deleteSection(section) {
-
-    document.getElementById(section).remove();
-    var parentDiv = document.getElementById(section + "div");
-    var addButton = document.createElement("button");
-    addButton.type = "button";
-    addButton.id = section + "addButton";
-    addButton.onclick = function () {
-        addSection(section);
-    };
-    addButton.textContent = "Добавить";
-
-    parentDiv.append(addButton);
-    document.getElementById(section + "deleteButton").remove();
+function deleteOrganization(id) {
+    document.getElementById(id).remove();
 }
 
-function addOrganization(section) {
-    var parentDiv = document.getElementById(section + "div");
-    var parentDivs = document.getElementsByClassName(section + "orgs");
-    var index = section + parentDivs.length;
-    addDescriptionList("Название организации", "text", parentDiv, section);
-    addDescriptionList("Ссылка", "text", parentDiv, index + "urlAdr");
-    addDescriptionList("Начало", "date", parentDiv, index + "startPeriod");
-    addDescriptionList("Окончание", "date", parentDiv, index + "endPeriod");
-    addDescriptionList("Позиция", "text", parentDiv, index + "position");
-    addDescriptionList("Описание", "textarea", parentDiv, index + "desc");
-
-    var btn = createDeleteButton(index, index, function () {
-        deleteOrganization(index, section);
-    });
-    parentDiv.append(btn);
-
-    document.getElementById(section + "addButtonOrg").remove();
-}
-
-function addDescriptionList(textContent, inputType, parentDiv, id, index, ddBtn) {
+function addDescriptionList(parentDiv, textContent, inputType, id) {
     var dl = document.createElement("dl");
     var dt = document.createElement("dt");
     var dd = document.createElement("dd");
-    dt.textContent = textContent;
+    if(textContent !== "")
+        dt.textContent = textContent;
+
     switch (inputType) {
         case "text":
         case "date":
@@ -92,8 +62,7 @@ function addDescriptionList(textContent, inputType, parentDiv, id, index, ddBtn)
             inputField.type = inputType;
             inputField.id = id;
             inputField.name = id;
-            inputField.size = 20;
-            inputField.className = index;
+            inputField.size = 70;
             inputField.required;
             dd.append(inputField);
             break;
@@ -105,47 +74,36 @@ function addDescriptionList(textContent, inputType, parentDiv, id, index, ddBtn)
             textField.rows = 4;
             textField.cols = 70;
             textField.style.resize = 'none';
-            textField.value = "";
-            inputField.className = index;
             textField.required;
             dd.append(textField);
             break;
     }
-    dl.append(ddBtn);
     dl.append(dt);
     dl.append(dd);
     parentDiv.append(dl);
-
     return dl;
-}
-
-function deleteOrganization(id, section) {
-    document.getElementsByClassName(id).remove();
-    createAddButton(section, "Организацию")
 }
 
 function createAddButton(section, text) {
     var dd = document.createElement("dd");
     var addButton = document.createElement("button");
     addButton.type = "button";
-    addButton.id = index;
-    addButton.className = index;
+    addButton.id = section + "addButton";
     addButton.onclick = function () {
-        addOrganization(this.id);
+        addSection(section);
     };
     addButton.textContent = "Добавить " + text;
     dd.append(addButton);
+    document.getElementById(section + "div").append(dd);
 }
 
-function createDeleteButton(id, className, functionName, text){
+function createDeleteButton(parentDiv, text, id, functionName) {
     var dd = document.createElement("dd");
     var delButton = document.createElement("button");
     delButton.type = "button";
     delButton.id = id;
-    delButton.className = className;
     delButton.onclick = functionName;
-    delButton.textContent = "Удалить" + text;
+    delButton.textContent = "Удалить " + text;
     dd.append(delButton);
-    return dd;
+    parentDiv.appendChild(dd);
 }
-
