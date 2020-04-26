@@ -33,52 +33,52 @@
         <jsp:useBean id="section" type="ru.javawebinar.model.Section"/>
         <c:choose>
             <c:when test="${secType=='PERSONAL' || secType=='OBJECTIVE'}">
-                <div id="${secType.name()}div">
-                    <dl>
-                        <dt><b>${secType.title}</b></dt>
+                <div id="${secType.name()}textDiv">
+                    <div id="${secType.name()}div">
+                        <dl>
+                            <dt><b>${secType.title}</b></dt>
 
-                        <c:if test='<%=((TextSection) section).getText().equals("")%>'>
-                            <button type="button" id="${secType.name()}addButton"
-                                    onclick="addSection('${secType.name()}')">
-                                Добавить
-                            </button>
-                        </c:if>
+                            <c:if test='<%=((TextSection) section).getText().equals("")%>'>
+                                <button type="button" id="${secType.name()}addButton"
+                                        onclick="addSection('${secType.name()}')">Добавить
+                                </button>
+                            </c:if>
 
-                        <c:if test='<%=!((TextSection) section).getText().equals("")%>'>
-                            <dd><input type="text" id="${secType.name()}" name="${secType.name()}" size=70
-                                       value="<%=section%>"
-                                       required/></dd>
-                            <button type="button" id="${secType.name()}deleteButton"
-                                    onclick="deleteSection('${secType.name()}')">
-                                Удалить
-                            </button>
-                        </c:if>
-                    </dl>
+                            <c:if test='<%=!((TextSection) section).getText().equals("")%>'>
+                                <dd><input type="text" id="${secType.name()}" name="${secType.name()}" size=70
+                                           value="<%=section%>"
+                                           required/></dd>
+                                <button type="button" id="${secType.name()}deleteButton"
+                                        onclick="deleteSection('${secType.name()}')">Удалить
+                                </button>
+                            </c:if>
+                        </dl>
+                    </div>
                 </div>
             </c:when>
             <c:when test="${secType=='ACHIEVEMENT' || secType=='QUALIFICATIONS'}">
-                <div id="${secType.name()}div">
-                    <dl>
-                        <dt><b>${secType.title}</b></dt>
+                <div id="${secType.name()}listDiv">
+                    <div id="${secType.name()}div">
+                        <dl>
+                            <dt><b>${secType.title}</b></dt>
 
-                        <c:if test='<%=((ListSection) section).getDescriptionList().size() == 0%>'>
-                            <button type="button" id="${secType.name()}addButton"
-                                    onclick="addSection('${secType.name()}')">
-                                Добавить
-                            </button>
-                        </c:if>
+                            <c:if test='<%=((ListSection) section).getDescriptionList().size() == 0%>'>
+                                <button type="button" id="${secType.name()}addButton"
+                                        onclick="addSection('${secType.name()}')">Добавить
+                                </button>
+                            </c:if>
 
-                        <c:if test='<%=((ListSection) section).getDescriptionList().size() != 0%>'>
-                            <dd><textarea id="${secType.name()}" name="${secType.name()}" rows="4" cols="70"
-                                          style="resize:none;"
-                                          required><%=String.join("\n", ((ListSection) section).getDescriptionList())%></textarea>
-                            </dd>
-                            <button type="button" id="${secType.name()}deleteButton"
-                                    onclick="deleteSection('${secType.name()}')">
-                                Удалить
-                            </button>
-                        </c:if>
-                    </dl>
+                            <c:if test='<%=((ListSection) section).getDescriptionList().size() != 0%>'>
+                                <dd><textarea id="${secType.name()}" name="${secType.name()}" rows="4" cols="70"
+                                              style="resize:none;"
+                                              required><%=String.join("\n", ((ListSection) section).getDescriptionList())%></textarea>
+                                </dd>
+                                <button type="button" id="${secType.name()}deleteButton"
+                                        onclick="deleteSection('${secType.name()}')">Удалить
+                                </button>
+                            </c:if>
+                        </dl>
+                    </div>
                 </div>
             </c:when>
             <c:when test="${secType=='EXPERIENCE' || secType=='EDUCATION'}">
@@ -87,12 +87,9 @@
                 <dt><b>${secType.title}</b></dt>
                 <c:set var="OrgList" value="<%=((OrganizationsSection) section).getOrganizations()%>"/>
 
-                <c:if test="${OrgList.size() == 0}">
-                    <button type="button" id="${secType.name()}addButton"
-                            onclick="addSection('${secType.name()}')">
-                        Добавить организацию
-                    </button>
-                </c:if>
+                <button type="button" id="${secType.name()}addButton"
+                        onclick="addSection('${secType.name()}')">Добавить организацию
+                </button>
 
                 <c:forEach items="${OrgList}" var="org" varStatus="orgStat"><br>
                     <div id="${secType.name()}${orgStat.index}div" class="${secType.name()}orgs">
@@ -108,8 +105,16 @@
                             <dd><input type="text" name="${secType.name()}urlAdr" size=20
                                        value="${org.link.urlAdr}" required/></dd>
                         </dl>
+
+                        <button type="button" id="${secType.name()}${orgStat.index}addButton"
+                                onclick="addPosition('${secType.name()}${orgStat.index}')">Добавить должность
+                        </button>
+                        <button type="button" id="${secType.name()}"
+                                onclick="deleteOrgPos('${secType.name()}${orgStat.index}div')">Удалить организацию
+                        </button>
                         <c:forEach items="${org.positions}" var="pos" varStatus="posStat">
-                            <div id="${secType.name()}${orgStat.index}pos" class="${secType.name()}${orgStat.index}pos">
+                            <div id="${secType.name()}${orgStat.index}pos${posStat.index}"
+                                 class="${secType.name()}${orgStat.index}pos">
                                 <dl>
                                     <dt>Начало</dt>
                                     <dd><input type="date" name="${secType.name()}${orgStat.index}startPeriod"
@@ -131,12 +136,15 @@
                                                   style="resize:none;" style="text-align:left"
                                                   required>${pos.description}</textarea></dd>
                                 </dl>
+                                <dd>
+                                    <button type="button" id="${secType.name()}"
+                                            onclick="deleteOrgPos('${secType.name()}${orgStat.index}pos${posStat.index}')">
+                                        Удалить должность
+                                    </button>
+                                </dd>
                             </div>
                         </c:forEach>
-                        <button type="button" id="${secType.name()}"
-                                onclick="deleteOrganization('${secType.name()}${orgStat.index}div')">
-                            Удалить организацию
-                        </button>
+
                         </dl>
                     </c:if>
                     </div>
