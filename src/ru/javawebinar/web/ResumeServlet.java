@@ -65,15 +65,16 @@ public class ResumeServlet extends HttpServlet {
                         break;
                     case EXPERIENCE:
                     case EDUCATION:
-                        String[] orgNames = req.getParameterValues(secName);
+                        String[] orgNames = req.getParameterValues(secType.name());
+                        String[] url = req.getParameterValues(secType.name() + "urlAdr");
                         List<Organization> orgs = new ArrayList<>();
                         for (int i = 0; i < orgNames.length; i++) {
                             //TODO Fix this
-                            String[] url = req.getParameterValues(secName + "urlAdr");
+
                             Link link = new Link(orgNames[i], url[i]);
                             List<Organization.Position> positionList = new ArrayList<>();
 
-                            String count = secName + i;
+                            String count = secType.name() + i;
                             String[] startPeriods = req.getParameterValues(count + "startPeriod");
                             String[] endPeriods = req.getParameterValues(count + "endPeriod");
                             String[] positions = req.getParameterValues(count + "position");
@@ -84,8 +85,8 @@ public class ResumeServlet extends HttpServlet {
                                         new Organization.Position(
                                                 LocalDate.parse(startPeriods[j]),
                                                 LocalDate.parse(endPeriods[i]),
-                                                req.getParameter(positions[i]),
-                                                req.getParameter(descs[i])
+                                                positions[i],
+                                                descs[i]
                                         ));
                             }
 
