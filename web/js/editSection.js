@@ -29,16 +29,18 @@ function addSection(section) {
             var orgDiv = document.createElement("div");
             orgDiv.id = index + "div";
             orgDiv.className = section + "orgs";
-            addDescriptionList(orgDiv, "Название организации", "text", section);
-            addDescriptionList(orgDiv, "Ссылка", "text", index + "urlAdr");
-
-            createAddButton(orgDiv, index, "должность", function () {
-                addPosition(index);
-            });
-            document.getElementById(section + "div").append(orgDiv);
             createDeleteButton(orgDiv, index, "организацию", function () {
                 deleteOrgPos(orgDiv.getAttribute("id"));
             });
+            addDescriptionList(orgDiv, "Название организации", "text", section);
+            addDescriptionList(orgDiv, "Ссылка", "text", section + "urlAdr");
+            createAddButton(orgDiv, index, "должность", function () {
+                addPosition(index);
+            });
+
+            document.getElementById(section + "div").append(orgDiv);
+            addPosition(index);
+
             break;
     }
 }

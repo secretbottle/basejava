@@ -84,9 +84,9 @@ public class ResumeServlet extends HttpServlet {
                                 positionList.add(
                                         new Organization.Position(
                                                 LocalDate.parse(startPeriods[j]),
-                                                LocalDate.parse(endPeriods[i]),
-                                                positions[i],
-                                                descs[i]
+                                                LocalDate.parse(endPeriods[j]),
+                                                positions[j],
+                                                descs[j]
                                         ));
                             }
 
@@ -158,13 +158,6 @@ public class ResumeServlet extends HttpServlet {
                 case EXPERIENCE:
                     List<Organization> orgs = new ArrayList<>();
                     List<Organization.Position> positions = new ArrayList<>();
-                    Link orgLink = new Link("", "");
-/*                    positions.add(new Organization.Position(
-                            LocalDate.of(1900, 1, 1),
-                            LocalDate.of(1900, 1, 1),
-                            "",
-                            ""));*/
-                    //orgs.add(new Organization(orgLink, positions));
                     resume.putSectionMap(secType, new OrganizationsSection(orgs));
                     break;
             }
