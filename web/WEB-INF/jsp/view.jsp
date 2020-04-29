@@ -4,6 +4,7 @@
 <%@ page import="ru.javawebinar.model.ListSection" %>
 <%@ page import="ru.javawebinar.model.OrganizationsSection" %>
 <%@ page import="ru.javawebinar.model.TextSection" %>
+<%@ page import="ru.javawebinar.util.HtmlUtil" %>
 <%@ page trimDirectiveWhitespaces="true" %>
 <html>
 <head>
@@ -48,25 +49,14 @@
                 <h3><a href=${org.link.urlAdr}>${org.link.title}</a></h3>
                 <table>
                     <c:forEach items="${org.positions}" var="pos">
+                        <jsp:useBean id="pos" type="ru.javawebinar.model.Organization.Position"/>
                         <tr>
-                            <td style="vertical-align: top">
-                                <fmt:parseDate value="${pos.startPeriod}" type="date" pattern="yyyy-MM-dd"
-                                               var="parsedSDate"/>
-                                <fmt:formatDate value="${parsedSDate}" type="date" pattern="dd/MM/yyyy"
-                                                var="startDate"/>
-                                <c:out value="${startDate} -"/>
+                            <td width="15%" style="vertical-align: top"><%=HtmlUtil.formatDates(pos)%>
                             </td>
-                            <td style="vertical-align: top">
-                                <fmt:parseDate value="${pos.endPeriod}" type="date" pattern="yyyy-MM-dd"
-                                               var="parsedEDate"/>
-                                <fmt:formatDate value="${parsedEDate}" type="date" pattern="dd/MM/yyyy" var="endDate"/>
-                                <c:out value="${endDate}"/>
-                            </td>
-                            <td><b>${pos.position}</b>.<br>${pos.description}</td>
+                            <td><b>${pos.position}</b><br>${pos.description}</td>
                         </tr>
                     </c:forEach>
                 </table>
-
             </td>
         </c:forEach>
     </c:when>
