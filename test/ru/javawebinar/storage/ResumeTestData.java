@@ -21,21 +21,21 @@ public class ResumeTestData {
     public static Resume generateResume(String uuid, String fullname) {
         Resume resume = new Resume(uuid, fullname);
         //Контакты
-        resume.putContactMap(ContactType.PHONE, "+7(921) 855-0482");
-        resume.putContactMap(ContactType.EMAIL, "skype:grigory.kislin" + generateRandomString(3));
-        resume.putContactMap(ContactType.SKYPE, "gkislin@yandex.ru");
-        resume.putContactMap(ContactType.LINKEDIN, "https://www.linkedin.com/in/gkislin" + generateRandomString(3));
-        resume.putContactMap(ContactType.GITHUB, "https://github.com/gkislin" + generateRandomString(3));
-        resume.putContactMap(ContactType.STACKOVERFLOW, "https://stackoverflow.com/users/548473" + generateRandomString(3));
-        resume.putContactMap(ContactType.HOMEPAGE, "http://gkislin.ru/");
+        resume.setContact(ContactType.PHONE, "+7(921) 855-0482");
+        resume.setContact(ContactType.EMAIL, "skype:grigory.kislin" + generateRandomString(3));
+        resume.setContact(ContactType.SKYPE, "gkislin@yandex.ru");
+        resume.setContact(ContactType.LINKEDIN, "https://www.linkedin.com/in/gkislin" + generateRandomString(3));
+        resume.setContact(ContactType.GITHUB, "https://github.com/gkislin" + generateRandomString(3));
+        resume.setContact(ContactType.STACKOVERFLOW, "https://stackoverflow.com/users/548473" + generateRandomString(3));
+        resume.setContact(ContactType.HOMEPAGE, "http://gkislin.ru/");
 
         // Раздел "Позиция"
         TextSection Position = new TextSection("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям" + generateRandomString(2));
-        resume.putSectionMap(SectionType.OBJECTIVE, Position);
+        resume.setSection(SectionType.OBJECTIVE, Position);
 
         // Раздел "Личные качества"
         TextSection personalDesc = new TextSection("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры." + generateRandomString(2));
-        resume.putSectionMap(SectionType.PERSONAL, personalDesc);
+        resume.setSection(SectionType.PERSONAL, personalDesc);
 
         // Раздел "Достижения"
         List<String> listAchievements = new ArrayList<>();
@@ -44,7 +44,7 @@ public class ResumeTestData {
         listAchievements.add("Налаживание процесса разработки и непрерывной интеграции ERP системы River BPM. Интеграция с 1С, Bonita BPM, CMIS, LDAP. Разработка приложения управления окружением на стеке: Scala/Play/Anorm/JQuery. Разработка SSO аутентификации и авторизации различных ERP модулей, интеграция CIFS/SMB java сервера." + generateRandomString(2));
 
         ListSection achievements = new ListSection(listAchievements);
-        resume.putSectionMap(SectionType.ACHIEVEMENT, achievements);
+        resume.setSection(SectionType.ACHIEVEMENT, achievements);
 
         // Раздел "Квалификация"
         List<String> listQualification = new ArrayList<>();
@@ -53,7 +53,7 @@ public class ResumeTestData {
         listQualification.add("DB: PostgreSQL(наследование, pgplsql, PL/Python), Redis (Jedis), H2, Oracle," + generateRandomString(2));
 
         ListSection qualification = new ListSection(listQualification);
-        resume.putSectionMap(SectionType.QUALIFICATIONS, qualification);
+        resume.setSection(SectionType.QUALIFICATIONS, qualification);
 
         // Раздел "Опыт работы"
         List <Organization> organizationExpList = new ArrayList<>();
@@ -74,8 +74,8 @@ public class ResumeTestData {
 
         OrganizationsSection experienceSection = new OrganizationsSection(organizationExpList);
 
-        //TODO Потом включить для OrganizationSection
-        resume.putSectionMap(SectionType.EXPERIENCE, experienceSection);
+        //TODO Потом включить для OrganizationsSection
+        resume.setSection(SectionType.EXPERIENCE, experienceSection);
 
         // Раздел "Образование
         List <Organization> educationExpList = new ArrayList<>();
@@ -100,8 +100,8 @@ public class ResumeTestData {
 
         OrganizationsSection education = new OrganizationsSection(educationExpList);
 
-        //TODO Потом включить для OrganizationSection
-        resume.putSectionMap(SectionType.EDUCATION, education);
+        //TODO Потом включить для OrganizationsSection
+        resume.setSection(SectionType.EDUCATION, education);
 
         return resume;
     }
@@ -109,20 +109,20 @@ public class ResumeTestData {
     public static Resume generateRandomContact(String uuid, String fullname) {
         Resume resume = new Resume(uuid, fullname);
         //Контакты
-        resume.putContactMap(ContactType.PHONE, "+7(921) 855-0482");
-        //resume.putContactMap(ContactType.EMAIL, "skype:grigory.kislin" + generateRandomString(3));
-        resume.putContactMap(ContactType.LINKEDIN, "адрес");
-        resume.putContactMap(ContactType.GITHUB, "https://github.com/gkislin" + generateRandomString(3));
-        resume.putContactMap(ContactType.STACKOVERFLOW, "https://stackoverflow.com/users/548473" + generateRandomString(3));
-        resume.putContactMap(ContactType.HOMEPAGE, "http://gkislin.ru/");
+        resume.setContact(ContactType.PHONE, "+7(921) 855-0482");
+        //resume.setContact(ContactType.EMAIL, "skype:grigory.kislin" + generateRandomString(3));
+        resume.setContact(ContactType.LINKEDIN, "адрес");
+        resume.setContact(ContactType.GITHUB, "https://github.com/gkislin" + generateRandomString(3));
+        resume.setContact(ContactType.STACKOVERFLOW, "https://stackoverflow.com/users/548473" + generateRandomString(3));
+        resume.setContact(ContactType.HOMEPAGE, "http://gkislin.ru/");
 
         // Раздел "Позиция"
         TextSection Position = new TextSection("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям" + generateRandomString(2));
-        resume.putSectionMap(SectionType.OBJECTIVE, Position);
+        resume.setSection(SectionType.OBJECTIVE, Position);
 
         // Раздел "Личные качества"
         TextSection personalDesc = new TextSection("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры." + generateRandomString(2));
-        resume.putSectionMap(SectionType.PERSONAL, personalDesc);
+        resume.setSection(SectionType.PERSONAL, personalDesc);
 
         // Раздел "Достижения"
         List<String> listAchievements = new ArrayList<>();
@@ -131,7 +131,7 @@ public class ResumeTestData {
         listAchievements.add("Налаживание процесса разработки и непрерывной интеграции ERP системы River BPM. Интеграция с 1С, Bonita BPM, CMIS, LDAP. Разработка приложения управления окружением на стеке: Scala/Play/Anorm/JQuery. Разработка SSO аутентификации и авторизации различных ERP модулей, интеграция CIFS/SMB java сервера." + generateRandomString(2));
 
         ListSection achievements = new ListSection(listAchievements);
-        resume.putSectionMap(SectionType.ACHIEVEMENT, achievements);
+        resume.setSection(SectionType.ACHIEVEMENT, achievements);
 
         // Раздел "Квалификация"
         List<String> listQualification = new ArrayList<>();
@@ -140,7 +140,7 @@ public class ResumeTestData {
         listQualification.add("DB: PostgreSQL(наследование, pgplsql, PL/Python), Redis (Jedis), H2, Oracle," + generateRandomString(2));
 
         ListSection qualification = new ListSection(listQualification);
-        resume.putSectionMap(SectionType.QUALIFICATIONS, qualification);
+        resume.setSection(SectionType.QUALIFICATIONS, qualification);
 
         // Раздел "Опыт работы"
         List <Organization> organizationExpList = new ArrayList<>();
@@ -161,7 +161,7 @@ public class ResumeTestData {
 
         OrganizationsSection experienceSection = new OrganizationsSection(organizationExpList);
 
-        resume.putSectionMap(SectionType.EXPERIENCE, experienceSection);
+        resume.setSection(SectionType.EXPERIENCE, experienceSection);
 
         // Раздел "Образование
         List <Organization> educationExpList = new ArrayList<>();
@@ -186,7 +186,7 @@ public class ResumeTestData {
 
         OrganizationsSection education = new OrganizationsSection(educationExpList);
 
-        resume.putSectionMap(SectionType.EDUCATION, education);
+        resume.setSection(SectionType.EDUCATION, education);
 
         return resume;
     }
@@ -195,21 +195,21 @@ public class ResumeTestData {
     public static Resume genNullContactsButSections(String uuid, String fullname) {
         Resume resume = new Resume(fullname);
         /*//Контакты
-        resume.putContactMap(ContactType.PHONE, "+7(921) 855-0482");
-        resume.putContactMap(ContactType.EMAIL, "skype:grigory.kislin" + generateRandomString(3));
-        resume.putContactMap(ContactType.SKYPE, "gkislin@yandex.ru");
-        resume.putContactMap(ContactType.LINKEDIN, "https://www.linkedin.com/in/gkislin" + generateRandomString(3));
-        resume.putContactMap(ContactType.GITHUB, "https://github.com/gkislin" + generateRandomString(3));
-        resume.putContactMap(ContactType.STACKOVERFLOW, "https://stackoverflow.com/users/548473" + generateRandomString(3));
-        resume.putContactMap(ContactType.HOMEPAGE, "http://gkislin.ru/");
+        resume.setContact(ContactType.PHONE, "+7(921) 855-0482");
+        resume.setContact(ContactType.EMAIL, "skype:grigory.kislin" + generateRandomString(3));
+        resume.setContact(ContactType.SKYPE, "gkislin@yandex.ru");
+        resume.setContact(ContactType.LINKEDIN, "https://www.linkedin.com/in/gkislin" + generateRandomString(3));
+        resume.setContact(ContactType.GITHUB, "https://github.com/gkislin" + generateRandomString(3));
+        resume.setContact(ContactType.STACKOVERFLOW, "https://stackoverflow.com/users/548473" + generateRandomString(3));
+        resume.setContact(ContactType.HOMEPAGE, "http://gkislin.ru/");
 */
         // Раздел "Позиция"
         TextSection Position = new TextSection("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям" + generateRandomString(2));
-        resume.putSectionMap(SectionType.OBJECTIVE, Position);
+        resume.setSection(SectionType.OBJECTIVE, Position);
 
         // Раздел "Личные качества"
         TextSection personalDesc = new TextSection("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры." + generateRandomString(2));
-        resume.putSectionMap(SectionType.PERSONAL, personalDesc);
+        resume.setSection(SectionType.PERSONAL, personalDesc);
 
         // Раздел "Достижения"
         List<String> listAchievements = new ArrayList<>();
@@ -218,7 +218,7 @@ public class ResumeTestData {
         listAchievements.add("Налаживание процесса разработки и непрерывной интеграции ERP системы River BPM. Интеграция с 1С, Bonita BPM, CMIS, LDAP. Разработка приложения управления окружением на стеке: Scala/Play/Anorm/JQuery. Разработка SSO аутентификации и авторизации различных ERP модулей, интеграция CIFS/SMB java сервера." + generateRandomString(2));
 
         ListSection achievements = new ListSection(listAchievements);
-        resume.putSectionMap(SectionType.ACHIEVEMENT, achievements);
+        resume.setSection(SectionType.ACHIEVEMENT, achievements);
 
         // Раздел "Квалификация"
         List<String> listQualification = new ArrayList<>();
@@ -227,7 +227,7 @@ public class ResumeTestData {
         listQualification.add("DB: PostgreSQL(наследование, pgplsql, PL/Python), Redis (Jedis), H2, Oracle," + generateRandomString(2));
 
         ListSection qualification = new ListSection(listQualification);
-        resume.putSectionMap(SectionType.QUALIFICATIONS, qualification);
+        resume.setSection(SectionType.QUALIFICATIONS, qualification);
 
         // Раздел "Опыт работы"
         List <Organization> organizationExpList = new ArrayList<>();
@@ -248,7 +248,7 @@ public class ResumeTestData {
 
         OrganizationsSection experienceSection = new OrganizationsSection(organizationExpList);
 
-        resume.putSectionMap(SectionType.EXPERIENCE, experienceSection);
+        resume.setSection(SectionType.EXPERIENCE, experienceSection);
 
         // Раздел "Образование
         List <Organization> educationExpList = new ArrayList<>();
@@ -273,7 +273,7 @@ public class ResumeTestData {
 
         OrganizationsSection education = new OrganizationsSection(educationExpList);
 
-        resume.putSectionMap(SectionType.EDUCATION, education);
+        resume.setSection(SectionType.EDUCATION, education);
 
         return resume;
     }
@@ -287,13 +287,13 @@ public class ResumeTestData {
     public static Resume genNullSections(String uuid, String fullname) {
         Resume resume = new Resume(uuid, fullname);
         //Контакты
-        resume.putContactMap(ContactType.PHONE, "+7(921) 855-0482" + generateRandomString(1));
-        resume.putContactMap(ContactType.EMAIL, "skype:grigory.kislin" + generateRandomString(3));
-        resume.putContactMap(ContactType.SKYPE, "gkislin@yandex.ru");
-        resume.putContactMap(ContactType.LINKEDIN, "https://www.linkedin.com/in/gkislin" + generateRandomString(3));
-        resume.putContactMap(ContactType.GITHUB, "https://github.com/gkislin" + generateRandomString(3));
-        resume.putContactMap(ContactType.STACKOVERFLOW, "https://stackoverflow.com/users/548473" + generateRandomString(3));
-        resume.putContactMap(ContactType.HOMEPAGE, "http://gkislin.ru" + generateRandomString(3)+ "/");
+        resume.setContact(ContactType.PHONE, "+7(921) 855-0482" + generateRandomString(1));
+        resume.setContact(ContactType.EMAIL, "skype:grigory.kislin" + generateRandomString(3));
+        resume.setContact(ContactType.SKYPE, "gkislin@yandex.ru");
+        resume.setContact(ContactType.LINKEDIN, "https://www.linkedin.com/in/gkislin" + generateRandomString(3));
+        resume.setContact(ContactType.GITHUB, "https://github.com/gkislin" + generateRandomString(3));
+        resume.setContact(ContactType.STACKOVERFLOW, "https://stackoverflow.com/users/548473" + generateRandomString(3));
+        resume.setContact(ContactType.HOMEPAGE, "http://gkislin.ru" + generateRandomString(3)+ "/");
 
         return resume;
     }

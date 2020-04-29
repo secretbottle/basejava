@@ -58,13 +58,13 @@ public abstract class AbstractStorageTest {
 
 /*
         RESUME_1 = new Resume(UUID_1, FULLNAME_1);
-        RESUME_1.putContactMap(ContactType.PHONE, "+7999999999");
+        RESUME_1.setContact(ContactType.PHONE, "+7999999999");
         RESUME_2 = new Resume(UUID_2, FULLNAME_2);
-        RESUME_2.putContactMap(ContactType.SKYPE, "SKYPENAME");
+        RESUME_2.setContact(ContactType.SKYPE, "SKYPENAME");
         RESUME_3 = new Resume(UUID_3, FULLNAME_3);
-        RESUME_3.putContactMap(ContactType.EMAIL, "email@mail.com");
+        RESUME_3.setContact(ContactType.EMAIL, "email@mail.com");
         RESUME_4 = new Resume(UUID_4, FULLNAME_4);
-        RESUME_4.putContactMap(ContactType.HOMEPAGE, "homepage.com");
+        RESUME_4.setContact(ContactType.HOMEPAGE, "homepage.com");
 */
     }
 

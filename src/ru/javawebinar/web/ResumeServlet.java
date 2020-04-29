@@ -44,7 +44,7 @@ public class ResumeServlet extends HttpServlet {
         for (ContactType type : ContactType.values()) {
             String value = req.getParameter(type.name());
             if (value != null && value.trim().length() != 0) {
-                resume.putContactMap(type, value);
+                resume.setContact(type, value);
             } else {
                 resume.getContactMap().remove(type);
             }
@@ -56,12 +56,12 @@ public class ResumeServlet extends HttpServlet {
                 switch (secType) {
                     case PERSONAL:
                     case OBJECTIVE:
-                        resume.putSectionMap(secType, new TextSection(secName));
+                        resume.setSection(secType, new TextSection(secName));
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
                         List<String> descList = new ArrayList<>(Arrays.asList(secName.split("\n")));
-                        resume.putSectionMap(secType, new ListSection(descList));
+                        resume.setSection(secType, new ListSection(descList));
                         break;
                     case EXPERIENCE:
                     case EDUCATION:
@@ -69,7 +69,6 @@ public class ResumeServlet extends HttpServlet {
                         String[] url = req.getParameterValues(secType.name() + "urlAdr");
                         List<Organization> orgs = new ArrayList<>();
                         for (int i = 0; i < orgNames.length; i++) {
-                            //TODO Fix this
 
                             Link link = new Link(orgNames[i], url[i]);
                             List<Organization.Position> positionList = new ArrayList<>();
@@ -92,7 +91,7 @@ public class ResumeServlet extends HttpServlet {
 
                             orgs.add(new Organization(link, positionList));
                         }
-                        resume.putSectionMap(secType, new OrganizationsSection(orgs));
+                        resume.setSection(secType, new OrganizationsSection(orgs));
                         break;
                 }
             } else {
@@ -148,17 +147,26 @@ public class ResumeServlet extends HttpServlet {
             switch (secType) {
                 case PERSONAL:
                 case OBJECTIVE:
-                    resume.putSectionMap(secType, new TextSection(""));
+                    resume.setSection(secType, TextSection.EMPTY);
                     break;
                 case ACHIEVEMENT:
                 case QUALIFICATIONS:
-                    resume.putSectionMap(secType, new ListSection(new ArrayList<>()));
+                    resume.setSection(secType, ListSection.EMPTY);
                     break;
                 case EDUCATION:
                 case EXPERIENCE:
-                    List<Organization> orgs = new ArrayList<>();
-                    List<Organization.Position> positions = new ArrayList<>();
-                    resume.putSectionMap(secType, new OrganizationsSection(orgs));
+                    OrganizationsSection section = (OrganizationsSection) resume.getSection(secType);
+                    List<Organization> emptyFirstOrganizations = new ArrayList<>();
+                    emptyFirstOrganizations.add(Organization.EMPTY);
+                    if (section != null) {
+                        for (Organization org : section.getOrganizations()) {
+                            List<Organization.Position> emptyFirstPositions = new ArrayList<>();
+                            emptyFirstPositions.add(Organization.Position.EMPTY);
+                            emptyFirstPositions.addAll(org.getPositions());
+                            emptyFirstOrganizations.add(new Organization(org.getLink(), emptyFirstPositions));
+                        }
+                    }
+                    resume.setSection(secType, new OrganizationsSection(emptyFirstOrganizations));
                     break;
             }
         }

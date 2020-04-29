@@ -68,7 +68,7 @@ public class DataStreamSerializer implements SerializableStrategy {
             Resume resume = new Resume(uuid, fullName);
 
             reader(dis, () -> {
-                resume.putContactMap(ContactType.valueOf(dis.readUTF()), dis.readUTF());
+                resume.setContact(ContactType.valueOf(dis.readUTF()), dis.readUTF());
             });
 
             reader(dis, () -> {
@@ -76,7 +76,7 @@ public class DataStreamSerializer implements SerializableStrategy {
                 switch (sectionType) {
                     case PERSONAL:
                     case OBJECTIVE:
-                        resume.putSectionMap(sectionType, new TextSection(dis.readUTF()));
+                        resume.setSection(sectionType, new TextSection(dis.readUTF()));
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
@@ -84,7 +84,7 @@ public class DataStreamSerializer implements SerializableStrategy {
                         break;
                     case EXPERIENCE:
                     case EDUCATION:
-                        resume.putSectionMap(sectionType, new OrganizationsSection(
+                        resume.setSection(sectionType, new OrganizationsSection(
                                         readToList(dis, () -> new Organization(
                                                         new Link(dis.readUTF(), dis.readUTF()),
                                                         readToList(dis, () -> new Organization.Position(

@@ -1,4 +1,6 @@
 <%@ page import="ru.javawebinar.model.*" %>
+<%@ page import="java.util.Date" %>
+<%@ page import="ru.javawebinar.util.DateUtil" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page trimDirectiveWhitespaces="true" %>
@@ -113,6 +115,7 @@
                                 onclick="deleteOrgPos('${secType.name()}${orgStat.index}div')">Удалить организацию
                         </button>
                         <c:forEach items="${org.positions}" var="pos" varStatus="posStat">
+                            <jsp:useBean id="pos" type="ru.javawebinar.model.Organization.Position"/>
                             <div id="${secType.name()}${orgStat.index}pos${posStat.index}"
                                  class="${secType.name()}${orgStat.index}pos">
                                 <dl>
@@ -122,8 +125,8 @@
                                 </dl>
                                 <dl>
                                     <dt>Окончание</dt>
-                                    <dd><input type="date" name="${secType.name()}${orgStat.index}endPeriod"
-                                               value="${pos.endPeriod}" required></dd>
+                                    <dd><input type="date" name="${secType.name()}${orgStat.index}endPeriod" dataformatas="MM/yyyy"
+                                               value="<%=DateUtil.format(pos.getEndPeriod())%>" required></dd>
                                 </dl>
                                 <dl>
                                     <dt>Позиция</dt>

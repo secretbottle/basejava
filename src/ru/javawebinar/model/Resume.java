@@ -53,11 +53,11 @@ public class Resume implements Comparable<Resume>, Serializable {
         return sectionMap;
     }
 
-    public void putContactMap(ContactType contactType, String value) {
+    public void setContact(ContactType contactType, String value) {
         contactMap.put(contactType, value);
     }
 
-    public void putSectionMap(SectionType sectionType, Section section) {
+    public void setSection(SectionType sectionType, Section section) {
         sectionMap.put(sectionType, section);
     }
 

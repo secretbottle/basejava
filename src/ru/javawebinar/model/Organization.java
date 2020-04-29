@@ -8,6 +8,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -19,7 +20,13 @@ public class Organization implements Serializable {
     private Link link;
     private List<Position> positions;
 
+    public static final Organization EMPTY = new Organization("", "", Position.EMPTY);
+
     public Organization() {
+    }
+
+    public Organization(String name, String url, Position... positions) {
+        this(new Link(name, url), Arrays.asList(positions));
     }
 
     public Organization(Link link, List<Position> positions) {
@@ -66,6 +73,8 @@ public class Organization implements Serializable {
         private LocalDate endPeriod;
         private String position;
         private String description;
+
+        public static final Position EMPTY = new Position();
 
         public Position() {
         }

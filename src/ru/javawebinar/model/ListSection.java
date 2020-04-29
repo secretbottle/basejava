@@ -1,5 +1,6 @@
 package ru.javawebinar.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -7,6 +8,8 @@ public class ListSection extends Section {
     private static final long serialVersionUID = 1L;
 
     private List<String> descriptionList;
+
+    public static ListSection EMPTY = new ListSection(new ArrayList<>());
 
     public ListSection() {
     }
