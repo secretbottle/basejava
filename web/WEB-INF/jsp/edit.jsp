@@ -125,8 +125,29 @@
                                 </dl>
                                 <dl>
                                     <dt>Окончание</dt>
-                                    <dd><input type="date" name="${secType.name()}${orgStat.index}endPeriod" dataformatas="MM/yyyy"
-                                               value="<%=DateUtil.format(pos.getEndPeriod())%>" required></dd>
+
+                                    <c:if test='<%=DateUtil.format(pos.getEndPeriod()).equals("Сейчас")%>'>
+                                        <dd><input type="date" id="${secType.name()}${orgStat.index}endPeriod"
+                                                   name="${secType.name()}${orgStat.index}endPeriod"
+                                                   value="${pos.endPeriod}" disabled required>
+                                            <input type="checkbox" id="${secType.name()}${orgStat.index}checkNow"
+                                                   name="${secType.name()}${orgStat.index}checkNow" checked
+                                            onclick="checkNow('${secType.name()}${orgStat.index}')">
+                                            <label for="${secType.name()}${orgStat.index}checkNow">Сейчас</label>
+                                        </dd>
+                                    </c:if>
+
+                                    <c:if test='<%=!DateUtil.format(pos.getEndPeriod()).equals("Сейчас")%>'>
+                                        <dd><input type="date" id="${secType.name()}${orgStat.index}endPeriod"
+                                                   name="${secType.name()}${orgStat.index}endPeriod"
+                                                   value="${pos.endPeriod}" required>
+                                            <input type="checkbox" id="${secType.name()}${orgStat.index}checkNow"
+                                                   name="${secType.name()}${orgStat.index}checkNow"
+                                                   onclick="checkNow('${secType.name()}${orgStat.index}')">
+                                            <label for="${secType.name()}${orgStat.index}checkNow">Сейчас</label>
+                                        </dd>
+                                    </c:if>
+
                                 </dl>
                                 <dl>
                                     <dt>Позиция</dt>

@@ -131,3 +131,15 @@ function createDeleteButton(parentDiv, id, textContent, functionName) {
     dd.append(delButton);
     parentDiv.append(dd);
 }
+
+function checkNow(id) {
+    var checkBox = document.getElementById(id + "checkNow");
+    var inputData = document.getElementById(id + "endPeriod");
+
+    if (checkBox.checked === true) {
+        inputData.disabled = true;
+        inputData.value = "";
+    } else {
+        inputData.readable = false;
+    }
+}
