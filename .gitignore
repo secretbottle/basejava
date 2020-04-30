@@ -9,6 +9,5 @@ log
 /storage/
 /library/
 /libraries/
-/config/resumes.properties
 /web/WEB-INF/lib/
-/web/js/jquery-3.5.0.js
+/config/resumes.properties
