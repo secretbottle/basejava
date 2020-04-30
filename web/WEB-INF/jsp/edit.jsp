@@ -125,8 +125,7 @@
                                 </dl>
                                 <dl>
                                     <dt>Окончание</dt>
-
-                                    <c:if test='<%=DateUtil.format(pos.getEndPeriod()).equals("Сейчас")%>'>
+                                    <c:if test="<%=pos.getEndPeriod().equals(DateUtil.NOW)%>">
                                         <dd><input type="date" id="${secType.name()}${orgStat.index}endPeriod"
                                                    name="${secType.name()}${orgStat.index}endPeriod"
                                                    value="${pos.endPeriod}" disabled required>
@@ -137,7 +136,7 @@
                                         </dd>
                                     </c:if>
 
-                                    <c:if test='<%=!DateUtil.format(pos.getEndPeriod()).equals("Сейчас")%>'>
+                                    <c:if test="<%=!pos.getEndPeriod().equals(DateUtil.NOW)%>">
                                         <dd><input type="date" id="${secType.name()}${orgStat.index}endPeriod"
                                                    name="${secType.name()}${orgStat.index}endPeriod"
                                                    value="${pos.endPeriod}" required>

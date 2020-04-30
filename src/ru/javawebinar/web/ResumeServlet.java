@@ -3,6 +3,7 @@ package ru.javawebinar.web;
 import ru.javawebinar.Config;
 import ru.javawebinar.model.*;
 import ru.javawebinar.storage.SqlStorage;
+import ru.javawebinar.util.DateUtil;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -69,7 +70,6 @@ public class ResumeServlet extends HttpServlet {
                         String[] url = req.getParameterValues(secType.name() + "urlAdr");
                         List<Organization> orgs = new ArrayList<>();
                         for (int i = 0; i < orgNames.length; i++) {
-
                             Link link = new Link(orgNames[i], url[i]);
                             List<Organization.Position> positionList = new ArrayList<>();
 
@@ -79,11 +79,17 @@ public class ResumeServlet extends HttpServlet {
                             String[] positions = req.getParameterValues(count + "position");
                             String[] descs = req.getParameterValues(count + "desc");
 
+                            if(startPeriods == null){
+                                positionList.add(Organization.Position.EMPTY);
+                                continue;
+                            }
+
                             for (int j = 0; j < positions.length; j++) {
+                                String checkBoxNow = req.getParameter(count + "checkNow");
                                 positionList.add(
                                         new Organization.Position(
                                                 LocalDate.parse(startPeriods[j]),
-                                                LocalDate.parse(endPeriods[j]),
+                                                checkBoxNow == null ? LocalDate.parse(endPeriods[j]) : DateUtil.NOW,
                                                 positions[j],
                                                 descs[j]
                                         ));

@@ -74,7 +74,7 @@ public class Organization implements Serializable {
         private String position;
         private String description;
 
-        public static final Position EMPTY = new Position();
+        public static final Position EMPTY = new Position(LocalDate.MIN, LocalDate.MAX, "", "");
 
         public Position() {
         }

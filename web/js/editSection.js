@@ -61,7 +61,17 @@ function addPosition(id) {
     posDiv.id = id + "pos" + posDivs.length;
     posDiv.className = id + "pos";
     addDescriptionList(posDiv, "Начало", "date", id + "startPeriod");
-    addDescriptionList(posDiv, "Окончание", "date", id + "endPeriod");
+    var endperiod = addDescriptionList(posDiv, "Окончание", "date", id + "endPeriod");
+    var checkBox = document.createElement("input");
+    checkBox.type = "checkBox";
+    checkBox.id = id + "checkNow";
+    checkBox.name = id + "checkNow";
+    checkBox.onclick = function () {checkNow(id)};
+    var labelCheckBox = document.createElement("label");
+    labelCheckBox.htmlFor = id + "checkNow";
+    labelCheckBox.value = "Сейчас";
+    endperiod.append(checkBox);
+
     addDescriptionList(posDiv, "Позиция", "text", id + "position");
     addDescriptionList(posDiv, "Описание", "textarea", id + "desc");
     orgDiv.append(posDiv);
@@ -141,5 +151,6 @@ function checkNow(id) {
         inputData.value = "";
     } else {
         inputData.readable = false;
+        inputData.disabled = false;
     }
 }
