@@ -1,5 +1,4 @@
 <%@ page import="ru.javawebinar.model.*" %>
-<%@ page import="java.util.Date" %>
 <%@ page import="ru.javawebinar.util.DateUtil" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -126,23 +125,23 @@
                                 <dl>
                                     <dt>Окончание</dt>
                                     <c:if test="<%=pos.getEndPeriod().equals(DateUtil.NOW)%>">
-                                        <dd><input type="date" id="${secType.name()}${orgStat.index}endPeriod"
+                                        <dd><input type="date" id="${secType.name()}${orgStat.index}endPeriod${posStat.index}"
                                                    name="${secType.name()}${orgStat.index}endPeriod"
                                                    value="${pos.endPeriod}" disabled required>
-                                            <input type="checkbox" id="${secType.name()}${orgStat.index}checkNow"
+                                            <input type="checkbox" id="${secType.name()}${orgStat.index}checkNow${posStat.index}"
                                                    name="${secType.name()}${orgStat.index}checkNow" checked
-                                            onclick="checkNow('${secType.name()}${orgStat.index}')">
+                                            onclick="checkNow('${secType.name()}${orgStat.index}','${posStat.index}')">
                                             <label for="${secType.name()}${orgStat.index}checkNow">Сейчас</label>
                                         </dd>
                                     </c:if>
 
                                     <c:if test="<%=!pos.getEndPeriod().equals(DateUtil.NOW)%>">
-                                        <dd><input type="date" id="${secType.name()}${orgStat.index}endPeriod"
+                                        <dd><input type="date" id="${secType.name()}${orgStat.index}endPeriod${posStat.index}"
                                                    name="${secType.name()}${orgStat.index}endPeriod"
                                                    value="${pos.endPeriod}" required>
-                                            <input type="checkbox" id="${secType.name()}${orgStat.index}checkNow"
+                                            <input type="checkbox" id="${secType.name()}${orgStat.index}checkNow${posStat.index}"
                                                    name="${secType.name()}${orgStat.index}checkNow"
-                                                   onclick="checkNow('${secType.name()}${orgStat.index}')">
+                                                   onclick="checkNow('${secType.name()}${orgStat.index}', '${posStat.index}')">
                                             <label for="${secType.name()}${orgStat.index}checkNow">Сейчас</label>
                                         </dd>
                                     </c:if>

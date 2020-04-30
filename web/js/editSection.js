@@ -4,7 +4,7 @@ function addSection(section) {
         case 'OBJECTIVE':
             var textDiv = document.createElement("div");
             textDiv.id = section + "div";
-            var dl = addDescriptionList(textDiv, "", "text", section);
+            var dl = addDescriptionList(textDiv, "", "text", section, section);
             createDeleteButton(dl, section, "", function () {
                 deleteSection(section);
             });
@@ -15,7 +15,7 @@ function addSection(section) {
         case 'QUALIFICATIONS':
             var listDiv = document.createElement("div");
             listDiv.id = section + "div";
-            var dl = addDescriptionList(listDiv, "", "textarea", section);
+            var dl = addDescriptionList(listDiv, "", "textarea", section, section);
             createDeleteButton(dl, section, "", function () {
                 deleteSection(section);
             });
@@ -32,8 +32,8 @@ function addSection(section) {
             createDeleteButton(orgDiv, index, "организацию", function () {
                 deleteOrgPos(orgDiv.getAttribute("id"));
             });
-            addDescriptionList(orgDiv, "Название организации", "text", section);
-            addDescriptionList(orgDiv, "Ссылка", "text", section + "urlAdr");
+            addDescriptionList(orgDiv, "Название организации", "text", section, section);
+            addDescriptionList(orgDiv, "Ссылка", "text", section + "urlAdr", section + "urlAdr");
             createAddButton(orgDiv, index, "должность", function () {
                 addPosition(index);
             });
@@ -58,22 +58,25 @@ function addPosition(id) {
     var orgDiv = document.getElementById(id + "div");
     var posDivs = document.getElementsByClassName(id + "pos");
     var posDiv = document.createElement("div");
-    posDiv.id = id + "pos" + posDivs.length;
+    var posIndex = posDivs.length;
+
+    posDiv.id = id + "pos" + posIndex;
     posDiv.className = id + "pos";
-    addDescriptionList(posDiv, "Начало", "date", id + "startPeriod");
-    var endperiod = addDescriptionList(posDiv, "Окончание", "date", id + "endPeriod");
+    addDescriptionList(posDiv, "Начало", "date", id + "startPeriod", id + "startPeriod");
+    var endPeriod = addDescriptionList(posDiv, "Окончание", "date", id + "endPeriod" + posIndex, id + "endPeriod");
     var checkBox = document.createElement("input");
     checkBox.type = "checkBox";
-    checkBox.id = id + "checkNow";
+    checkBox.id = id + "checkNow" + posIndex;
     checkBox.name = id + "checkNow";
-    checkBox.onclick = function () {checkNow(id)};
+    checkBox.onclick = function () {checkNow(id, posIndex)};
     var labelCheckBox = document.createElement("label");
     labelCheckBox.htmlFor = id + "checkNow";
-    labelCheckBox.value = "Сейчас";
-    endperiod.append(checkBox);
+    labelCheckBox.textContent = "Сейчас";
+    endPeriod.append(checkBox);
+    endPeriod.append(labelCheckBox);
 
-    addDescriptionList(posDiv, "Позиция", "text", id + "position");
-    addDescriptionList(posDiv, "Описание", "textarea", id + "desc");
+    addDescriptionList(posDiv, "Позиция", "text", id + "position", id + "position");
+    addDescriptionList(posDiv, "Описание", "textarea", id + "desc", id + "desc");
     orgDiv.append(posDiv);
     createDeleteButton(posDiv, id, " должность", function () {
         deleteOrgPos(posDiv.getAttribute("id"));
@@ -84,7 +87,7 @@ function deleteOrgPos(id) {
     document.getElementById(id).remove();
 }
 
-function addDescriptionList(parentDiv, textContent, inputType, id) {
+function addDescriptionList(parentDiv, textContent, inputType, id, name) {
     var dl = document.createElement("dl");
     var dt = document.createElement("dt");
     var dd = document.createElement("dd");
@@ -97,7 +100,7 @@ function addDescriptionList(parentDiv, textContent, inputType, id) {
             var inputField = document.createElement("input");
             inputField.type = inputType;
             inputField.id = id;
-            inputField.name = id;
+            inputField.name = name;
             inputField.size = 70;
             inputField.required;
             dd.append(inputField);
@@ -106,7 +109,7 @@ function addDescriptionList(parentDiv, textContent, inputType, id) {
             var textField = document.createElement("textarea");
             textField.type = inputType;
             textField.id = id;
-            textField.name = id;
+            textField.name = name;
             textField.rows = 4;
             textField.cols = 70;
             textField.style.resize = 'none';
@@ -142,15 +145,14 @@ function createDeleteButton(parentDiv, id, textContent, functionName) {
     parentDiv.append(dd);
 }
 
-function checkNow(id) {
-    var checkBox = document.getElementById(id + "checkNow");
-    var inputData = document.getElementById(id + "endPeriod");
+function checkNow(orgIndex, posIndex) {
+    var checkBox = document.getElementById(orgIndex + "checkNow" + posIndex);
+    var inputData = document.getElementById(orgIndex + "endPeriod" + posIndex);
 
     if (checkBox.checked === true) {
         inputData.disabled = true;
         inputData.value = "";
     } else {
-        inputData.readable = false;
         inputData.disabled = false;
     }
 }
