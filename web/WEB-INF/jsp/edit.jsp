@@ -34,62 +34,55 @@
         <jsp:useBean id="section" type="ru.javawebinar.model.Section"/>
         <c:choose>
             <c:when test="${secType=='PERSONAL' || secType=='OBJECTIVE'}">
-                <div id="${secType.name()}textDiv">
-                    <div id="${secType.name()}div">
-                        <dl>
-                            <dt><b>${secType.title}</b></dt>
-
-                            <c:if test='<%=((TextSection) section).getText().equals("")%>'>
-                                <button type="button" id="${secType.name()}addButton"
-                                        onclick="addSection('${secType.name()}')">Добавить
-                                </button>
-                            </c:if>
-
-                            <c:if test='<%=!((TextSection) section).getText().equals("")%>'>
-                                <dd><input type="text" id="${secType.name()}" name="${secType.name()}" size=70
-                                           value="<%=section%>"
-                                           required/></dd>
-                                <button type="button" id="${secType.name()}deleteButton"
-                                        onclick="deleteSection('${secType.name()}')">Удалить
-                                </button>
-                            </c:if>
-                        </dl>
-                    </div>
+                <div id="${secType.name()}div">
+                    <dl>
+                        <dt><b>${secType.title}</b></dt>
+                        <c:if test='<%=((TextSection) section).getText().equals("")%>'>
+                            <button type="button" id="${secType.name()}addButton"
+                                    onclick="sectionSelector('${secType.name()}')">Добавить
+                            </button>
+                        </c:if>
+                        <c:if test='<%=!((TextSection) section).getText().equals("")%>'>
+                            <dd><input type="text" id="${secType.name()}" name="${secType.name()}" size=70
+                                       value="<%=section%>"
+                                       required/></dd>
+                            <button type="button" id="${secType.name()}deleteButton"
+                                    onclick="deleteSection('${secType.name()}')">Удалить
+                            </button>
+                        </c:if>
+                    </dl>
                 </div>
             </c:when>
             <c:when test="${secType=='ACHIEVEMENT' || secType=='QUALIFICATIONS'}">
-                <div id="${secType.name()}listDiv">
-                    <div id="${secType.name()}div">
-                        <dl>
-                            <dt><b>${secType.title}</b></dt>
-
-                            <c:if test='<%=((ListSection) section).getDescriptionList().size() == 0%>'>
-                                <button type="button" id="${secType.name()}addButton"
-                                        onclick="addSection('${secType.name()}')">Добавить
-                                </button>
-                            </c:if>
-
-                            <c:if test='<%=((ListSection) section).getDescriptionList().size() != 0%>'>
-                                <dd><textarea id="${secType.name()}" name="${secType.name()}" rows="4" cols="70"
-                                              style="resize:none;"
-                                              required><%=String.join("\n", ((ListSection) section).getDescriptionList())%></textarea>
-                                </dd>
-                                <button type="button" id="${secType.name()}deleteButton"
-                                        onclick="deleteSection('${secType.name()}')">Удалить
-                                </button>
-                            </c:if>
-                        </dl>
-                    </div>
+                <div id="${secType.name()}div">
+                    <dl>
+                        <dt><b>${secType.title}</b></dt>
+                        <c:if test='<%=((ListSection) section).getDescriptionList().size() == 0%>'>
+                            <button type="button" id="${secType.name()}addButton"
+                                    onclick="sectionSelector('${secType.name()}')">Добавить
+                            </button>
+                        </c:if>
+                        <c:if test='<%=((ListSection) section).getDescriptionList().size() != 0%>'>
+                            <dd><textarea id="${secType.name()}" name="${secType.name()}" rows="4" cols="70"
+                                          style="resize:none;"
+                                          required><%=String.join("\n", ((ListSection) section).getDescriptionList())%></textarea>
+                            </dd>
+                            <button type="button" id="${secType.name()}deleteButton"
+                                    onclick="deleteSection('${secType.name()}')">Удалить
+                            </button>
+                        </c:if>
+                    </dl>
                 </div>
             </c:when>
             <c:when test="${secType=='EXPERIENCE' || secType=='EDUCATION'}">
                 <div id="${secType.name()}div">
                 <dl>
                 <dt><b>${secType.title}</b></dt>
+                <dd>
                 <c:set var="OrgList" value="<%=((OrganizationsSection) section).getOrganizations()%>"/>
 
                 <button type="button" id="${secType.name()}addButton"
-                        onclick="addSection('${secType.name()}')">Добавить организацию
+                        onclick="sectionSelector('${secType.name()}')">Добавить организацию
                 </button>
 
                 <c:forEach items="${OrgList}" var="org" varStatus="orgStat"><br>
@@ -125,21 +118,25 @@
                                 <dl>
                                     <dt>Окончание</dt>
                                     <c:if test="<%=pos.getEndPeriod().equals(DateUtil.NOW)%>">
-                                        <dd><input type="date" id="${secType.name()}${orgStat.index}endPeriod${posStat.index}"
+                                        <dd><input type="date"
+                                                   id="${secType.name()}${orgStat.index}endPeriod${posStat.index}"
                                                    name="${secType.name()}${orgStat.index}endPeriod"
                                                    value="${pos.endPeriod}" disabled required>
-                                            <input type="checkbox" id="${secType.name()}${orgStat.index}checkNow${posStat.index}"
+                                            <input type="checkbox"
+                                                   id="${secType.name()}${orgStat.index}checkNow${posStat.index}"
                                                    name="${secType.name()}${orgStat.index}checkNow" checked
-                                            onclick="checkNow('${secType.name()}${orgStat.index}','${posStat.index}')">
+                                                   onclick="checkNow('${secType.name()}${orgStat.index}','${posStat.index}')">
                                             <label for="${secType.name()}${orgStat.index}checkNow">Сейчас</label>
                                         </dd>
                                     </c:if>
 
                                     <c:if test="<%=!pos.getEndPeriod().equals(DateUtil.NOW)%>">
-                                        <dd><input type="date" id="${secType.name()}${orgStat.index}endPeriod${posStat.index}"
+                                        <dd><input type="date"
+                                                   id="${secType.name()}${orgStat.index}endPeriod${posStat.index}"
                                                    name="${secType.name()}${orgStat.index}endPeriod"
                                                    value="${pos.endPeriod}" required>
-                                            <input type="checkbox" id="${secType.name()}${orgStat.index}checkNow${posStat.index}"
+                                            <input type="checkbox"
+                                                   id="${secType.name()}${orgStat.index}checkNow${posStat.index}"
                                                    name="${secType.name()}${orgStat.index}checkNow"
                                                    onclick="checkNow('${secType.name()}${orgStat.index}', '${posStat.index}')">
                                             <label for="${secType.name()}${orgStat.index}checkNow">Сейчас</label>
@@ -158,12 +155,12 @@
                                                   style="resize:none;" style="text-align:left"
                                                   required>${pos.description}</textarea></dd>
                                 </dl>
-                                <dd>
-                                    <button type="button" id="${secType.name()}"
-                                            onclick="deleteOrgPos('${secType.name()}${orgStat.index}pos${posStat.index}')">
-                                        Удалить должность
-                                    </button>
-                                </dd>
+                            <dd>
+                                <button type="button" id="${secType.name()}"
+                                        onclick="deleteOrgPos('${secType.name()}${orgStat.index}pos${posStat.index}')">
+                                    Удалить должность
+                                </button>
+                            </dd>
                             </div>
                         </c:forEach>
 
@@ -171,6 +168,7 @@
                     </c:if>
                     </div>
                 </c:forEach>
+                </dd>
                 </dl>
                 </div>
 
