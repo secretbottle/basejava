@@ -3,7 +3,7 @@ function sectionSelector(section) {
     switch (section) {
         case 'PERSONAL':
         case 'OBJECTIVE':
-            var parent = addSection(parentDiv, "text", section, section);
+            var parent = addSection(parentDiv, "text", section);
             createDeleteButton(parent, section, "", function () {
                 deleteSection(section);
             });
@@ -11,7 +11,7 @@ function sectionSelector(section) {
             break;
         case 'ACHIEVEMENT':
         case 'QUALIFICATIONS':
-            var parent = addSection(parentDiv, "textarea", section, section);
+            var parent = addSection(parentDiv, "textarea", section);
             createDeleteButton(parent, section, "", function () {
                 deleteSection(section);
             });
@@ -29,27 +29,26 @@ function sectionSelector(section) {
                 deleteOrgPos(orgDiv.getAttribute("id"));
             });
             //TODO addSection->addOrganizationSection
-            addOrganizationSection(orgDiv, "Название организации", "text", section, section);
-            addOrganizationSection(orgDiv, "Ссылка", "text", section + "urlAdr", section + "urlAdr");
+            addOrganizationSection(parentDiv, orgDiv, "Название организации", "text", section, section);
+            addOrganizationSection(parentDiv, orgDiv, "Ссылка", "text", section + "urlAdr",section + "urlAdr");
             createAddButton(orgDiv, index, "должность", function () {
                 addPosition(index);
             });
 
-            parentDiv.firstElementChild.appendChild(orgDiv);
             addPosition(index);
 
             break;
     }
 }
 
-function addSection(parent, inputType, id, name) {
+function addSection(parent, inputType, idName) {
     var child = parent.firstElementChild;
     switch (inputType) {
         case "text":
             var inputField = document.createElement("input");
             inputField.type = inputType;
-            inputField.id = id;
-            inputField.name = name;
+            inputField.id = idName;
+            inputField.name = idName;
             inputField.size = 70;
             inputField.required;
             child.appendChild(inputField);
@@ -57,8 +56,8 @@ function addSection(parent, inputType, id, name) {
         case "textarea":
             var textField = document.createElement("textarea");
             textField.type = inputType;
-            textField.id = id;
-            textField.name = name;
+            textField.id = idName;
+            textField.name = idName;
             textField.rows = 4;
             textField.cols = 70;
             textField.style.resize = 'none';
@@ -79,12 +78,12 @@ function deleteSection(id) {
     document.getElementById(id + "deleteButton").remove();
 }
 
-function addOrganizationSection(parent, textContent, inputType, id, name) {
+function addOrganizationSection(parent, parentOrg, textContent, inputType, id, name) {
+    var child = parent.firstElementChild;
     var dl = document.createElement("dl");
-    var dt = document.createElement("dt");
     var dd = document.createElement("dd");
+    var dt = document.createElement("dt");
     dt.textContent = textContent;
-
     var inputField = document.createElement("input");
     inputField.type = inputType;
     inputField.id = id;
@@ -95,21 +94,22 @@ function addOrganizationSection(parent, textContent, inputType, id, name) {
     dd.append(inputField);
     dl.append(dt);
     dl.append(dd);
-    parent.append(dl);
-    return dl;
+    parentOrg.append(dl);
+    child.appendChild(parentOrg);
+    return dd;
 }
 
 function addPosition(id) {
     var orgDiv = document.getElementById(id + "div");
     var posDivs = document.getElementsByClassName(id + "pos");
-    var posDiv = document.createElement("div");
     var posIndex = posDivs.length;
-
+    var posDiv = document.createElement("div");
     posDiv.id = id + "pos" + posIndex;
     posDiv.className = id + "pos";
     //TODO addSection->addOrganizationSection
-    addOrganizationSection(posDiv, "Начало", "date", id + "startPeriod", id + "startPeriod");
-    var endPeriod = addSection(posDiv, "Окончание", "date", id + "endPeriod" + posIndex, id + "endPeriod");
+    addOrganizationSection(orgDiv, posDiv, "Начало", "date", id + "startPeriod", id + "startPeriod");
+    //TODO addOrganizationSection problems with args 4 -> 3
+    var endPeriod = addOrganizationSection(orgDiv, posDiv, "Окончание", "date", id + "endPeriod" + posIndex, id + "endPeriod");
     var checkBox = document.createElement("input");
     checkBox.type = "checkBox";
     checkBox.id = id + "checkNow" + posIndex;
@@ -117,14 +117,15 @@ function addPosition(id) {
     checkBox.onclick = function () {
         checkNow(id, posIndex)
     };
+    endPeriod.appendChild(checkBox);
+
     var labelCheckBox = document.createElement("label");
     labelCheckBox.htmlFor = id + "checkNow";
     labelCheckBox.textContent = "Сейчас";
-    endPeriod.append(checkBox);
-    endPeriod.append(labelCheckBox);
+    endPeriod.appendChild(labelCheckBox);
     //TODO addSection->addOrganizationSection
-    addOrganizationSection(posDiv, "Позиция", "text", id + "position", id + "position");
-    addOrganizationSection(posDiv, "Описание", "textarea", id + "desc", id + "desc");
+    addOrganizationSection(orgDiv, posDiv, "Позиция", "text", id + "position", id + "position");
+    addOrganizationSection(orgDiv, posDiv, "Описание", "textarea", id + "desc", id + "desc");
     orgDiv.append(posDiv);
     createDeleteButton(posDiv, id, " должность", function () {
         deleteOrgPos(posDiv.getAttribute("id"));
@@ -134,7 +135,6 @@ function addPosition(id) {
 function deleteOrgPos(id) {
     document.getElementById(id).remove();
 }
-
 
 function createAddButton(parent, id, textContent, functionName) {
     var dd = document.createElement("dd");

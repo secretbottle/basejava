@@ -155,12 +155,14 @@
                                                   style="resize:none;" style="text-align:left"
                                                   required>${pos.description}</textarea></dd>
                                 </dl>
-                            <dd>
-                                <button type="button" id="${secType.name()}"
-                                        onclick="deleteOrgPos('${secType.name()}${orgStat.index}pos${posStat.index}')">
-                                    Удалить должность
-                                </button>
-                            </dd>
+                                <dl>
+                                    <dd>
+                                        <button type="button" id="${secType.name()}"
+                                                onclick="deleteOrgPos('${secType.name()}${orgStat.index}pos${posStat.index}')">
+                                            Удалить должность
+                                        </button>
+                                    </dd>
+                                </dl>
                             </div>
                         </c:forEach>
 
