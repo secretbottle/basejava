@@ -24,11 +24,9 @@ function sectionSelector(section) {
             var orgDiv = document.createElement("div");
             orgDiv.id = index + "div";
             orgDiv.className = section + "orgs";
-            //TODO add parentDiv
             createDeleteButton(orgDiv, index, "организацию", function () {
                 deleteOrgPos(orgDiv.getAttribute("id"));
             });
-            //TODO addSection->addOrganizationSection
             addOrganizationSection(parentDiv, orgDiv, "Название организации", "text", section, section);
             addOrganizationSection(parentDiv, orgDiv, "Ссылка", "text", section + "urlAdr",section + "urlAdr");
             createAddButton(orgDiv, index, "должность", function () {
@@ -43,6 +41,7 @@ function sectionSelector(section) {
 
 function addSection(parent, inputType, idName) {
     var child = parent.firstElementChild;
+
     switch (inputType) {
         case "text":
             var inputField = document.createElement("input");
@@ -51,7 +50,8 @@ function addSection(parent, inputType, idName) {
             inputField.name = idName;
             inputField.size = 70;
             inputField.required;
-            child.appendChild(inputField);
+            //child.appendChild(inputField);
+            child.replaceChild(inputField, child.lastChild);
             break;
         case "textarea":
             var textField = document.createElement("textarea");
@@ -106,9 +106,7 @@ function addPosition(id) {
     var posDiv = document.createElement("div");
     posDiv.id = id + "pos" + posIndex;
     posDiv.className = id + "pos";
-    //TODO addSection->addOrganizationSection
     addOrganizationSection(orgDiv, posDiv, "Начало", "date", id + "startPeriod", id + "startPeriod");
-    //TODO addOrganizationSection problems with args 4 -> 3
     var endPeriod = addOrganizationSection(orgDiv, posDiv, "Окончание", "date", id + "endPeriod" + posIndex, id + "endPeriod");
     var checkBox = document.createElement("input");
     checkBox.type = "checkBox";
@@ -123,10 +121,11 @@ function addPosition(id) {
     labelCheckBox.htmlFor = id + "checkNow";
     labelCheckBox.textContent = "Сейчас";
     endPeriod.appendChild(labelCheckBox);
-    //TODO addSection->addOrganizationSection
+
     addOrganizationSection(orgDiv, posDiv, "Позиция", "text", id + "position", id + "position");
     addOrganizationSection(orgDiv, posDiv, "Описание", "textarea", id + "desc", id + "desc");
     orgDiv.append(posDiv);
+
     createDeleteButton(posDiv, id, " должность", function () {
         deleteOrgPos(posDiv.getAttribute("id"));
     });
