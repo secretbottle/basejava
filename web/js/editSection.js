@@ -50,7 +50,6 @@ function addSection(parent, inputType, idName) {
             inputField.name = idName;
             inputField.size = 70;
             inputField.required;
-            //child.appendChild(inputField);
             child.replaceChild(inputField, child.lastChild);
             break;
         case "textarea":

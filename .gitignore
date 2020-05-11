@@ -11,3 +11,4 @@ log
 /libraries/
 /web/WEB-INF/lib/
 config/resumes.properties
+/web/js/jquery.js
