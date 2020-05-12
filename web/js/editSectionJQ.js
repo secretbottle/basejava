@@ -34,10 +34,11 @@ $(function () {
             case 'EDUCATION':
                 var orgDivs = $('.' + section + 'orgs');
                 var index = section + orgDivs.length;
-                var orgDiv = parentDiv.children().children().last().append($('<div>', {
+                var orgDiv = $('<div>', {
                     id: index + 'div',
-                    classname: section + 'orgs'
-                }));
+                    class: section + 'orgs'
+                });
+                parentDiv.children().children().last().append(orgDiv);
 
                 addOrgSection(parentDiv, orgDiv, 'Название организации', 'text', section, section);
                 addOrgSection(parentDiv, orgDiv, 'Ссылка', 'text', section + "urlAdr", section + "urlAdr");
@@ -71,7 +72,14 @@ $(function () {
                 break;
             case 'EXPERIENCE':
             case 'EDUCATION':
-                //TODO Delete position
+                button.parents().eq(0).remove();
+                button.remove();
+                break;
+            default:
+                console.log(section);
+                console.log(button.parent());
+                button.parent().remove();
+                button.remove();
                 break;
         }
     });
@@ -83,7 +91,6 @@ function addOrgSection(parent, parentOrg, textContent, type, id, name) {
     dl.append($('<dt>', {
         text: textContent
     }));
-
     dl.append($('<input>', {
         type: type,
         id: id,
@@ -91,22 +98,21 @@ function addOrgSection(parent, parentOrg, textContent, type, id, name) {
         size: 50,
         required: true
     }));
-
     parentOrg.append(dl);
     parent.append(parentOrg);
-
     return dl;
 }
 
 function addPosition(id) {
     var orgDiv = $('div#' + id + 'div');
     var posDivs = $('.' + id + 'pos');
+    console.log("Позиций" + posDivs + posDivs.length);
     var posIndex = posDivs.length;
     var posDiv = $('<div>', {
-        id: id + "pos" + posIndex,
-        classname: id + "pos"
+        id: id + 'pos' + posIndex,
+        class: id + 'pos'
     });
-
+    console.log(orgDiv.children().last());
     addOrgSection(orgDiv.children().last(), posDiv, 'Начало', 'date', id + 'startPeriod', id + 'startPeriod');
     var endPeriod = addOrgSection(orgDiv.children().last(), posDiv, 'Окончание', 'date', id + 'endPeriod' + posIndex, id + 'endPeriod');
     var checkBox = $('<input>', {
@@ -118,12 +124,10 @@ function addPosition(id) {
     endPeriod.last().append($('<lable>', {
         text: 'Сейчас'
     }));
-
     addOrgSection(orgDiv.children().last(), posDiv, 'Позиция', "text", id + "position", id + "position");
     addOrgSection(orgDiv.children().last(), posDiv, 'Описание', 'textarea', id + "desc", id + "desc");
+    createDeleteButton(posDiv, id, " должность");
     orgDiv.append(posDiv);
-
-    createDeleteButton(posDiv, id, " должность")
 }
 
 function createAddButton(parent, id, textContent) {

@@ -5,7 +5,7 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <html>
 <head>
-    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script type="text/javascript" src="js/editSectionJQ.js"></script>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link rel="stylesheet" href="css/style.css">
@@ -92,7 +92,7 @@
                         </dl>
 
                         <button type="button" id="${secType.name()}${orgStat.index}addButton">Добавить должность</button>
-                        <button type="button" id="${secType.name()}">Удалить организацию</button>
+                        <button type="button" id="${secType.name()}deleteButton">Удалить организацию</button>
                         <c:forEach items="${org.positions}" var="pos" varStatus="posStat">
                             <jsp:useBean id="pos" type="ru.javawebinar.model.Organization.Position"/>
                             <div id="${secType.name()}${orgStat.index}pos${posStat.index}"
@@ -144,7 +144,7 @@
                                 </dl>
                                 <dl>
                                     <dd>
-                                        <button type="button" id="${secType.name()}">Удалить должность</button>
+                                        <button type="button" id="${secType.name()}${orgStat.index}deleteButton">Удалить должность</button>
                                     </dd>
                                 </dl>
                             </div>
