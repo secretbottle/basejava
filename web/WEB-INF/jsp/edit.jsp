@@ -6,7 +6,7 @@
 <html>
 <head>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
-    <script type="text/javascript" src="js/editSectionJQ.js"></script>
+    <script type="text/javascript" src="js/editSection.js"></script>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link rel="stylesheet" href="css/style.css">
     <jsp:useBean id="resume" type="ru.javawebinar.model.Resume" scope="request"/>
@@ -111,8 +111,7 @@
                                                    value="${pos.endPeriod}" disabled required>
                                             <input type="checkbox"
                                                    id="${secType.name()}${orgStat.index}checkNow${posStat.index}"
-                                                   name="${secType.name()}${orgStat.index}checkNow" checked
-                                                   onclick="checkNow('${secType.name()}${orgStat.index}','${posStat.index}')">
+                                                   name="${secType.name()}${orgStat.index}checkNow" checked>
                                             <label for="${secType.name()}${orgStat.index}checkNow">Сейчас</label>
                                         </dd>
                                     </c:if>
@@ -124,8 +123,7 @@
                                                    value="${pos.endPeriod}" required>
                                             <input type="checkbox"
                                                    id="${secType.name()}${orgStat.index}checkNow${posStat.index}"
-                                                   name="${secType.name()}${orgStat.index}checkNow"
-                                                   onclick="checkNow('${secType.name()}${orgStat.index}', '${posStat.index}')">
+                                                   name="${secType.name()}${orgStat.index}checkNow">
                                             <label for="${secType.name()}${orgStat.index}checkNow">Сейчас</label>
                                         </dd>
                                     </c:if>
