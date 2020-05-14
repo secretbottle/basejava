@@ -1,8 +1,8 @@
 $(function () {
     $(document).on("click", "button[id$='addButton']", function () {
-        var button = $(this);
-        var section = $(this).attr('id').slice(0, -9);
-        var parentDiv = $('div#' + section + 'div');
+        let button = $(this);
+        let section = $(this).attr('id').slice(0, -9);
+        let parentDiv = $(`div#${section}div`);
         switch (section) {
             case 'PERSONAL':
             case 'OBJECTIVE':
@@ -18,16 +18,16 @@ $(function () {
                 break;
             case 'EXPERIENCE':
             case 'EDUCATION':
-                var orgDivs = $('.' + section + 'orgs');
-                var index = section + orgDivs.length;
-                var orgDiv = $('<div>', {
-                    id: index + 'div',
-                    class: section + 'orgs'
+                let orgDivs = $(`.${section}orgs`);
+                let index = section + orgDivs.length;
+                let orgDiv = $('<div>', {
+                    id: `${index}div`,
+                    class: `${section}orgs`
                 });
                 parentDiv.children().children().last().append(orgDiv);
 
                 addOrgSection(parentDiv, orgDiv, 'Название организации', 'text', section, section);
-                addOrgSection(parentDiv, orgDiv, 'Ссылка', 'text', section + "urlAdr", section + "urlAdr");
+                addOrgSection(parentDiv, orgDiv, 'Ссылка', 'text', `${section}urlAdr`, `${section}urlAdr`);
                 createAddButton(orgDiv, index, 'должность');
                 createDeleteButton(orgDiv, index, 'организацию');
                 addPosition(index);
@@ -40,19 +40,19 @@ $(function () {
     });
 
     $(document).on('click', "button[id$='deleteButton']", function () {
-        var button = $(this);
-        var section = $(this).attr('id').slice(0, -12);
-        var parentDiv = $('div#' + section + 'div');
+        let button = $(this);
+        let section = $(this).attr('id').slice(0, -12);
+        let parentDiv = $(`div#${section}div`);
         switch (section) {
             case 'PERSONAL':
             case 'OBJECTIVE':
-                $('input#' + section).remove();
+                $(`input#${section}`).remove();
                 button.remove();
                 createAddButton(parentDiv.children(), section, "");
                 break;
             case 'ACHIEVEMENT':
             case 'QUALIFICATIONS':
-                $('textarea#' + section).remove();
+                $(`textarea#${section}`).remove();
                 button.remove();
                 createAddButton(parentDiv.children(), section, "");
                 break;
@@ -69,8 +69,8 @@ $(function () {
     });
 
     $(document).on('click', "input[name*='checkNow']", function () {
-        var checkBox = $(this);
-        var endPeriod = checkBox.prev();
+        let checkBox = $(this);
+        let endPeriod = checkBox.prev();
         if (checkBox.prop('checked') === true) {
             endPeriod.prop('disabled', true);
             endPeriod.prop('value', '');
@@ -105,7 +105,7 @@ function createInput(type, id, name) {
 }
 
 function addOrgSection(parent, parentOrg, textContent, type, id, name) {
-    var dl = $('<dl>');
+    let dl = $('<dl>');
     dl.append($('<dt>', {
         text: textContent
     }));
@@ -124,42 +124,42 @@ function addOrgSection(parent, parentOrg, textContent, type, id, name) {
 }
 
 function addPosition(id) {
-    var orgDiv = $('div#' + id + 'div');
-    var posDivs = $('.' + id + 'pos');
-    var posIndex = posDivs.length;
-    var posDiv = $('<div>', {
-        id: id + 'pos' + posIndex,
-        class: id + 'pos'
+    let orgDiv = $(`div#${id}div`);
+    let posDivs = $(`.${id}pos`);
+    let posIndex = posDivs.length;
+    let posDiv = $('<div>', {
+        id: `${id}pos${posIndex}`,
+        class: `${id}pos`
     });
-    addOrgSection(orgDiv.children().last(), posDiv, 'Начало', 'date', id + 'startPeriod', id + 'startPeriod');
-    var endPeriod = addOrgSection(orgDiv.children().last(), posDiv, 'Окончание', 'date', id + 'endPeriod' + posIndex, id + 'endPeriod');
-    var checkBox = $('<input>', {
+    addOrgSection(orgDiv.children().last(), posDiv, 'Начало', 'date', `${id}startPeriod`, `${id}startPeriod`);
+    let endPeriod = addOrgSection(orgDiv.children().last(), posDiv, 'Окончание', 'date', `${id}endPeriod${posIndex}`, `${id}endPeriod`);
+    let checkBox = $('<input>', {
         type: 'checkBox',
-        id: id + 'checkNow' + posIndex,
-        name: id + 'checkNow'
+        id: `${id}checkNow${posIndex}`,
+        name: `${id}checkNow`
     });
     endPeriod.append(checkBox);
     endPeriod.last().append($('<lable>', {
         text: 'Сейчас'
     }));
-    addOrgSection(orgDiv.children().last(), posDiv, 'Позиция', 'text', id + 'position', id + 'position');
-    addOrgSection(orgDiv.children().last(), posDiv, 'Описание', 'textarea', id + 'desc', id + 'desc');
-    createDeleteButton(posDiv, id, " должность");
+    addOrgSection(orgDiv.children().last(), posDiv, 'Позиция', 'text', `${id}position`, `${id}position`);
+    addOrgSection(orgDiv.children().last(), posDiv, 'Описание', 'textarea', `${id}desc`, `${id}desc`);
+    createDeleteButton(posDiv, id, "должность");
     orgDiv.append(posDiv);
 }
 
 function createAddButton(parent, id, textContent) {
     parent.append($('<button>', {
         type: 'button',
-        id: id + "addButton",
-        text: "Добавить " + textContent
+        id: `${id}addButton`,
+        text: `Добавить ${textContent}`
     }));
 }
 
 function createDeleteButton(parent, id, textContent) {
     parent.append($('<button>', {
         type: 'button',
-        id: id + "deleteButton",
-        text: "Удалить " + textContent
+        id: `${id}deleteButton`,
+        text: `Удалить ${textContent}`
     }));
 }
